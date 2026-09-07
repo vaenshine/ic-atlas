@@ -1,186 +1,21 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {
+  material,
+  box,
+  cylinder,
+  trace,
+  label,
+  movable,
+  pad,
+  pcb,
+} from './model-utils.ts';
+import { createFamilyModel, FAMILY_SHAPES } from './family-models.ts';
 import type { Part } from './catalog';
 
 export type Marker = { label: string; point: THREE.Vector3; explode?: number };
 export type Model = { group: THREE.Group; markers: Marker[] };
 const dark = '#26282c';
-function material(color: string, metalness = 0, roughness = 0.6) {
-  return new THREE.MeshStandardMaterial({ color, metalness, roughness });
-}
-function box(
-  g: THREE.Group,
-  w: number,
-  h: number,
-  d: number,
-  x: number,
-  y: number,
-  z: number,
-  m: THREE.Material,
-  r = 0.02,
-) {
-  const geometry =
-    r > 0
-      ? new RoundedBoxGeometry(w, h, d, 2, Math.min(r, w / 3, h / 3, d / 3))
-      : new THREE.BoxGeometry(w, h, d);
-  const mesh = new THREE.Mesh(geometry, m);
-  mesh.position.set(x, y, z);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  g.add(mesh);
-  return mesh;
-}
-function cylinder(
-  g: THREE.Group,
-  r: number,
-  h: number,
-  x: number,
-  y: number,
-  z: number,
-  m: THREE.Material,
-) {
-  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 20), m);
-  mesh.position.set(x, y, z);
-  mesh.castShadow = true;
-  g.add(mesh);
-  return mesh;
-}
-function trace(
-  g: THREE.Group,
-  points: number[][],
-  color: string | number = '#638658',
-  width = 0.012,
-) {
-  const curve = new THREE.CurvePath<THREE.Vector3>();
-  for (let i = 1; i < points.length; i++)
-    curve.add(
-      new THREE.LineCurve3(
-        new THREE.Vector3(...(points[i - 1] as [number, number, number])),
-        new THREE.Vector3(...(points[i] as [number, number, number])),
-      ),
-    );
-  const mesh = new THREE.Mesh(
-    new THREE.TubeGeometry(
-      curve,
-      Math.max(points.length * 2, 8),
-      width,
-      4,
-      false,
-    ),
-    material(String(color), 0.55, 0.48),
-  );
-  g.add(mesh);
-  return mesh;
-}
-function label(
-  g: THREE.Group,
-  text: string,
-  x: number,
-  y: number,
-  z: number,
-  w: number,
-  h: number,
-  color = '#c4c8c3',
-  bg?: string,
-  rotation = 0,
-) {
-  const c = document.createElement('canvas');
-  c.width = w < 0.7 ? 128 : w < 1.5 ? 256 : 512;
-  c.height = c.width / 2;
-  const ctx = c.getContext('2d')!;
-  ctx.scale(c.width / 768, c.height / 384);
-  ctx.clearRect(0, 0, 768, 384);
-  if (bg) {
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, 768, 384);
-  }
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const lines = text.split('\n');
-  const fs = Math.min(
-    80,
-    (650 / Math.max(...lines.map((l) => l.length))) * 1.55,
-  );
-  ctx.font = `500 ${fs}px "Courier New",monospace`;
-  lines.forEach((s, i) =>
-    ctx.fillText(s, 384, 192 + (i - (lines.length - 1) / 2) * (fs * 1.45)),
-  );
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(w, h),
-    new THREE.MeshBasicMaterial({
-      map: tex,
-      transparent: true,
-      depthWrite: false,
-      polygonOffset: true,
-      polygonOffsetFactor: -2,
-    }),
-  );
-  mesh.rotation.set(-Math.PI / 2, 0, rotation);
-  mesh.position.set(x, y, z);
-  g.add(mesh);
-  return mesh;
-}
-function movable(parent: THREE.Group, y: number, amount: number) {
-  const g = new THREE.Group();
-  g.position.y = y;
-  g.userData.explode = amount;
-  g.userData.baseY = y;
-  parent.add(g);
-  return g;
-}
-function pad(
-  g: THREE.Group,
-  x: number,
-  z: number,
-  y: number,
-  gold: THREE.Material,
-  r = 0.1,
-) {
-  const m = new THREE.Mesh(new THREE.TorusGeometry(r, 0.035, 7, 18), gold);
-  m.rotation.x = -Math.PI / 2;
-  m.position.set(x, y, z);
-  g.add(m);
-  return m;
-}
-function pcb(
-  g: THREE.Group,
-  w: number,
-  d: number,
-  m: THREE.Material,
-  holes: number[][] = [],
-) {
-  const r = 0.13,
-    s = new THREE.Shape();
-  s.moveTo(-w / 2 + r, -d / 2);
-  s.lineTo(w / 2 - r, -d / 2);
-  s.quadraticCurveTo(w / 2, -d / 2, w / 2, -d / 2 + r);
-  s.lineTo(w / 2, d / 2 - r);
-  s.quadraticCurveTo(w / 2, d / 2, w / 2 - r, d / 2);
-  s.lineTo(-w / 2 + r, d / 2);
-  s.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - r);
-  s.lineTo(-w / 2, -d / 2 + r);
-  s.quadraticCurveTo(-w / 2, -d / 2, -w / 2 + r, -d / 2);
-  holes.forEach(([x, z, radius]) => {
-    const hole = new THREE.Path();
-    hole.absarc(x, -z, radius, 0, Math.PI * 2, true);
-    s.holes.push(hole);
-  });
-  const geo = new THREE.ExtrudeGeometry(s, {
-    depth: 0.13,
-    bevelEnabled: false,
-    curveSegments: 12,
-  });
-  geo.rotateX(-Math.PI / 2);
-  const mesh = new THREE.Mesh(geo, m);
-  mesh.receiveShadow = true;
-  mesh.castShadow = true;
-  g.add(mesh);
-}
 function smd(
   g: THREE.Group,
   x: number,
@@ -221,7 +56,7 @@ function tinyChip(
   g.add(t);
   const silver = material('#abb3b8', 0.8, 0.3);
   box(t, w, 0.11, d, 0, 0.12, 0, material('#232528'), 0.02);
-  for (let side of [-1, 1])
+  for (const side of [-1, 1])
     for (let i = 0; i < pins / 2; i++)
       box(
         t,
@@ -281,7 +116,7 @@ function usb(g: THREE.Group, x: number, z: number, large = false) {
       material('#d3b86c', 0.8, 0.28),
       0,
     );
-  for (let side of [-1, 1])
+  for (const side of [-1, 1])
     box(u, 0.11, 0.05, 0.18, (side * w) / 2, 0.16, -0.08, silver);
   return u;
 }
@@ -293,7 +128,7 @@ function shieldModule(g: THREE.Group, z = 0) {
   for (let i = 0; i < 10; i++)
     box(mod, 0.1, 0.028, 0.085, (i - 4.5) * 0.17, 0.145, 1.46, gold, 0.009);
   for (let i = 0; i < 14; i++)
-    for (let side of [-1, 1])
+    for (const side of [-1, 1])
       box(
         mod,
         0.09,
@@ -349,7 +184,7 @@ function shieldModule(g: THREE.Group, z = 0) {
   const lid = movable(mod, 0, 1.7);
   const silver = material('#a5aeb3', 0.86, 0.28);
   box(lid, 1.8, 0.045, 2.05, 0, 0.42, 0.32, silver, 0.03);
-  for (let side of [-1, 1])
+  for (const side of [-1, 1])
     box(lid, 0.035, 0.28, 2.05, side * 0.883, 0.28, 0.32, silver, 0.01);
   box(lid, 1.8, 0.28, 0.035, 0, 0.28, 1.33, silver, 0.01);
   box(lid, 1.8, 0.28, 0.035, 0, 0.28, -0.69, silver, 0.01);
@@ -381,7 +216,7 @@ function board(part: Part): Model {
   const rowPitch = isPico ? 0.265 : isSensor ? 0.48 : isRadio ? 0.35 : 0.285;
   const holes: number[][] = [];
   if (!isUno && !isSensor && !isRadio)
-    for (let side of [-1, 1])
+    for (const side of [-1, 1])
       for (let i = 0; i < pinCount; i++)
         holes.push([
           side * (w / 2 - 0.2),
@@ -394,8 +229,8 @@ function board(part: Part): Model {
     for (let row = 0; row < 2; row++)
       for (let i = 0; i < 4; i++)
         holes.push([(i - 1.5) * 0.35, 1.28 + row * 0.3, 0.053]);
-  for (let side of [-1, 1])
-    for (let end of [-1, 1])
+  for (const side of [-1, 1])
+    for (const end of [-1, 1])
       if (!isPico)
         holes.push([side * (w / 2 - 0.36), end * (d / 2 - 0.24), 0.1]);
   pcb(
@@ -410,7 +245,7 @@ function board(part: Part): Model {
     holes,
   );
   // Routing is an illustrative learning layer; each trace has discrete chamfered turns.
-  for (let side of [-1, 1])
+  for (const side of [-1, 1])
     for (let i = 0; i < (isSensor ? 6 : 16); i++) {
       const zz = (i - 7.5) * 0.28,
         xx = side * (w / 2 - 0.23);
@@ -428,7 +263,7 @@ function board(part: Part): Model {
         0.009,
       );
     }
-  for (let side of isSensor ? [0] : [-1, 1]) {
+  for (const side of isSensor ? [0] : [-1, 1]) {
     const header = movable(g, 0, -0.65);
     const count = isUno ? 14 : pinCount;
     for (let i = 0; i < count; i++) {
@@ -488,8 +323,8 @@ function board(part: Part): Model {
         );
     }
   }
-  for (let side of [-1, 1])
-    for (let end of [-1, 1])
+  for (const side of [-1, 1])
+    for (const end of [-1, 1])
       if (!isPico)
         pad(g, side * (w / 2 - 0.36), end * (d / 2 - 0.24), 0.144, gold, 0.13);
   if (isSensor) {
@@ -541,7 +376,7 @@ function board(part: Part): Model {
   } else if (isUno) {
     const main = movable(g, 0, 1.1);
     box(main, 0.72, 0.27, 2.6, 0.7, 0.33, 0.5, plastic, 0.06);
-    for (let side of [-1, 1])
+    for (const side of [-1, 1])
       for (let i = 0; i < 14; i++)
         box(
           main,
@@ -650,7 +485,7 @@ function board(part: Part): Model {
         Math.PI / 2,
         i % 3 ? 'capacitor' : 'resistor',
       );
-    for (let side of [-1, 1]) {
+    for (const side of [-1, 1]) {
       box(
         g,
         0.4,
@@ -716,7 +551,584 @@ function board(part: Part): Model {
   );
   return { group: g, markers };
 }
+function basicModel(part: Part): Model {
+  const g = new THREE.Group(),
+    markers: Marker[] = [];
+  const silver = material('#bdc5cd', 0.87, 0.25),
+    gold = material('#d8ba79', 0.78, 0.3),
+    black = material('#24282d', 0.06, 0.55),
+    white = material('#eee6d5', 0.05, 0.48);
+  const lead = (x: number, z: number, y = 0.05, length = 1) => {
+    const mesh = cylinder(g, 0.045, length, x, y, z, silver);
+    mesh.userData.terminal = true;
+    return mesh;
+  };
+  if (['diode', 'glassdiode', 'resistor'].includes(part.shape)) {
+    const glass = part.shape === 'glassdiode',
+      resistor = part.shape === 'resistor',
+      r = glass ? 0.2 : resistor ? 0.3 : 0.28,
+      len = glass ? 1.1 : 1.45;
+    for (const side of [-1, 1]) {
+      const l = lead(side * (len / 2 + 0.63), 0, 0.45, 1.35);
+      l.rotation.z = Math.PI / 2;
+    }
+    const shell = movable(g, 0, 1.05);
+    const bodyMat = glass
+      ? new THREE.MeshPhysicalMaterial({
+          color: '#d3955e',
+          transparent: true,
+          opacity: 0.66,
+          roughness: 0.15,
+          metalness: 0.05,
+          transmission: 0.25,
+          thickness: 0.18,
+        })
+      : resistor
+        ? material('#c7b993', 0.04, 0.5)
+        : black;
+    const body = cylinder(shell, r, len, 0, 0.45, 0, bodyMat);
+    body.rotation.z = Math.PI / 2;
+    if (resistor) {
+      ['#8d4b26', '#15171b', '#c62828', '#c0a254'].forEach((color, i) => {
+        const band = cylinder(
+          shell,
+          r + 0.007,
+          0.1,
+          -0.49 + i * 0.31,
+          0.45,
+          0,
+          material(color, 0.3, 0.42),
+        );
+        band.rotation.z = Math.PI / 2;
+      });
+      label(shell, '1 kΩ', 0, 0.77, 0, 0.65, 0.26, '#635b47');
+    } else {
+      const band = cylinder(
+        shell,
+        r + 0.008,
+        0.14,
+        len * 0.29,
+        0.45,
+        0,
+        glass ? black : material('#d5d6d2'),
+      );
+      band.rotation.z = Math.PI / 2;
+      label(shell, part.name, 0, 0.45 + r + 0.02, 0, 0.8, 0.25, '#e0e1d9');
+    }
+    box(
+      g,
+      0.4,
+      0.07,
+      0.13,
+      0,
+      0.43,
+      0,
+      material(resistor ? '#7c6257' : '#668a9d', 0.5, 0.3),
+    );
+    trace(
+      g,
+      [
+        [-len / 2, 0.45, 0],
+        [len / 2, 0.45, 0],
+      ],
+      '#b5b9b9',
+      0.018,
+    );
+    markers.push(
+      {
+        label: resistor ? '色环：棕 黑 红 金' : 'K 阴极 · 色环端',
+        point: new THREE.Vector3(resistor ? 0 : len * 0.3, 0.93, 0),
+        explode: 1.05,
+      },
+      {
+        label: resistor ? '轴向引线' : 'A 阳极',
+        point: new THREE.Vector3(-1.3, 0.48, 0),
+      },
+    );
+  } else if (part.shape === 'sma') {
+    const shell = movable(g, 0, 1);
+    box(shell, 1.75, 0.65, 1.15, 0, 0.43, 0, black, 0.09);
+    box(shell, 0.15, 0.016, 1.01, 0.55, 0.765, 0, white, 0.006);
+    label(shell, part.name, -0.1, 0.772, 0, 1.0, 0.5);
+    for (const side of [-1, 1]) {
+      const m = box(g, 0.43, 0.1, 0.84, side * 0.97, 0.09, 0, silver, 0.024);
+      m.userData.terminal = true;
+    }
+    box(g, 0.5, 0.1, 0.45, 0, 0.2, 0, material('#538498', 0.6, 0.22));
+    markers.push(
+      {
+        label: 'K 阴极标记',
+        point: new THREE.Vector3(0.65, 0.85, 0.12),
+        explode: 1,
+      },
+      { label: '表面贴装端子', point: new THREE.Vector3(-1.15, 0.15, 0) },
+    );
+  } else if (part.shape === 'bjt') {
+    // TO-92 has a flat identification face and a curved back.
+    const s = new THREE.Shape();
+    s.moveTo(-0.55, -0.19);
+    s.lineTo(0.55, -0.19);
+    s.lineTo(0.55, 0.02);
+    s.absarc(0, 0.02, 0.55, 0, Math.PI, false);
+    s.lineTo(-0.55, -0.19);
+    const geo = new THREE.ExtrudeGeometry(s, {
+      depth: 1.0,
+      bevelEnabled: true,
+      bevelSize: 0.035,
+      bevelThickness: 0.035,
+      bevelSegments: 2,
+      steps: 1,
+    });
+    geo.rotateX(-Math.PI / 2);
+    const shell = movable(g, 0.55, 1.15);
+    const body = new THREE.Mesh(geo, black);
+    shell.add(body);
+    body.castShadow = true;
+    const silk = label(shell, part.name, 0, 0.48, 0.245, 0.91, 0.57, '#c9cfcc');
+    silk.rotation.set(0, 0, 0);
+    for (let i = 0; i < 3; i++) lead((i - 1) * 0.3, 0.1, -0.15, 1.45);
+    box(g, 0.28, 0.28, 0.12, 0, 0.95, 0.03, material('#507e90', 0.6, 0.25));
+    markers.push(
+      {
+        label: 'TO-92 平面 · 丝印侧',
+        point: new THREE.Vector3(0, 1.67, 0.42),
+        explode: 1.15,
+      },
+      {
+        label: '3 脚定义随型号核对',
+        point: new THREE.Vector3(0.45, -0.35, 0.13),
+      },
+    );
+  } else if (['led', 'rgbled'].includes(part.shape)) {
+    const rgb = part.shape === 'rgbled',
+      shell = movable(g, 0, 1.1);
+    const domeMat = new THREE.MeshPhysicalMaterial({
+      color: rgb ? '#d9e6ef' : '#b93739',
+      metalness: 0.02,
+      roughness: 0.13,
+      transmission: 0.2,
+      thickness: 0.4,
+      transparent: true,
+      opacity: 0.61,
+      side: THREE.DoubleSide,
+    });
+    const _body = cylinder(shell, 0.53, 0.8, 0, 0.92, 0, domeMat);
+    const dome = new THREE.Mesh(
+      new THREE.SphereGeometry(0.53, 32, 18, 0, Math.PI * 2, 0, Math.PI / 2),
+      domeMat,
+    );
+    dome.position.set(0, 1.32, 0);
+    shell.add(dome);
+    const flangeShape = new THREE.Shape(),
+      cut = 0.55,
+      rad = 0.59,
+      angle = Math.acos(cut / rad),
+      height = Math.sqrt(rad * rad - cut * cut);
+    flangeShape.moveTo(cut, -height);
+    flangeShape.lineTo(cut, height);
+    flangeShape.absarc(0, 0, rad, angle, Math.PI * 2 - angle, false);
+    flangeShape.closePath();
+    const flangeGeometry = new THREE.ExtrudeGeometry(flangeShape, {
+      depth: 0.11,
+      bevelEnabled: false,
+      curveSegments: 32,
+    });
+    flangeGeometry.rotateX(-Math.PI / 2);
+    const flange = new THREE.Mesh(flangeGeometry, domeMat);
+    flange.position.y = 0.435;
+    shell.add(flange);
+    for (let i = 0; i < (rgb ? 4 : 2); i++) {
+      const x = (i - ((rgb ? 4 : 2) - 1) / 2) * 0.26;
+      lead(x, 0, rgb ? (i === 1 ? -0.12 : 0.02) : i === 0 ? -0.12 : 0.04, 1.35);
+      box(g, 0.14, 0.59, 0.12, x, 0.49, 0, silver, 0.012);
+    }
+    const _cup = cylinder(g, 0.18, 0.08, 0, 0.74, 0, silver);
+    const emitter = material(rgb ? '#c2defa' : '#e33a41', 0.1, 0.2);
+    emitter.emissive.set(rgb ? '#7dafed' : '#ff2238');
+    emitter.emissiveIntensity = 0.03;
+    if (rgb) {
+      ['#ff3344', '#42ef7c', '#4786ff'].forEach((color, i) => {
+        const em = material(color, 0.1, 0.2);
+        em.emissive.set(color);
+        em.emissiveIntensity = 0.03;
+        const die = box(
+          g,
+          0.075,
+          0.05,
+          0.12,
+          (i - 1) * 0.09,
+          0.8,
+          0,
+          em,
+          0.009,
+        );
+        die.userData.emitter = true;
+        die.userData.rgbChannel = i + 1;
+        trace(
+          g,
+          [
+            [(i - 1) * 0.12, 0.8, 0],
+            [(i - 1) * 0.14, 0.96, 0.03],
+            [(i - 1) * 0.22, 0.75, 0],
+          ],
+          '#d2b77d',
+          0.008,
+        );
+      });
+    } else {
+      const die = box(g, 0.22, 0.05, 0.16, 0, 0.8, 0, emitter, 0.01);
+      die.userData.emitter = true;
+    }
+    const glowMat = new THREE.MeshBasicMaterial({
+      color: '#ff2946',
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    });
+    const glow = new THREE.Mesh(
+      new THREE.SphereGeometry(0.44, 20, 12),
+      glowMat,
+    );
+    glow.position.set(0, 1.2, 0);
+    glow.userData.glow = true;
+    glow.userData.rgb = rgb;
+    g.add(glow);
+    trace(
+      g,
+      [
+        [-0.13, 0.75, 0],
+        [-0.12, 0.95, 0],
+        [0.13, 0.84, 0],
+      ],
+      '#c4a56b',
+      0.01,
+    );
+    markers.push(
+      {
+        label: rgb ? '透明环氧透镜' : '红色环氧透镜',
+        point: new THREE.Vector3(0.3, 1.8, 0.2),
+        explode: 1.1,
+      },
+      {
+        label: rgb ? '4 根引脚 · 共阴型示意' : '极性与限流电阻需一起确认',
+        point: new THREE.Vector3(0, -0.35, 0.2),
+      },
+    );
+  } else if (part.shape === 'tactile') {
+    box(g, 1.65, 0.33, 1.65, 0, 0.19, 0, black, 0.06);
+    const top = movable(g, 0, 1.1);
+    box(top, 1.61, 0.09, 1.61, 0, 0.43, 0, silver, 0.035);
+    for (const x of [-0.61, 0.61])
+      for (const z of [-0.61, 0.61])
+        cylinder(top, 0.082, 0.06, x, 0.5, z, black);
+    const actuator = movable(top, 0, 0);
+    actuator.userData.press = 0.15;
+    cylinder(actuator, 0.32, 0.39, 0, 0.64, 0, black);
+    cylinder(g, 0.46, 0.06, 0, 0.4, 0, gold);
+    for (const side of [-1, 1])
+      for (const z of [-0.52, 0.52]) {
+        trace(
+          g,
+          [
+            [side * 0.6, 0.19, z],
+            [side * 0.97, 0.19, z],
+            [side * 1.1, -0.17, z],
+          ],
+          '#b6bec7',
+          0.045,
+        );
+        const _pin = lead(side * 1.1, z, -0.34, 0.35);
+      }
+    markers.push(
+      {
+        label: '瞬时触点 · 按压接通',
+        point: new THREE.Vector3(0, 1.1, 0),
+        explode: 1.1,
+      },
+      { label: '同组两脚常通', point: new THREE.Vector3(1.2, 0.03, 0.6) },
+    );
+  } else if (part.shape === 'slideswitch') {
+    box(g, 2, 0.45, 0.9, 0, 0.25, 0, black, 0.04);
+    const top = movable(g, 0, 1.0);
+    box(top, 2.08, 0.045, 0.95, 0, 0.5, 0, silver, 0.02);
+    box(top, 1.45, 0.025, 0.41, 0, 0.533, 0, black, 0.018);
+    const toggle = movable(top, 0, 0);
+    toggle.userData.slide = 0.47;
+    box(toggle, 0.52, 0.55, 0.38, -0.47, 0.8, 0, black, 0.022);
+    for (let i = 0; i < 4; i++)
+      box(
+        toggle,
+        0.06,
+        0.015,
+        0.39,
+        -0.65 + i * 0.12,
+        1.081,
+        0,
+        material('#41464b'),
+        0.005,
+      );
+    for (let i = 0; i < 3; i++) lead((i - 1) * 0.65, 0, -0.29, 0.66);
+    for (let i = 0; i < 3; i++)
+      box(g, 0.35, 0.04, 0.26, (i - 1) * 0.58, 0.4, 0, gold, 0.005);
+    markers.push(
+      {
+        label: '滑柄 · 选择一侧触点',
+        point: new THREE.Vector3(0, 1.23, 0),
+        explode: 1,
+      },
+      {
+        label: 'COM 公共端在中间（示意）',
+        point: new THREE.Vector3(0, -0.55, 0.2),
+      },
+    );
+  } else if (part.shape === 'usbc') {
+    const top = movable(g, 0, 1);
+    const metal = material('#b9c3ce', 0.93, 0.2);
+    // Rounded, open-ended shell with a real cavity and central contact tongue.
+    box(top, 2.1, 0.08, 0.97, 0, 0.85, 0, metal, 0.035);
+    box(top, 2.1, 0.08, 0.97, 0, 0.14, 0, metal, 0.035);
+    for (const side of [-1, 1])
+      box(top, 0.11, 0.69, 0.97, side * 1.02, 0.49, 0, metal, 0.045);
+    box(g, 1.95, 0.58, 0.12, 0, 0.49, -0.46, black, 0.01);
+    box(g, 1.73, 0.14, 0.79, 0, 0.48, 0.02, black, 0.03);
+    for (const side of [-1, 1])
+      for (let i = 0; i < 12; i++) {
+        const pin = box(
+          g,
+          0.075,
+          0.019,
+          0.53,
+          (i - 5.5) * 0.136,
+          0.48 + side * 0.084,
+          0.095,
+          gold,
+          0.009,
+        );
+        pin.userData.terminal = true;
+        box(
+          g,
+          0.075,
+          0.05,
+          0.18,
+          (i - 5.5) * 0.136,
+          0.18,
+          side === 1 ? -0.62 : -0.89,
+          gold,
+          0.006,
+        );
+      }
+    for (const side of [-1, 1])
+      box(g, 0.19, 0.22, 0.25, side * 1.08, 0.02, -0.31, silver, 0.01);
+    markers.push(
+      {
+        label: '金属屏蔽壳',
+        point: new THREE.Vector3(0.85, 1.06, 0.07),
+        explode: 1,
+      },
+      { label: '上下双面 · 24 个触点', point: new THREE.Vector3(0, 0.46, 0.6) },
+    );
+  } else if (['jst', 'terminal', 'header'].includes(part.shape)) {
+    if (part.shape === 'header') {
+      const insulator = movable(g, 0, 1.2);
+      box(insulator, 1.04, 0.46, 2.68, 0, 0.28, 0, black, 0.025);
+      for (const x of [-0.27, 0.27])
+        for (let i = 0; i < 5; i++) {
+          const pin = box(
+            g,
+            0.115,
+            1.75,
+            0.115,
+            x,
+            0.36,
+            (i - 2) * 0.52,
+            gold,
+            0.016,
+          );
+          pin.userData.terminal = true;
+        }
+      markers.push(
+        { label: '2 × 5 方形镀金针', point: new THREE.Vector3(0, 1.42, 0.15) },
+        {
+          label: '2.54 mm 间距示例',
+          point: new THREE.Vector3(0.6, 0.49, 1.05),
+          explode: 1.2,
+        },
+      );
+    } else if (part.shape === 'jst') {
+      const shell = movable(g, 0, 1.2);
+      box(shell, 1.8, 0.13, 1.18, 0, 0.29, 0, white, 0.03);
+      for (const side of [-1, 1])
+        box(shell, 0.13, 1.1, 1.18, side * 0.84, 0.83, 0, white, 0.04);
+      box(shell, 1.73, 1.1, 0.14, 0, 0.83, -0.51, white, 0.025);
+      box(shell, 1.73, 0.46, 0.15, 0, 0.59, 0.51, white, 0.02);
+      box(shell, 0.65, 0.18, 0.16, 0, 1.28, -0.38, white, 0.02);
+      for (const x of [-0.37, 0.37]) {
+        const pin = box(g, 0.11, 1.53, 0.11, x, 0.39, 0, silver, 0.012);
+        pin.userData.terminal = true;
+      }
+      markers.push(
+        {
+          label: '有方向的塑料护墙',
+          point: new THREE.Vector3(0.65, 1.68, 0),
+          explode: 1.2,
+        },
+        {
+          label: 'XH 系列 · 2.50 mm',
+          point: new THREE.Vector3(-0.4, 0.03, 0.1),
+        },
+      );
+    } else {
+      const shell = movable(g, 0, 1.15),
+        green = material('#2b856a', 0.04, 0.48);
+      box(shell, 2.25, 0.2, 1.43, 0, 0.18, 0, green, 0.04);
+      box(shell, 2.25, 1.12, 0.18, 0, 0.79, -0.62, green, 0.025);
+      for (const x of [-1.04, 0, 1.04])
+        box(shell, 0.14, 1.12, 1.25, x, 0.79, 0, green, 0.02);
+      box(shell, 2.25, 0.22, 0.38, 0, 1.24, -0.35, green, 0.03);
+      for (const x of [-0.54, 0.54]) {
+        box(
+          g,
+          0.79,
+          0.64,
+          0.93,
+          x,
+          0.66,
+          -0.02,
+          material('#948d6c', 0.8, 0.31),
+          0.03,
+        );
+        box(g, 0.51, 0.35, 0.012, x, 0.63, 0.456, black, 0.005);
+        const _screw = cylinder(g, 0.25, 0.18, x, 1.11, -0.1, silver);
+        box(g, 0.33, 0.014, 0.055, x, 1.209, -0.1, black, 0.003);
+        lead(x, -0.05, -0.35, 0.76);
+      }
+      markers.push(
+        { label: '螺钉与压线框', point: new THREE.Vector3(0, 1.51, 0) },
+        {
+          label: '接线入口',
+          point: new THREE.Vector3(0.53, 0.6, 0.62),
+          explode: 1.15,
+        },
+      );
+    }
+  } else if (['ceramic', 'electrolytic'].includes(part.shape)) {
+    const electrolytic = part.shape === 'electrolytic',
+      shell = movable(g, 0, 1.2);
+    for (const side of [-1, 1]) lead(side * 0.27, 0, -0.28, 1.17);
+    if (electrolytic) {
+      cylinder(shell, 0.63, 1.65, 0, 1.07, 0, material('#225b89', 0.18, 0.37));
+      cylinder(shell, 0.63, 0.035, 0, 1.906, 0, silver);
+      cylinder(shell, 0.66, 0.08, 0, 0.28, 0, black);
+      box(shell, 0.045, 1.44, 0.19, 0.622, 1.04, 0, material('#b6c9d7'), 0.012);
+      trace(
+        shell,
+        [
+          [-0.4, 1.931, 0],
+          [0.4, 1.931, 0],
+        ],
+        '#4d5760',
+        0.012,
+      );
+      trace(
+        shell,
+        [
+          [0, 1.931, -0.4],
+          [0, 1.931, 0.4],
+        ],
+        '#4d5760',
+        0.012,
+      );
+      const print = label(
+        shell,
+        '100µF\n−  −',
+        0,
+        1.11,
+        0.65,
+        0.76,
+        0.84,
+        '#d5e3ed',
+      );
+      print.rotation.set(0, 0, 0);
+      cylinder(g, 0.44, 1.26, 0, 0.98, 0, material('#a4a8a6', 0.78, 0.4));
+      for (let i = 0; i < 12; i++) {
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(0.4 - i * 0.014, 0.009, 4, 30),
+          gold,
+        );
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.y = 1.62;
+        g.add(ring);
+      }
+      markers.push(
+        {
+          label: '顶部防爆刻痕',
+          point: new THREE.Vector3(0, 2.15, 0),
+          explode: 1.2,
+        },
+        {
+          label: '负极条纹（示意）',
+          point: new THREE.Vector3(0.72, 1.0, 0.1),
+          explode: 1.2,
+        },
+      );
+    } else {
+      const disc = cylinder(
+        shell,
+        0.67,
+        0.22,
+        0,
+        0.87,
+        0,
+        material('#bd8959', 0.01, 0.64),
+      );
+      disc.rotation.x = Math.PI / 2;
+      const print = label(
+        shell,
+        '104\n100nF',
+        0,
+        0.89,
+        0.121,
+        1,
+        0.7,
+        '#342b20',
+      );
+      print.rotation.set(0, 0, 0);
+      cylinder(g, 0.48, 0.035, 0, 0.87, 0, silver).rotation.x = Math.PI / 2;
+      markers.push(
+        {
+          label: '104 = 100,000 pF',
+          point: new THREE.Vector3(0, 1.72, 0.1),
+          explode: 1.2,
+        },
+        { label: '陶瓷介质 · 双引脚', point: new THREE.Vector3(0.37, -0.5, 0) },
+      );
+    }
+  }
+  return { group: g, markers };
+}
+
 export function createModel(part: Part): Model {
+  if (FAMILY_SHAPES.has(part.shape)) return createFamilyModel(part);
+  if (
+    [
+      'diode',
+      'glassdiode',
+      'sma',
+      'bjt',
+      'led',
+      'rgbled',
+      'tactile',
+      'slideswitch',
+      'usbc',
+      'jst',
+      'header',
+      'terminal',
+      'resistor',
+      'ceramic',
+      'electrolytic',
+    ].includes(part.shape)
+  )
+    return basicModel(part);
   if (['devkit', 'uno', 'pico', 'sensor', 'radio'].includes(part.shape))
     return board(part);
   const g = new THREE.Group(),
@@ -747,7 +1159,7 @@ export function createModel(part: Part): Model {
       ],
     };
   }
-  if (part.shape === 'to220') {
+  if (['to220', 'mosfet', 'to2205', 'to263'].includes(part.shape)) {
     const shape = new THREE.Shape();
     shape.moveTo(-0.85, -1.05);
     shape.lineTo(0.85, -1.05);
@@ -756,7 +1168,7 @@ export function createModel(part: Part): Model {
     shape.closePath();
     const hole = new THREE.Path();
     hole.absarc(0, 1.04, 0.21, 0, Math.PI * 2, true);
-    shape.holes.push(hole);
+    if (part.shape !== 'to263') shape.holes.push(hole);
     const geo = new THREE.ExtrudeGeometry(shape, {
       depth: 0.07,
       bevelEnabled: false,
@@ -767,18 +1179,50 @@ export function createModel(part: Part): Model {
     tab.castShadow = true;
     const shell = movable(g, 0, 1.3);
     box(shell, 1.82, 0.55, 1.7, 0, 0.34, 0.28, plastic, 0.06);
-    label(shell, part.name + '\nST  5V', 0, 0.62, 0.3, 1.45, 0.98);
-    for (let i = 0; i < 3; i++)
-      box(g, 0.17, 0.1, 1.7, (i - 1) * 0.55, 0.1, 1.9, silver, 0.012);
+    label(
+      shell,
+      part.name +
+        '\n' +
+        (part.shape === 'mosfet'
+          ? 'MOSFET'
+          : part.shape === 'to263'
+            ? 'D2PAK'
+            : ''),
+      0,
+      0.62,
+      0.3,
+      1.45,
+      0.98,
+    );
+    for (let i = 0; i < part.pins; i++) {
+      const pin = box(
+        g,
+        0.13,
+        0.1,
+        part.shape === 'to263' ? 0.62 : 1.7,
+        (i - (part.pins - 1) / 2) * (part.pins === 5 ? 0.33 : 0.55),
+        0.1,
+        part.shape === 'to263' ? 1.3 : 1.9,
+        silver,
+        0.012,
+      );
+      pin.userData.terminal = true;
+    }
     box(g, 0.5, 0.06, 0.5, 0, 0.09, 0.15, material('#577f96', 0.7, 0.15));
     markers.push(
-      { label: '散热片与安装孔', point: new THREE.Vector3(0, 0.1, -1.3) },
-      { label: '3 个连接引脚', point: new THREE.Vector3(0.65, 0.2, 2.45) },
+      {
+        label: part.shape === 'to263' ? '金属散热焊盘' : '散热片与安装孔',
+        point: new THREE.Vector3(0, 0.1, -1.3),
+      },
+      {
+        label: part.pins + ' 个连接引脚',
+        point: new THREE.Vector3(0.65, 0.2, 2.45),
+      },
     );
     return { group: g, markers };
   }
   const dip = part.shape === 'dip',
-    sop = ['soic', 'tssop', 'sot23'].includes(part.shape),
+    sop = ['soic', 'tssop', 'sot23', 'sot236'].includes(part.shape),
     qfn = part.shape === 'qfn',
     bga = part.shape === 'bga',
     sot = part.shape === 'sot223';
@@ -811,7 +1255,7 @@ export function createModel(part: Part): Model {
         : bga
           ? 'BGA  ·  TOP'
           : part.kind === 'mcu'
-            ? '2609   ARM'
+            ? '2609   MCU'
             : '2609  LOT A'),
     0,
     baseY + h + 0.038,
@@ -867,15 +1311,22 @@ export function createModel(part: Part): Model {
   };
   if (bga) {
     const ball = new THREE.SphereGeometry(0.059, 10, 8);
-    const balls = new THREE.InstancedMesh(ball, silver, 324),
+    const balls = new THREE.InstancedMesh(ball, silver, part.pins),
       matrix = new THREE.Matrix4();
-    for (let i = 0; i < 18; i++)
-      for (let j = 0; j < 18; j++) {
-        matrix.makeTranslation((i - 8.5) * 0.127, 0.018, (j - 8.5) * 0.127);
-        balls.setMatrixAt(i * 18 + j, matrix);
-      }
+    let ballRows = Math.floor(Math.sqrt(part.pins));
+    while (part.pins % ballRows !== 0) ballRows--;
+    const ballCols = part.pins / ballRows;
+    const ballPitch = 2.16 / Math.max(ballRows - 1, ballCols - 1, 1);
+    for (let i = 0; i < part.pins; i++) {
+      matrix.makeTranslation(
+        ((i % ballCols) - (ballCols - 1) / 2) * ballPitch,
+        0.018,
+        (Math.floor(i / ballCols) - (ballRows - 1) / 2) * ballPitch,
+      );
+      balls.setMatrixAt(i, matrix);
+    }
     balls.instanceMatrix.needsUpdate = true;
-    balls.userData.balls = 324;
+    balls.userData.balls = part.pins;
     g.add(balls);
     box(
       g,
@@ -915,7 +1366,10 @@ export function createModel(part: Part): Model {
     }
     if (qfn) box(g, w * 0.57, 0.06, d * 0.57, 0, 0.04, 0, silver, 0.008);
   }
-  if (part.id === 'drv8833')
+  if (
+    part.id === 'drv8833' ||
+    (!qfn && /裸露|PowerPAD|ESOP/.test(part.package))
+  )
     box(g, w * 0.57, 0.06, d * 0.57, 0, 0.04, 0, silver, 0.008);
   if (part.id === 'pc817') {
     const optical = movable(g, 0, 0.35);
@@ -993,7 +1447,7 @@ export function createModel(part: Part): Model {
         material((i + j) % 2 ? '#6b9aab' : '#9285a2', 0.68, 0.32),
         0,
       );
-  for (let side of [-1, 1])
+  for (const side of [-1, 1])
     for (let i = 0; i < Math.min(rows, 10); i++) {
       const zz =
         (i - (Math.min(rows, 10) - 1) / 2) *

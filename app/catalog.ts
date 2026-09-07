@@ -1,4 +1,7 @@
-export type Kind = 'ic' | 'mcu' | 'module';
+import analogData from './data/analog.json' with { type: 'json' };
+import digitalData from './data/digital.json' with { type: 'json' };
+import basicData from './data/basic.json' with { type: 'json' };
+export type Kind = 'ic' | 'mcu' | 'module' | 'basic';
 export type Shape =
   | 'dip'
   | 'soic'
@@ -14,7 +17,88 @@ export type Shape =
   | 'uno'
   | 'pico'
   | 'sensor'
-  | 'radio';
+  | 'radio'
+  | 'diode'
+  | 'glassdiode'
+  | 'sma'
+  | 'bjt'
+  | 'mosfet'
+  | 'led'
+  | 'rgbled'
+  | 'tactile'
+  | 'slideswitch'
+  | 'usbc'
+  | 'jst'
+  | 'header'
+  | 'terminal'
+  | 'resistor'
+  | 'ceramic'
+  | 'electrolytic'
+  | 'sot236'
+  | 'to263'
+  | 'to2205'
+  | 'chipresistor'
+  | 'mlcc'
+  | 'tantalum'
+  | 'smdcan'
+  | 'powerinductor'
+  | 'chipinductor'
+  | 'bead'
+  | 'ptcfuse'
+  | 'fuse'
+  | 'crystal'
+  | 'oscillator'
+  | 'relay'
+  | 'signalrelay'
+  | 'bridge'
+  | 'mov'
+  | 'ntc'
+  | 'potentiometer'
+  | 'transformer'
+  | 'commonchoke'
+  | 'rj45'
+  | 'ffc'
+  | 'idc'
+  | 'housing'
+  | 'crimp'
+  | 'coax'
+  | 'dsub'
+  | 'powerjack'
+  | 'femaleheader'
+  | 'automotive'
+  | 'fuseholder'
+  | 'bladefuse'
+  | 'sevenseg'
+  | 'dipswitch'
+  | 'buzzer'
+  | 'slotopto'
+  | 'photodiode'
+  | 'antenna'
+  | 'modulebox'
+  | 'film'
+  | 'safetycap'
+  | 'thermistor'
+  | 'gasdischarge'
+  | 'resistorarray'
+  | 'shunt'
+  | 'feedthrough'
+  | 'sensorcan'
+  | 'powermodule'
+  | 'tss'
+  | 'balun'
+  | 'rf_filter'
+  | 'smdrgb'
+  | 'ambientlight'
+  | 'irreceiver'
+  | 'reflective'
+  | 'phototransistor'
+  | 'irled'
+  | 'axialinductor'
+  | 'radialmlcc'
+  | 'ceramicresonator'
+  | 'solderterminal'
+  | 'faston'
+  | 'pluggable';
 export type Part = {
   id: string;
   name: string;
@@ -37,6 +121,7 @@ export const kindLabels: Record<Kind, string> = {
   ic: '集成电路',
   mcu: '单片机',
   module: '模块与开发板',
+  basic: '基础器件',
 };
 export const parts: Part[] = [
   {
@@ -876,6 +961,9 @@ export const parts: Part[] = [
     ],
     source: 'https://www.ti.com/product/TPS61040',
   },
+  ...(basicData as Part[]),
+  ...(digitalData as Part[]),
+  ...(analogData as Part[]),
 ];
 export const packageInfo: Record<
   string,
@@ -960,3 +1048,59 @@ export const packageInfo: Record<
     mount: '表面贴装',
   },
 };
+
+Object.assign(packageInfo, {
+  glassdiode: {
+    title: 'DO-35',
+    name: '玻璃轴向封装',
+    description:
+      '小型玻璃管封装，两端引线沿同一轴伸出，色环帮助识别二极管阴极。',
+    feature: '玻璃外壳 · 轴向引线 · 阴极色环',
+    mount: '通孔安装',
+  },
+  diode: {
+    title: 'DO-41',
+    name: '塑封轴向封装',
+    description: '常见于整流二极管，塑料本体与轴向引线便于通孔焊接。',
+    feature: '塑料圆柱 · 双端引线 · 阴极标记',
+    mount: '通孔安装',
+  },
+  sma: {
+    title: 'SMA / DO-214AC',
+    name: '贴片二极管封装',
+    description: '两端金属端子焊接在 PCB 表面。本体上的色条通常标记阴极方向。',
+    feature: '矩形本体 · 两端金属片 · 极性条纹',
+    mount: '表面贴装',
+  },
+  bjt: {
+    title: 'TO-92',
+    name: '小功率直插封装',
+    description:
+      '三引脚塑封器件，外形通常有一个平面和一个弧形背面。可用于三极管、稳压器和传感器。',
+    feature: '半圆柱本体 · 平面丝印 · 三脚定义随型号',
+    mount: '通孔安装',
+  },
+  sot236: {
+    title: 'SOT-23-6',
+    name: '六引脚微型封装',
+    description: '每侧三脚的小型贴片封装，常见于电源、转换器、接口和保护芯片。',
+    feature: '小本体 · 双侧各三脚',
+    mount: '表面贴装',
+  },
+  to263: {
+    title: 'TO-263-5',
+    name: 'D²PAK 功率贴片封装',
+    description:
+      '具有大面积金属散热端的功率封装，用于开关稳压器等器件。散热端的电气连接需查具体型号。',
+    feature: '金属散热底面 · 五个信号引脚 · 功率器件',
+    mount: '表面贴装',
+  },
+  to2205: {
+    title: 'Pentawatt-5',
+    name: '五引脚功率封装',
+    description:
+      '五根引脚与金属散热背板构成的功率器件封装，可用于音频功率放大器。',
+    feature: '五脚 · 散热片 · 安装孔',
+    mount: '通孔安装',
+  },
+});

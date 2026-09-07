@@ -1,0 +1,5286 @@
+{
+  "esp32dev": {
+    "name": "ESP32 DevKitC V4",
+    "subtitle": "Wi-Fi / Bluetooth development board",
+    "family": "Wireless connectivity",
+    "package": "Development board · 38P",
+    "description": "A miniature controller board that connects to a network. It combines an ESP32 module, a USB-to-UART bridge, power circuitry, and pin headers so programming can begin over a computer connection.",
+    "specs": [
+      [
+        "Core",
+        "ESP32"
+      ],
+      [
+        "Wireless",
+        "Wi-Fi + BT"
+      ],
+      [
+        "GPIO logic level",
+        "3.3 V"
+      ],
+      [
+        "Programming interface",
+        "Micro USB"
+      ]
+    ],
+    "uses": [
+      "Smart homes",
+      "IoT devices",
+      "Wireless sensors"
+    ],
+    "tip": "The silver shield covers the wireless module; the meandering copper trace at the board edge is the antenna. Keep large metal objects away from the antenna.",
+    "pinNotes": [
+      [
+        "3V3 / GND",
+        "3.3 V power and common ground."
+      ],
+      [
+        "GPIO",
+        "Programmable inputs and outputs; some pins have boot, Flash, or input-only restrictions."
+      ],
+      [
+        "TX / RX",
+        "Serial transmit and receive for debugging and communication."
+      ],
+      [
+        "EN / BOOT",
+        "EN resets the chip; BOOT selects firmware download mode."
+      ]
+    ],
+    "steps": [
+      "Connect to a computer over USB and install an ESP32 development environment.",
+      "Write a program to control an LED or read a sensor.",
+      "Send the collected data over Wi-Fi."
+    ]
+  },
+  "stm32": {
+    "name": "STM32F103C8T6",
+    "subtitle": "32-bit Arm microcontroller",
+    "family": "Control and computing",
+    "package": "LQFP-48",
+    "description": "A microcontroller integrating a processor, memory, and multiple peripherals. A program reads inputs, makes decisions, and controls external devices such as lights and motors.",
+    "specs": [
+      [
+        "Processor",
+        "Cortex-M3"
+      ],
+      [
+        "Maximum clock",
+        "72 MHz"
+      ],
+      [
+        "Flash",
+        "64 KB"
+      ],
+      [
+        "Supply",
+        "2.0–3.6 V"
+      ]
+    ],
+    "uses": [
+      "Motor control",
+      "Industrial instruments",
+      "Embedded development"
+    ],
+    "tip": "Fine leads extending from all four sides identify the LQFP package. The dot marks pin 1; confirm that the datasheet drawing is a top view.",
+    "pinNotes": [
+      [
+        "VDD / VSS",
+        "Digital power and ground; place decoupling capacitors near every supply pair."
+      ],
+      [
+        "PAx / PBx / PCx",
+        "General-purpose I/O; many pins also serve serial, timer, and other peripheral functions."
+      ],
+      [
+        "SWDIO / SWCLK",
+        "Firmware programming and in-circuit debugging."
+      ],
+      [
+        "NRST / BOOT0",
+        "Reset and boot-mode selection."
+      ]
+    ],
+    "steps": [
+      "Provide stable power, decoupling, and boot configuration.",
+      "Program the device through SWD using an ST-LINK.",
+      "Configure GPIO or a timer to light an LED."
+    ]
+  },
+  "ne555": {
+    "name": "NE555P",
+    "subtitle": "Classic timer",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "Uses resistors and a capacitor to set a delay or generate continuous pulses. It provides an accessible introduction to oscillation, timing, and duty cycle.",
+    "specs": [
+      [
+        "Channels",
+        "1"
+      ],
+      [
+        "Supply",
+        "4.5–16 V"
+      ],
+      [
+        "Pin count",
+        "8"
+      ],
+      [
+        "Mounting",
+        "Through-hole"
+      ]
+    ],
+    "uses": [
+      "Blinking LEDs",
+      "Delay switches",
+      "Pulse generators"
+    ],
+    "tip": "With the notch at the top in a top view, pin 1 is at the upper left and numbering proceeds counterclockwise. A common DIP pitch is 2.54 mm, convenient for breadboards.",
+    "pinNotes": [
+      [
+        "1 GND · 8 VCC",
+        "Power ground and positive supply."
+      ],
+      [
+        "2 TRIG · 6 THRES",
+        "Trigger and threshold inputs sense capacitor voltage."
+      ],
+      [
+        "3 OUT · 7 DISCH",
+        "Signal output and capacitor discharge terminal."
+      ],
+      [
+        "4 RESET · 5 CONT",
+        "Active-low reset and control-voltage input."
+      ]
+    ],
+    "steps": [
+      "Build the astable oscillator from the datasheet.",
+      "The capacitor repeatedly charges and discharges, producing high and low output levels.",
+      "Change the resistance or capacitance and observe the LED flash period."
+    ]
+  },
+  "lm358": {
+    "name": "LM358D",
+    "subtitle": "Dual operational amplifier",
+    "family": "Analog and signals",
+    "package": "SOIC-8",
+    "description": "Contains two operational amplifiers. Feedback resistors let it amplify small sensor signals or form filters and voltage followers.",
+    "specs": [
+      [
+        "Channels",
+        "2"
+      ],
+      [
+        "GBW (typical)",
+        "0.7 MHz"
+      ],
+      [
+        "Supply",
+        "3–30 V"
+      ],
+      [
+        "Mounting",
+        "Surface-mount"
+      ]
+    ],
+    "uses": [
+      "Sensor signal amplification",
+      "Active filtering",
+      "Voltage buffering"
+    ],
+    "tip": "SOIC leads bend outward into a gull-wing profile. Check both the input common-mode range and output swing when designing the circuit.",
+    "pinNotes": [
+      [
+        "1 OUT1 · 7 OUT2",
+        "Outputs of the two amplifiers."
+      ],
+      [
+        "2 IN− · 3 IN+",
+        "Inverting and noninverting inputs of amplifier 1."
+      ],
+      [
+        "5 IN+ · 6 IN−",
+        "Noninverting and inverting inputs of amplifier 2."
+      ],
+      [
+        "4 V− · 8 V+",
+        "Negative supply or ground, and positive supply."
+      ]
+    ],
+    "steps": [
+      "Connect the sensor voltage to the noninverting input.",
+      "Use resistors to establish negative feedback and set closed-loop gain.",
+      "Feed the amplified signal to an ADC."
+    ]
+  },
+  "atmega": {
+    "name": "ATmega328P-PU",
+    "subtitle": "8-bit AVR microcontroller",
+    "family": "Control and computing",
+    "package": "DIP-28",
+    "description": "The main controller used by the classic Arduino Uno. It executes programs, reads analog voltages, generates PWM, and communicates with other chips over serial interfaces.",
+    "specs": [
+      [
+        "Architecture",
+        "8-bit AVR"
+      ],
+      [
+        "Flash",
+        "32 KB"
+      ],
+      [
+        "SRAM",
+        "2 KB"
+      ],
+      [
+        "Maximum frequency*",
+        "20 MHz"
+      ]
+    ],
+    "uses": [
+      "Arduino learning",
+      "Simple automation",
+      "Interactive installations"
+    ],
+    "tip": "The model shows the 28-pin DIP version; other packages are available. Operation at 20 MHz requires a 4.5–5.5 V supply; check the speed grade for other voltages.",
+    "pinNotes": [
+      [
+        "VCC / AVCC / GND",
+        "Digital and analog power, and common ground."
+      ],
+      [
+        "PB / PC / PD",
+        "Three I/O ports; selected pins support ADC, PWM, or communications."
+      ],
+      [
+        "RESET",
+        "Active-low reset, also used during ISP programming."
+      ],
+      [
+        "XTAL1 / XTAL2",
+        "External crystal connections."
+      ]
+    ],
+    "steps": [
+      "Provide power, decoupling, and the required clock circuit.",
+      "Program through ISP or download using a bootloader.",
+      "Read a button and use PWM to vary LED brightness."
+    ]
+  },
+  "wroom": {
+    "name": "ESP32-WROOM-32E",
+    "subtitle": "Wi-Fi / Bluetooth module",
+    "family": "Wireless connectivity",
+    "package": "Module · 38P",
+    "description": "Integrates the ESP32 chip, Flash, crystal, and RF circuitry on a small board. A metal shield helps reduce electromagnetic interference, while the PCB antenna transmits and receives radio signals.",
+    "specs": [
+      [
+        "Processor",
+        "Dual-core Xtensa"
+      ],
+      [
+        "Maximum clock",
+        "240 MHz"
+      ],
+      [
+        "Supply",
+        "3.0–3.6 V"
+      ],
+      [
+        "Contacts",
+        "38"
+      ]
+    ],
+    "uses": [
+      "Connected terminals",
+      "Smart plugs",
+      "Wireless gateways"
+    ],
+    "tip": "The module provides RF circuitry; a complete development board also requires power, a programming interface, and connectors. Preserve the antenna clearance specified by the official guide.",
+    "pinNotes": [
+      [
+        "3V3 / GND",
+        "Module power connections."
+      ],
+      [
+        "EN",
+        "Chip enable; a low level resets the chip."
+      ],
+      [
+        "GPIO",
+        "General-purpose I/O; check alternate functions and boot restrictions before use."
+      ],
+      [
+        "TXD0 / RXD0",
+        "UART0 for programming and logging."
+      ]
+    ],
+    "steps": [
+      "Provide a stable 3.3 V supply on the carrier board.",
+      "Reserve antenna clearance according to the recommended layout.",
+      "Connect the programming interface and run a wireless application."
+    ]
+  },
+  "rp2040": {
+    "name": "RP2040",
+    "subtitle": "Dual-core Arm microcontroller",
+    "family": "Control and computing",
+    "package": "QFN-56",
+    "description": "A dual-core Arm Cortex-M0+ MCU with programmable I/O (PIO). RP2040 uses external Flash to store programs; the Pico board integrates this memory.",
+    "specs": [
+      [
+        "Processor",
+        "Dual-core Cortex-M0+"
+      ],
+      [
+        "Maximum clock",
+        "133 MHz"
+      ],
+      [
+        "SRAM",
+        "264 KB"
+      ],
+      [
+        "Package body",
+        "7 × 7 mm"
+      ]
+    ],
+    "uses": [
+      "Pico development boards",
+      "Custom keyboards",
+      "Real-time I/O control"
+    ],
+    "tip": "Rotate the model to inspect its underside pads and center pad. RP2040 programs are usually stored in external Flash.",
+    "pinNotes": [
+      [
+        "IOVDD / GND",
+        "I/O power and ground. Follow the official hardware guide for power domains and decoupling."
+      ],
+      [
+        "GPIO0–29",
+        "General-purpose I/O supporting several alternate peripheral functions."
+      ],
+      [
+        "QSPI",
+        "Connects external Flash for program storage."
+      ],
+      [
+        "USB / SWD",
+        "USB communication and serial-wire debugging."
+      ]
+    ],
+    "steps": [
+      "Store the program in external QSPI Flash.",
+      "The two processor cores execute tasks after startup.",
+      "Use PIO state machines to generate precise interface timing."
+    ]
+  },
+  "am3358": {
+    "name": "AM3358BZCZ60",
+    "subtitle": "Arm application processor",
+    "family": "Control and computing",
+    "package": "NFBGA-324",
+    "description": "An Arm Cortex-A8 application processor with graphics and peripheral interfaces for embedded systems running Linux. BGA describes its solder-ball connections; the system also requires external memory, power, and supporting circuitry.",
+    "specs": [
+      [
+        "Processor",
+        "Cortex-A8"
+      ],
+      [
+        "This part speed grade",
+        "600 MHz"
+      ],
+      [
+        "Solder balls",
+        "324"
+      ],
+      [
+        "Package body",
+        "15 × 15 mm"
+      ]
+    ],
+    "uses": [
+      "Linux single-board computers",
+      "Industrial human-machine interfaces",
+      "Edge gateways"
+    ],
+    "tip": "This is an application-processor example. Rotate it to inspect the 18 × 18 ball array; use the specific device documentation for wiring and ball assignments.",
+    "pinNotes": [
+      [
+        "DDR interface",
+        "Connects external working memory."
+      ],
+      [
+        "Boot interface",
+        "Loads the bootloader from the selected storage device."
+      ],
+      [
+        "Power domains",
+        "The processor core, I/O, and other domains have separate supply requirements."
+      ],
+      [
+        "Ball coordinates",
+        "BGA drawings commonly use letters and numbers to locate balls; check the drawing orientation."
+      ]
+    ],
+    "steps": [
+      "The power-management IC powers each domain in the required sequence.",
+      "The bootloader initializes external DDR and other hardware.",
+      "The operating system runs applications and manages network and display peripherals."
+    ]
+  },
+  "7805": {
+    "name": "L7805CV",
+    "subtitle": "5 V linear regulator",
+    "family": "Power and drivers",
+    "package": "TO-220",
+    "description": "Regulates a DC input with sufficient headroom to 5 V. A linear regulator dissipates the input-to-output voltage drop as heat, so load capability depends on cooling.",
+    "specs": [
+      [
+        "Fixed output",
+        "5 V"
+      ],
+      [
+        "Pin count",
+        "3"
+      ],
+      [
+        "Regulator type",
+        "Linear"
+      ],
+      [
+        "Mounting",
+        "Through-hole"
+      ]
+    ],
+    "uses": [
+      "5 V supplies",
+      "Small controller boards",
+      "Linear power experiments"
+    ],
+    "tip": "The metal tab and mounting hole assist heat dissipation. Power loss is approximately (input voltage − output voltage) × current; assess temperature rise for the load.",
+    "pinNotes": [
+      [
+        "1 INPUT",
+        "The input must provide the headroom required by the datasheet."
+      ],
+      [
+        "2 GND",
+        "Common ground; this model’s metal tab also connects to ground."
+      ],
+      [
+        "3 OUTPUT",
+        "Regulated 5 V output."
+      ]
+    ],
+    "steps": [
+      "Apply the DC input to the regulator.",
+      "The internal feedback loop regulates the output to 5 V.",
+      "Check headroom and load, then calculate cooling needs."
+    ]
+  },
+  "ams1117": {
+    "name": "AMS1117-3.3",
+    "subtitle": "3.3 V low-dropout regulator",
+    "family": "Power and drivers",
+    "package": "SOT-223",
+    "description": "Provides a fixed 3.3 V low-dropout linear output. Current, dropout, and output-capacitor requirements depend on the manufacturer; this exhibit uses UMW documentation.",
+    "specs": [
+      [
+        "Fixed output",
+        "3.3 V"
+      ],
+      [
+        "Manufacturer",
+        "UMW"
+      ],
+      [
+        "Package",
+        "SOT-223"
+      ],
+      [
+        "Conversion",
+        "Linear"
+      ]
+    ],
+    "uses": [
+      "Development-board supplies",
+      "3.3 V sensors",
+      "Power conversion"
+    ],
+    "tip": "Three small leads lie on one side, with a wide metal heat-dissipation tab on the other.",
+    "pinNotes": [
+      [
+        "1 GND",
+        "Ground on the fixed-output version."
+      ],
+      [
+        "2 OUTPUT / TAB",
+        "The output and large tab are electrically connected."
+      ],
+      [
+        "3 INPUT",
+        "Input; required headroom depends on load and dropout specifications."
+      ]
+    ],
+    "steps": [
+      "Use an input capacitor to stabilize the upstream supply.",
+      "The chip adjusts its internal pass element to maintain 3.3 V.",
+      "Select the output capacitor from the datasheet and provide sufficient heat-spreading copper."
+    ]
+  },
+  "drv8833": {
+    "name": "DRV8833PWPR",
+    "subtitle": "Dual H-bridge motor driver",
+    "family": "Power and drivers",
+    "package": "HTSSOP-16",
+    "description": "Two internal H-bridges reverse winding current to drive two DC motors or one bipolar stepper motor. Sustainable current depends on package, supply, and cooling; peak and continuous ratings describe different conditions.",
+    "specs": [
+      [
+        "Drive channels",
+        "Dual H-bridge"
+      ],
+      [
+        "Motor supply",
+        "2.7–10.8 V"
+      ],
+      [
+        "Pin count",
+        "16"
+      ],
+      [
+        "Cooling",
+        "Bottom thermal pad"
+      ]
+    ],
+    "uses": [
+      "Robot-car motors",
+      "Small stepper motors",
+      "Motorized toys"
+    ],
+    "tip": "Inspect the thermal pad on the underside. Consider motor supply, current, cooling, and recirculation-current layout together.",
+    "pinNotes": [
+      [
+        "VM / GND",
+        "Motor supply and common ground."
+      ],
+      [
+        "AIN / BIN",
+        "Control inputs from the controller."
+      ],
+      [
+        "AOUT / BOUT",
+        "Power outputs connected to motor windings."
+      ],
+      [
+        "nSLEEP / nFAULT",
+        "Sleep control and fault indication."
+      ]
+    ],
+    "steps": [
+      "The MCU supplies direction signals and PWM.",
+      "The H-bridges reverse current to change motor direction.",
+      "The chip detects faults while the thermal design supports continuous operation."
+    ]
+  },
+  "ch340": {
+    "name": "CH340G",
+    "subtitle": "USB-to-UART bridge",
+    "family": "Communication and interfaces",
+    "package": "SOP-16",
+    "description": "Transfers data between USB and a UART serial port. The G-suffix version uses an external clock component; other CH340 suffixes have their own packages and features.",
+    "specs": [
+      [
+        "USB",
+        "Full-speed USB"
+      ],
+      [
+        "Output interface",
+        "UART"
+      ],
+      [
+        "External crystal",
+        "12 MHz"
+      ],
+      [
+        "Pin count",
+        "16"
+      ]
+    ],
+    "uses": [
+      "Development-board programming",
+      "Serial debugging",
+      "USB-to-TTL adapters"
+    ],
+    "tip": "There are eight surface-mount leads on each side; a CH340G circuit usually has an external crystal nearby.",
+    "pinNotes": [
+      [
+        "UD+ / UD−",
+        "USB differential data lines."
+      ],
+      [
+        "TXD / RXD",
+        "UART transmit and receive."
+      ],
+      [
+        "XI / XO",
+        "CH340G external-crystal connections."
+      ],
+      [
+        "VCC / V3 / GND",
+        "Follow the selected power-supply arrangement for these connections."
+      ]
+    ],
+    "steps": [
+      "The computer enumerates a serial device over USB.",
+      "The chip converts between USB packets and UART bit streams.",
+      "The MCU receives commands or outputs logs through UART."
+    ]
+  },
+  "max3232": {
+    "name": "MAX3232IPWR",
+    "subtitle": "RS-232 level converter",
+    "family": "Communication and interfaces",
+    "package": "TSSOP-16",
+    "description": "Converts between logic-level serial signals and RS-232 levels, with two drivers and two receivers. UART describes data timing; RS-232 also specifies electrical signaling, so the levels must match the connected interface.",
+    "specs": [
+      [
+        "Supply",
+        "3–5.5 V"
+      ],
+      [
+        "Drivers / receivers",
+        "2 / 2"
+      ],
+      [
+        "Data-rate grade",
+        "250 kbit/s"
+      ],
+      [
+        "Voltage generation",
+        "Charge pump"
+      ]
+    ],
+    "uses": [
+      "Industrial serial ports",
+      "Instrument communication",
+      "RS-232 conversion"
+    ],
+    "tip": "UART describes serial data transfer, while RS-232 defines interface electrical characteristics. Check both endpoints’ voltage standards before connecting them.",
+    "pinNotes": [
+      [
+        "TIN / ROUT",
+        "Logic-level system side."
+      ],
+      [
+        "TOUT / RIN",
+        "RS-232 signal side."
+      ],
+      [
+        "C1± / C2±",
+        "External charge-pump capacitor connections."
+      ],
+      [
+        "VCC / GND",
+        "Power and ground."
+      ]
+    ],
+    "steps": [
+      "The controller produces logic-level serial signals.",
+      "The charge pump generates positive and negative conversion voltages.",
+      "The transceiver communicates with external equipment at RS-232 levels."
+    ]
+  },
+  "w25q": {
+    "name": "W25Q32JVSSIQ",
+    "subtitle": "32 Mbit serial Flash",
+    "family": "Memory and timing",
+    "package": "Wide-body SOP-8",
+    "description": "Stores 32 Mbit through SPI, Dual, or Quad interfaces and retains the data without power. 32 Mbit equals 4 MiB; erase and program operations follow device-specific block and page rules.",
+    "specs": [
+      [
+        "Capacity",
+        "32 Mbit / 4 MB"
+      ],
+      [
+        "Interface",
+        "SPI / Quad SPI"
+      ],
+      [
+        "Supply",
+        "2.7–3.6 V"
+      ],
+      [
+        "Body width",
+        "208 mil"
+      ]
+    ],
+    "uses": [
+      "Firmware storage",
+      "Resource files",
+      "Boot code"
+    ],
+    "tip": "32 Mbit equals 4 MB. A byte contains eight bits; this model uses the 208 mil wide-body SOP-8 version.",
+    "pinNotes": [
+      [
+        "CS# / CLK",
+        "Chip select and serial clock."
+      ],
+      [
+        "IO0–IO3",
+        "Serial data pins whose functions depend on interface mode."
+      ],
+      [
+        "VCC / GND",
+        "Power and ground."
+      ],
+      [
+        "Program / erase",
+        "Flash is programmed by page; updates may require sector erasure first."
+      ]
+    ],
+    "steps": [
+      "The controller sends a read command and address over SPI.",
+      "The chip returns data from that address.",
+      "Follow the erase-and-program sequence when updating data."
+    ]
+  },
+  "24lc256": {
+    "name": "24LC256-I/P",
+    "subtitle": "I²C EEPROM",
+    "family": "Memory and timing",
+    "package": "DIP-8",
+    "description": "Stores 256 Kbit over I²C with electrical erase/write and power-off retention. 256 Kbit equals 32 KiB; write endurance and write-cycle time have specified limits.",
+    "specs": [
+      [
+        "Capacity",
+        "256 Kbit / 32 KB"
+      ],
+      [
+        "Interface",
+        "I²C"
+      ],
+      [
+        "Supply",
+        "2.5–5.5 V"
+      ],
+      [
+        "Page size",
+        "64 byte"
+      ]
+    ],
+    "uses": [
+      "Saved settings",
+      "Calibration data",
+      "Device configuration"
+    ],
+    "tip": "EEPROM suits small amounts of configuration data. Write endurance and cycle time influence software design.",
+    "pinNotes": [
+      [
+        "SDA / SCL",
+        "I²C data and clock lines with suitable pull-ups."
+      ],
+      [
+        "A0–A2",
+        "Address selection allows multiple devices on one bus."
+      ],
+      [
+        "WP",
+        "Hardware write protection."
+      ],
+      [
+        "VCC / VSS",
+        "Power and ground."
+      ]
+    ],
+    "steps": [
+      "The controller selects the device address and memory location.",
+      "Write the configuration data and wait for the write cycle to finish.",
+      "Read the retained data when the device powers up again."
+    ]
+  },
+  "ds3231": {
+    "name": "DS3231SN#",
+    "subtitle": "High-accuracy real-time clock",
+    "family": "Memory and timing",
+    "package": "Wide-body SOIC-16",
+    "description": "Provides date and time over I²C using an integrated temperature-compensated crystal oscillator and supports battery backup. A suitable backup supply keeps time after the main supply is removed.",
+    "specs": [
+      [
+        "Interface",
+        "I²C"
+      ],
+      [
+        "Internal clock",
+        "Temperature-compensated crystal"
+      ],
+      [
+        "Main supply",
+        "2.3–5.5 V"
+      ],
+      [
+        "Body width",
+        "300 mil"
+      ]
+    ],
+    "uses": [
+      "Electronic clocks",
+      "Timed logging",
+      "Device timestamps"
+    ],
+    "tip": "The temperature-compensated crystal is integrated. The package is 300 mil wide, and the backup-battery connection sustains timekeeping.",
+    "pinNotes": [
+      [
+        "SDA / SCL",
+        "Read and set the date and time."
+      ],
+      [
+        "VBAT",
+        "Backup supply input for timekeeping after main power is removed."
+      ],
+      [
+        "INT / SQW",
+        "Alarm interrupt or square-wave output."
+      ],
+      [
+        "VCC / GND",
+        "Main power and ground."
+      ]
+    ],
+    "steps": [
+      "Set the correct date and time.",
+      "The internal compensated crystal maintains time.",
+      "The controller reads the clock periodically or responds to an alarm interrupt."
+    ]
+  },
+  "hc595": {
+    "name": "SN74HC595N",
+    "subtitle": "8-bit shift register",
+    "family": "Digital logic",
+    "package": "DIP-16",
+    "description": "Receives serial data one bit per clock, then updates eight parallel outputs through a latch. The shift register holds incoming data while the output latch controls when the whole output group changes.",
+    "specs": [
+      [
+        "Output bits",
+        "8"
+      ],
+      [
+        "Input",
+        "Serial"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ],
+      [
+        "Cascading",
+        "Supported"
+      ]
+    ],
+    "uses": [
+      "LED arrays",
+      "Seven-segment displays",
+      "I/O expansion"
+    ],
+    "tip": "Eight through-hole leads run along each side; the top marking includes 74HC595.",
+    "pinNotes": [
+      [
+        "SER / SRCLK",
+        "Serial data and shift clock."
+      ],
+      [
+        "RCLK",
+        "Latches shift-register data into the outputs."
+      ],
+      [
+        "QA–QH",
+        "Eight parallel outputs; observe their load-current ratings."
+      ],
+      [
+        "OE# / SRCLR#",
+        "Output enable and shift-register clear."
+      ]
+    ],
+    "steps": [
+      "The MCU sends eight data bits sequentially.",
+      "Each shift-clock edge moves data into the register.",
+      "A latch operation updates all eight outputs together."
+    ]
+  },
+  "hc00": {
+    "name": "SN74HC00N",
+    "subtitle": "Quad 2-input NAND gate",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "Contains four independent two-input NAND gates; the output goes low when both inputs are high. Logic gates map input levels to defined outputs, and a truth table lists every input combination.",
+    "specs": [
+      [
+        "Logic gates",
+        "4 × NAND"
+      ],
+      [
+        "Inputs per gate",
+        "2"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ],
+      [
+        "Output",
+        "Digital logic level"
+      ]
+    ],
+    "uses": [
+      "Logic experiments",
+      "Combinational logic",
+      "Signal control"
+    ],
+    "tip": "Seven through-hole leads run along each side; 74HC00 identifies the logic family and gate function.",
+    "pinNotes": [
+      [
+        "A / B",
+        "Two inputs for each gate."
+      ],
+      [
+        "Y",
+        "NAND result: low only when both inputs are high."
+      ],
+      [
+        "VCC / GND",
+        "Power and ground."
+      ],
+      [
+        "Unused inputs",
+        "Tie unused CMOS inputs to valid logic levels as directed by the datasheet."
+      ]
+    ],
+    "steps": [
+      "Apply a defined high or low level to each input.",
+      "Observe all four input combinations.",
+      "Record the outputs to build the NAND truth table."
+    ]
+  },
+  "pc817": {
+    "name": "PC817X2NSZ1B",
+    "subtitle": "Optocoupler",
+    "family": "Isolation and sampling",
+    "package": "DIP-4",
+    "description": "An internal infrared LED drives a phototransistor optically to transfer a signal between two circuits. Current transfer ratio (CTR) has grades and test conditions; isolation performance depends on the device and complete board design.",
+    "specs": [
+      [
+        "Input",
+        "Infrared LED"
+      ],
+      [
+        "Output",
+        "Phototransistor"
+      ],
+      [
+        "Pin count",
+        "4"
+      ],
+      [
+        "Signal coupling",
+        "Light"
+      ]
+    ],
+    "uses": [
+      "Signal isolation",
+      "Switch-state detection",
+      "Power-supply feedback"
+    ],
+    "tip": "An optocoupler contains a light emitter and receiver. CTR is output current divided by input current and varies with grade and operating conditions.",
+    "pinNotes": [
+      [
+        "1 ANODE · 2 CATHODE",
+        "Input LED anode and cathode; add a current-limiting resistor."
+      ],
+      [
+        "4 COLLECTOR · 3 EMITTER",
+        "Output phototransistor collector and emitter."
+      ],
+      [
+        "Isolation boundary",
+        "Design the input and output electrical circuits separately."
+      ]
+    ],
+    "steps": [
+      "Input current lights the internal LED.",
+      "The light turns on the output phototransistor.",
+      "The output circuit detects the change, transferring an isolated signal."
+    ]
+  },
+  "mpu6050": {
+    "name": "MPU-6050",
+    "subtitle": "Six-axis inertial sensor",
+    "family": "Isolation and sampling",
+    "package": "QFN-24",
+    "description": "Measures three-axis acceleration and three-axis angular rate, providing digital data over I²C. Accelerometer readings include gravity; orientation estimation combines sensor data with algorithms.",
+    "specs": [
+      [
+        "Accelerometer",
+        "3 axes"
+      ],
+      [
+        "Gyroscope",
+        "3 axes"
+      ],
+      [
+        "Digital interface",
+        "I²C"
+      ],
+      [
+        "Supply",
+        "2.375–3.46 V"
+      ]
+    ],
+    "uses": [
+      "Orientation sensing",
+      "Motion detection",
+      "Self-balancing robots"
+    ],
+    "tip": "Six axes means three acceleration axes and three angular-rate axes. Long-term orientation estimation involves drift correction and sensor fusion.",
+    "pinNotes": [
+      [
+        "SDA / SCL",
+        "I²C communication interface."
+      ],
+      [
+        "AD0",
+        "Selects the I²C slave address."
+      ],
+      [
+        "INT",
+        "Interrupts for data-ready and other events."
+      ],
+      [
+        "VDD / VLOGIC / GND",
+        "Device power, logic-level reference, and ground."
+      ]
+    ],
+    "steps": [
+      "The accelerometer measures acceleration components along three axes.",
+      "The gyroscope measures angular rate about three axes.",
+      "Software calibrates and fuses the readings to estimate motion and orientation."
+    ]
+  },
+  "mcp3008": {
+    "name": "MCP3008-I/P",
+    "subtitle": "8-channel analog-to-digital converter",
+    "family": "Isolation and sampling",
+    "package": "DIP-16",
+    "description": "Converts eight analog inputs into 10-bit digital results read over SPI. A 10-bit conversion has 1024 codes; the reference voltage and other conditions determine the actual input range.",
+    "specs": [
+      [
+        "Resolution",
+        "10 bit"
+      ],
+      [
+        "Input channels",
+        "8"
+      ],
+      [
+        "Interface",
+        "SPI"
+      ],
+      [
+        "Supply",
+        "2.7–5.5 V"
+      ]
+    ],
+    "uses": [
+      "Potentiometer reading",
+      "Multiple sensors",
+      "Analog signal sampling"
+    ],
+    "tip": "A 10-bit ADC has 1024 quantization levels. Input range, reference quality, and sample rate all influence the result.",
+    "pinNotes": [
+      [
+        "CH0–CH7",
+        "Eight analog input channels."
+      ],
+      [
+        "VREF",
+        "Reference voltage defining the conversion range."
+      ],
+      [
+        "CLK / DIN / DOUT / CS",
+        "SPI clock, data input, data output, and chip select."
+      ],
+      [
+        "AGND / DGND",
+        "Analog and digital grounds; plan their connection according to the datasheet."
+      ]
+    ],
+    "steps": [
+      "Connect the voltage to the chosen channel.",
+      "The controller starts sampling over SPI.",
+      "Read the 10-bit result and convert it to voltage using VREF."
+    ]
+  },
+  "uno": {
+    "name": "Arduino Uno R3",
+    "subtitle": "Classic 8-bit development board",
+    "family": "Development and experiments",
+    "package": "Development board · Uno",
+    "description": "Combines an ATmega328P, USB, power circuitry, and accessible female headers into a beginner development platform. Its 14 digital I/O and six analog inputs describe the board-level interfaces.",
+    "specs": [
+      [
+        "Controller",
+        "ATmega328P"
+      ],
+      [
+        "System clock",
+        "16 MHz"
+      ],
+      [
+        "Logic level",
+        "5 V"
+      ],
+      [
+        "Analog inputs",
+        "6 channels"
+      ]
+    ],
+    "uses": [
+      "Learning programming",
+      "Interactive installations",
+      "Sensor experiments"
+    ],
+    "tip": "The illustration highlights the socketed DIP controller, USB Type-B port, and expansion headers. Follow the Uno R3 pinout for actual wiring.",
+    "pinNotes": [
+      [
+        "Digital 0–13",
+        "Digital I/O; selected pins support PWM."
+      ],
+      [
+        "A0–A5",
+        "Analog inputs that can also serve as digital I/O."
+      ],
+      [
+        "5V / 3.3V / GND",
+        "Power outputs and ground; observe each rail’s current limit."
+      ],
+      [
+        "USB / ICSP",
+        "Program download, serial communication, and direct programming interfaces."
+      ]
+    ],
+    "steps": [
+      "Connect over USB and select the Uno board.",
+      "Write the setup and loop functions.",
+      "Upload, connect a button or LED, and observe the inputs and outputs."
+    ]
+  },
+  "pico": {
+    "name": "Raspberry Pi Pico",
+    "subtitle": "RP2040 development board",
+    "family": "Development and experiments",
+    "package": "Development board · 40P",
+    "description": "Integrates RP2040, external Flash, power circuitry, and USB for C/C++ and MicroPython projects. The 40-position main interface includes 26 multifunction GPIO plus power, ground, and other pins.",
+    "specs": [
+      [
+        "Controller",
+        "RP2040"
+      ],
+      [
+        "Onboard Flash",
+        "2 MB"
+      ],
+      [
+        "GPIO",
+        "26 channels"
+      ],
+      [
+        "Logic level",
+        "3.3 V"
+      ]
+    ],
+    "uses": [
+      "MicroPython",
+      "USB peripherals",
+      "Programmable I/O"
+    ],
+    "tip": "Castellated board edges allow direct soldering to a carrier, and pin headers can also be fitted. The controller and external Flash are separate devices.",
+    "pinNotes": [
+      [
+        "GP0–GP28",
+        "Exposed GPIO numbering has reserved gaps; consult the pinout."
+      ],
+      [
+        "VSYS / VBUS / 3V3",
+        "System power, USB power, and regulated 3.3 V output."
+      ],
+      [
+        "BOOTSEL",
+        "Hold while connecting USB to enter firmware download mode."
+      ],
+      [
+        "SWD",
+        "Separate debugging interface."
+      ]
+    ],
+    "steps": [
+      "Hold BOOTSEL while connecting USB.",
+      "Copy a UF2 firmware file to the storage device that appears.",
+      "Run a MicroPython or C/C++ program to control peripherals."
+    ]
+  },
+  "gy521": {
+    "name": "GY-521 module",
+    "subtitle": "MPU-6050 sensor breakout board",
+    "family": "Development and experiments",
+    "package": "Module · 8P",
+    "description": "Places an MPU-6050 and supporting power circuitry on a small board with accessible connections. Commercial GY-521 versions vary; confirm supply and logic levels against the actual board and its documentation.",
+    "specs": [
+      [
+        "Core device",
+        "MPU-6050"
+      ],
+      [
+        "Motion sensing",
+        "6 axes"
+      ],
+      [
+        "Signal interface",
+        "I²C"
+      ],
+      [
+        "Board representation",
+        "Generic illustration"
+      ]
+    ],
+    "uses": [
+      "Orientation experiments",
+      "Motion logging",
+      "Robot balancing"
+    ],
+    "tip": "GY-521 boards have multiple manufacturing versions, and this model illustrates a generic form. The documentation link gives functional reference for a similar MPU-6050 module.",
+    "pinNotes": [
+      [
+        "VCC / GND",
+        "Module power and ground; the input range depends on the board’s power design."
+      ],
+      [
+        "SCL / SDA",
+        "Main I²C clock and data."
+      ],
+      [
+        "XDA / XCL",
+        "Auxiliary I²C interface."
+      ],
+      [
+        "AD0 / INT",
+        "Address selection and interrupt signal."
+      ]
+    ],
+    "steps": [
+      "Identify the MPU-6050 and surrounding components.",
+      "Check the module’s logic levels and connect to a controller over I²C.",
+      "Read and calibrate acceleration and angular rate."
+    ]
+  },
+  "nrf24": {
+    "name": "nRF24L01+ module",
+    "subtitle": "2.4 GHz wireless transceiver module",
+    "family": "Wireless connectivity",
+    "package": "Module · 8P",
+    "description": "Receives host data through SPI and communicates with a peer over 2.4 GHz radio. Both ends require compatible protocols and settings; supply quality and antenna layout affect link performance.",
+    "specs": [
+      [
+        "Band",
+        "2.4 GHz"
+      ],
+      [
+        "Control interface",
+        "SPI"
+      ],
+      [
+        "Radio data rate",
+        "Up to 2 Mbit/s"
+      ],
+      [
+        "Chip supply",
+        "1.9–3.6 V"
+      ]
+    ],
+    "uses": [
+      "Wireless remotes",
+      "Short-range data links",
+      "Sensor networks"
+    ],
+    "tip": "The meandering copper trace at the board end is the antenna. Both ends need matching channels, addresses, and data rates to establish a link.",
+    "pinNotes": [
+      [
+        "VCC / GND",
+        "Stable power and ground; decoupling supports transmit-current changes."
+      ],
+      [
+        "SCK / MOSI / MISO / CSN",
+        "SPI configuration and data communication."
+      ],
+      [
+        "CE",
+        "Controls operating states such as receive and transmit."
+      ],
+      [
+        "IRQ",
+        "Interrupts for events such as completed data reception."
+      ]
+    ],
+    "steps": [
+      "Set the channel, address, and data rate through SPI.",
+      "Load data into the transmit buffer.",
+      "The peer module receives the data and passes it to its controller."
+    ]
+  },
+  "tps61040": {
+    "name": "TPS61040DBVR",
+    "subtitle": "Boost DC/DC converter",
+    "family": "Power and drivers",
+    "package": "SOT-23-5",
+    "description": "Uses switching action, an inductor, and a diode to raise a DC input voltage. Feedback resistors set the output voltage, commonly for low-power bias supplies.",
+    "specs": [
+      [
+        "Input",
+        "1.8–6 V"
+      ],
+      [
+        "Switching frequency",
+        "Up to 1 MHz"
+      ],
+      [
+        "Package",
+        "SOT-23-5"
+      ],
+      [
+        "Control",
+        "Switching boost"
+      ]
+    ],
+    "uses": [
+      "LCD bias",
+      "Low-power step-up supplies",
+      "Power electronics learning"
+    ],
+    "tip": "A five-pin SOT-23 has three leads on one side and two on the other. The inductor, diode, and capacitors are essential parts of the boost circuit.",
+    "pinNotes": [
+      [
+        "SW",
+        "Switch node connected to the inductor and rectifier diode."
+      ],
+      [
+        "FB",
+        "Feedback input; a resistor divider sets the target voltage."
+      ],
+      [
+        "VIN / GND",
+        "Input power and ground."
+      ],
+      [
+        "EN",
+        "Enable control."
+      ]
+    ],
+    "steps": [
+      "The inductor stores energy while the switch conducts.",
+      "When the switch opens, the inductor transfers energy to the output through the diode.",
+      "Feedback adjusts switching to maintain the target voltage."
+    ]
+  },
+  "1n4148": {
+    "name": "1N4148",
+    "subtitle": "Glass-packaged fast switching diode",
+    "family": "Diodes",
+    "package": "DO-35",
+    "description": "A small-signal diode for steering, clamping, and fast switching. The black band on its glass body marks cathode K; the electrical data here reference the Vishay 1N4148.",
+    "specs": [
+      [
+        "Maximum DC reverse voltage",
+        "75 V"
+      ],
+      [
+        "Repetitive peak reverse voltage",
+        "100 V"
+      ],
+      [
+        "Maximum average forward current",
+        "150 mA, VR = 0"
+      ],
+      [
+        "Maximum continuous forward current",
+        "300 mA, at 25°C"
+      ]
+    ],
+    "uses": [
+      "Key-matrix signal isolation",
+      "Small-signal clamping",
+      "Fast switching circuits"
+    ],
+    "tip": "Maximum ratings require the associated temperature and power conditions. Start learning experiments at low voltage and current, and check the purchased manufacturer’s datasheet.",
+    "pinNotes": [
+      [
+        "K · Cathode",
+        "The black-banded end. The bar in the circuit symbol also indicates the cathode."
+      ],
+      [
+        "A · Anode",
+        "The opposite end of the glass body; conventional forward current flows from A to K."
+      ],
+      [
+        "Physical identification",
+        "Trimmed lead lengths and mounting orientation vary; cross-check the band using a multimeter’s diode mode."
+      ]
+    ],
+    "steps": [
+      "Locate the black cathode band and match it to K in the schematic.",
+      "With power disconnected, measure both directions in diode mode; forward conduction usually displays a voltage drop.",
+      "Choose connections for the required current, reverse voltage, and dissipation."
+    ]
+  },
+  "1n4007": {
+    "name": "1N4007",
+    "subtitle": "Axial general-purpose rectifier diode",
+    "family": "Diodes",
+    "package": "DO-41",
+    "description": "A black cylindrical body with axial leads, commonly used for power rectification and slow flyback paths. The band marks cathode K; the electrical data here reference the Vishay 1N4007.",
+    "specs": [
+      [
+        "Repetitive peak reverse voltage",
+        "1000 V maximum"
+      ],
+      [
+        "Average rectified current",
+        "1 A, TA = 75°C"
+      ],
+      [
+        "Forward voltage",
+        "≤ 1.1 V, IF = 1 A"
+      ],
+      [
+        "Package",
+        "DO-41 / DO-204AL"
+      ]
+    ],
+    "uses": [
+      "Low-frequency power rectification",
+      "Slow coil flyback paths",
+      "Series reverse-polarity protection"
+    ],
+    "tip": "The 1 A rating includes a 9.5 mm lead-length condition; calculate temperature rise in the actual design. Check reverse-recovery performance for high-frequency switching-supply rectification.",
+    "pinNotes": [
+      [
+        "K · Cathode",
+        "The banded end, corresponding to the bar in the circuit symbol."
+      ],
+      [
+        "A · Anode",
+        "The opposite end; conventional forward current flows from A to K."
+      ],
+      [
+        "Flyback orientation",
+        "For a DC coil, K usually connects to the positive coil supply and A to the switched end."
+      ]
+    ],
+    "steps": [
+      "Read the body marking and locate the cathode band.",
+      "Confirm the forward direction using a multimeter’s diode mode.",
+      "Wire the low-voltage experiment and check current and heating."
+    ]
+  },
+  "ss14": {
+    "name": "SS14",
+    "subtitle": "Surface-mount Schottky rectifier",
+    "family": "Diodes",
+    "package": "SMA / DO-214AC",
+    "description": "A Schottky structure provides a low forward drop, useful in low-voltage supplies. The SMA body has solder terminals at each end and a cathode band; data reference the Vishay SS14.",
+    "specs": [
+      [
+        "Repetitive peak reverse voltage",
+        "40 V maximum"
+      ],
+      [
+        "Average rectified current",
+        "1 A, with datasheet temperature and pad conditions"
+      ],
+      [
+        "Forward voltage",
+        "≤ 0.50 V, IF = 1 A"
+      ],
+      [
+        "Package",
+        "SMA / DO-214AC"
+      ]
+    ],
+    "uses": [
+      "Low-voltage switching-supply rectification",
+      "Power-path isolation",
+      "DC load freewheeling"
+    ],
+    "tip": "Schottky reverse leakage changes significantly with temperature; check reverse voltage, conduction loss, and PCB heat-spreading copper.",
+    "pinNotes": [
+      [
+        "K · Cathode",
+        "The body band marks K; verify pad orientation from the manufacturer’s package drawing."
+      ],
+      [
+        "A · Anode",
+        "The other terminal is A; forward current flows from A to K."
+      ],
+      [
+        "Surface markings",
+        "Top codes and band styles vary by manufacturer; use the purchased part number and package drawing together."
+      ]
+    ],
+    "steps": [
+      "Confirm the purchased part number is SS14 and locate the cathode band.",
+      "Align the component band with the PCB’s K mark.",
+      "After soldering, inspect orientation, joints, and shorts with power disconnected."
+    ]
+  },
+  "2n3904": {
+    "name": "2N3904",
+    "subtitle": "NPN small-signal transistor",
+    "family": "Transistors",
+    "package": "TO-92",
+    "description": "Base current controls collector current for small-signal amplification and low-power switching. The TO-92 body has one flat face; this entry uses the onsemi 2N3904 pin assignment.",
+    "specs": [
+      [
+        "Collector-emitter voltage",
+        "40 V maximum"
+      ],
+      [
+        "Continuous collector current",
+        "200 mA maximum"
+      ],
+      [
+        "Total power dissipation",
+        "625 mW, TA = 25°C"
+      ],
+      [
+        "DC current gain",
+        "100–300, IC = 10 mA, VCE = 1 V"
+      ]
+    ],
+    "uses": [
+      "Small-signal amplification",
+      "LED current switching",
+      "Small DC load driving"
+    ],
+    "tip": "Add a base current-limiting resistor. Size base drive using saturation specifications while observing collector-current and dissipation limits; provide flyback protection for inductive loads.",
+    "pinNotes": [
+      [
+        "1 · Emitter E",
+        "For this reference part, with the flat face toward you and leads down, the left lead is pin 1, E."
+      ],
+      [
+        "2 · Base B",
+        "The center lead is B, driven through a resistor."
+      ],
+      [
+        "3 · Collector C",
+        "The right lead is pin 3, C, commonly connected to the controlled load."
+      ],
+      [
+        "Package and part number",
+        "TO-92 devices use several pin arrangements; verify E, B, and C individually when substituting parts."
+      ]
+    ],
+    "steps": [
+      "Face the flat side forward with leads down and identify E, B, and C from the datasheet.",
+      "Calculate base and load current-limiting resistors for the LED or small load.",
+      "Use a low-voltage current-limited supply and observe switching and temperature rise."
+    ]
+  },
+  "irlz44n": {
+    "name": "IRLZ44N",
+    "subtitle": "Logic-level N-channel power MOSFET",
+    "family": "Transistors",
+    "package": "TO-220AB",
+    "description": "Gate-source voltage controls drain-source conduction, commonly for DC motor and LED-strip switching. The metal mounting tab is electrically connected to the drain; data reference the Infineon IRLZ44NPbF.",
+    "specs": [
+      [
+        "Maximum drain-source voltage",
+        "55 V"
+      ],
+      [
+        "Maximum gate-source voltage",
+        "±16 V"
+      ],
+      [
+        "Maximum continuous drain current",
+        "47 A, TC = 25°C, VGS = 10 V"
+      ],
+      [
+        "Device type",
+        "N-channel / logic-level"
+      ]
+    ],
+    "uses": [
+      "DC motor low-side switching",
+      "LED-strip dimming",
+      "DC heater control"
+    ],
+    "tip": "The 47 A rating depends on case temperature and cooling. Gate threshold describes the onset of tiny current; calculate load capability from on-resistance at the actual VGS and resulting temperature rise.",
+    "pinNotes": [
+      [
+        "1 · Gate G",
+        "With the marked face forward and leads down, the left lead G takes the drive signal; a series gate resistor and pull-down are common."
+      ],
+      [
+        "2 · Drain D",
+        "The center lead D connects to the switched load; the rear metal tab also connects to D."
+      ],
+      [
+        "3 · Source S",
+        "The right lead S is grounded in a typical low-side circuit; drive voltage is referenced to S."
+      ],
+      [
+        "Gate drive",
+        "For 3.3 V control, verify conduction performance at that voltage and establish a clear common reference for gate and driver."
+      ]
+    ],
+    "steps": [
+      "Identify G, D, and S and check the tab’s electrical connection.",
+      "Choose drive voltage, cooling, and inductive-load protection for the load current.",
+      "Use a current-limited supply and a small initial load to check on-state voltage drop and temperature rise."
+    ]
+  },
+  "led-red-5mm": {
+    "name": "5 mm red LED",
+    "subtitle": "Two-lead through-hole LED",
+    "family": "Light-emitting devices",
+    "package": "T-1 3/4 · 5 mm",
+    "description": "Emits red light when forward current flows, making it useful for circuit-state indication. The model shows a common 5 mm two-lead structure; the voltage example uses the Kingbright WP7113ID.",
+    "specs": [
+      [
+        "Nominal body diameter",
+        "5 mm"
+      ],
+      [
+        "Pin count",
+        "2"
+      ],
+      [
+        "Example forward voltage",
+        "Typical 1.9 V, IF = 10 mA"
+      ],
+      [
+        "Operating current",
+        "Select for the specific part and temperature; add series current limiting"
+      ]
+    ],
+    "uses": [
+      "Power-status indication",
+      "Digital-output experiments",
+      "Simple optical signaling"
+    ],
+    "tip": "Choose a target current, then calculate the series resistor as R ≈ (supply voltage − LED forward voltage) / current; check resistor power and GPIO current capability.",
+    "pinNotes": [
+      [
+        "A · Anode",
+        "On a common new component, the longer lead is A and connects toward the higher-potential current-limited branch."
+      ],
+      [
+        "K · Cathode",
+        "The shorter lead and flattened rim commonly mark K; confirm with the specific package drawing."
+      ],
+      [
+        "Identification after trimming",
+        "Use body polarity marks, the manufacturer’s drawing, and a diode-mode test."
+      ]
+    ],
+    "steps": [
+      "Identify anode A and cathode K.",
+      "Calculate and insert a series resistor before connecting a low-voltage DC supply.",
+      "Measure current, observe brightness, and check rated conditions."
+    ]
+  },
+  "rgb-led-5mm": {
+    "name": "5 mm common-cathode RGB LED",
+    "subtitle": "Three LED dies sharing one cathode",
+    "family": "Light-emitting devices",
+    "package": "5 mm · Four-lead through-hole",
+    "description": "Red, green, and blue LED dies share one body and mix colors through three controlled currents. The model illustrates the common-cathode structure of the Kingbright WP154A4SUREQBFZGC.",
+    "specs": [
+      [
+        "Nominal body diameter",
+        "5 mm"
+      ],
+      [
+        "Pin count",
+        "4"
+      ],
+      [
+        "Common terminal",
+        "Common cathode K"
+      ],
+      [
+        "Current limiting",
+        "One resistor for each red, green, and blue channel"
+      ]
+    ],
+    "uses": [
+      "Multicolor status indication",
+      "PWM color-mixing experiments",
+      "Color-feedback interfaces"
+    ],
+    "tip": "Check forward voltage and efficiency separately for each color. Common-cathode and common-anode parts look similar; confirm the common-terminal type before designing the driver, and verify the part-specific color pin order.",
+    "pinNotes": [
+      [
+        "2 · Common cathode",
+        "Reference-part pin 2 is K and the longer lead; all three colors share it."
+      ],
+      [
+        "1 · Red anode",
+        "Reference-part pin 1 is the red anode, connected to its own current-limiting branch."
+      ],
+      [
+        "3, 4 · Blue and green anodes",
+        "Reference-part pin 3 is blue and pin 4 is green, each with a separate resistor."
+      ],
+      [
+        "Viewing direction",
+        "Read pin numbers from the manufacturer’s specified view; retain the assigned numbers when rotating the model."
+      ]
+    ],
+    "steps": [
+      "Use the manufacturer’s drawing to identify the common cathode and color leads.",
+      "Add a separate resistor for each color and light them individually at low current.",
+      "Adjust brightness with three PWM channels and observe color mixing."
+    ]
+  },
+  "tactile-6x6": {
+    "name": "6 × 6 mm tactile switch",
+    "subtitle": "Four-lead normally-open momentary switch",
+    "family": "Switches",
+    "package": "6 × 6 mm · Four-lead through-hole",
+    "description": "Pressing connects two contact groups, and releasing returns the mechanism. The four leads form two internally connected pairs; this generic structure can be compared with the Omron B3F family.",
+    "specs": [
+      [
+        "Nominal body size",
+        "6 × 6 mm"
+      ],
+      [
+        "Pin count",
+        "4, forming two electrical nodes"
+      ],
+      [
+        "Action",
+        "SPST-NO / momentary normally open"
+      ],
+      [
+        "Contact rating",
+        "Check the complete part number and load type in the datasheet"
+      ]
+    ],
+    "uses": [
+      "MCU button inputs",
+      "Reset triggering",
+      "Menu and parameter selection"
+    ],
+    "tip": "With power disconnected, use continuity mode to identify the two internally connected pairs. Add a pull-up or pull-down for the input and handle mechanical contact bounce.",
+    "pinNotes": [
+      [
+        "A1 / A2 · First group",
+        "These leads remain connected in both released and pressed states; group names are teaching labels."
+      ],
+      [
+        "B1 / B2 · Second group",
+        "The other internally connected pair forms the second node."
+      ],
+      [
+        "A and B · Switching action",
+        "Pressing joins the groups; releasing separates them. Determine physical pair positions from the datasheet and continuity measurements."
+      ]
+    ],
+    "steps": [
+      "With power disconnected, identify the two always-connected lead pairs.",
+      "Choose one lead from each pair for the input circuit.",
+      "Check logic levels when pressed and released, then add debouncing."
+    ]
+  },
+  "spdt-slide": {
+    "name": "Three-terminal slide switch",
+    "subtitle": "SPDT, two maintained positions",
+    "family": "Switches",
+    "package": "Three-terminal slide switch · generic structure",
+    "description": "The slider moves between two positions, connecting the common contact COM to one of two selectable terminals. The model shows a three-terminal SPDT ON-ON structure, with the circuit form referenced to the C&K JS series.",
+    "specs": [
+      [
+        "Circuit form",
+        "SPDT / single-pole double-throw"
+      ],
+      [
+        "Signal terminals",
+        "3"
+      ],
+      [
+        "Action",
+        "ON-ON / two maintained positions"
+      ],
+      [
+        "Contact rating",
+        "Check the exact part and DC load in the datasheet"
+      ]
+    ],
+    "uses": [
+      "Mode selection",
+      "Signal-path switching",
+      "Low-voltage power switching within ratings"
+    ],
+    "tip": "The middle terminal is commonly COM on three-terminal versions; confirm the actual part with a continuity test. Determine the connection corresponding to each slider direction from its internal structure and manufacturer drawing.",
+    "pinNotes": [
+      [
+        "COM · common",
+        "Connects to one of the two selectable terminals in each position; commonly the middle terminal."
+      ],
+      [
+        "T1 · first selectable terminal",
+        "Connected to COM in the first position."
+      ],
+      [
+        "T2 · second selectable terminal",
+        "Connected to COM in the second position; identify metal mounting tabs separately using the mechanical drawing."
+      ]
+    ],
+    "steps": [
+      "Measure continuity between the three terminals in both positions.",
+      "Identify COM and record the selected terminal for each position.",
+      "Check contact ratings before connecting a mode-selection or low-voltage switching circuit."
+    ]
+  },
+  "usb-c-24": {
+    "name": "USB-C 24-contact receptacle",
+    "subtitle": "Reversible power and data interface",
+    "family": "Connectors",
+    "package": "USB Type-C receptacle · 24 contacts",
+    "description": "An insulating tongue sits inside a metal shield, with the full interface arranging 24 contacts on its two sides. The model illustrates the connector family and can be compared with GCT USB4080; PCB solder-tail arrangements vary by exact model.",
+    "specs": [
+      [
+        "Interface type",
+        "USB Type-C receptacle"
+      ],
+      [
+        "Interface contacts",
+        "24; shield solder tabs counted separately"
+      ],
+      [
+        "Power and data capability",
+        "Determined jointly by connector, cable and circuitry"
+      ],
+      [
+        "Rated voltage and current",
+        "Determined by the exact connector and system negotiation conditions"
+      ]
+    ],
+    "uses": [
+      "Device power input",
+      "USB data connection",
+      "Expansion interfaces with protocol control"
+    ],
+    "tip": "Check mechanical footprint, CC circuitry and target protocol together. Products with the same connector outline may use different solder-tail counts and data-channel arrangements.",
+    "pinNotes": [
+      [
+        "VBUS / GND",
+        "Power and ground each have several contacts; assess routing and current capacity for the complete design."
+      ],
+      [
+        "CC1 / CC2",
+        "Identify plug orientation and connection state, and participate in power-capability detection or USB PD communication."
+      ],
+      [
+        "D+ / D−, TX / RX",
+        "Connect USB 2.0 and high-speed differential signals in their groups; the system design determines which channels are used."
+      ],
+      [
+        "SBU and shield",
+        "SBU supports the applicable modes; treat shield solder tabs according to the grounding plan."
+      ]
+    ],
+    "steps": [
+      "Confirm the purchased receptacle’s 24-contact arrangement and PCB footprint drawing.",
+      "Check power, CC, data and shield connections for the required protocol.",
+      "Inspect for shorts after soldering, then verify both orientations and power behavior according to the design."
+    ]
+  },
+  "jst-xh-2": {
+    "name": "JST XH two-pin connector",
+    "subtitle": "2.50 mm-pitch wire-to-board connection",
+    "family": "Connectors",
+    "package": "JST XH · 2 positions",
+    "description": "The shrouded board header mates with a crimp-contact cable housing, commonly for power or simple signals. The model illustrates the two-position vertical board header of the XH family.",
+    "specs": [
+      [
+        "Contact pitch",
+        "2.50 mm"
+      ],
+      [
+        "Contact count",
+        "2"
+      ],
+      [
+        "Series current rating",
+        "3 A AC/DC with AWG 22 wire"
+      ],
+      [
+        "Series voltage rating",
+        "250 V AC/DC under manufacturer conditions"
+      ]
+    ],
+    "uses": [
+      "Low-voltage power harnesses",
+      "Two-wire sensor connections",
+      "Detachable internal wiring"
+    ],
+    "tip": "Assess current capacity using the contacts, wire size, crimp quality and temperature rise together; select mutually compatible XH housings, contacts and board headers.",
+    "pinNotes": [
+      [
+        "1 · first contact",
+        "Its signal function is defined by the board; consult the PCB markings and schematic."
+      ],
+      [
+        "2 · second contact",
+        "Also assigned by the circuit; trace power polarity through every harness endpoint."
+      ],
+      [
+        "Keying features",
+        "Shrouds and latches define insertion direction; the designer assigns the circuit’s positive and negative positions."
+      ]
+    ],
+    "steps": [
+      "Check the series, 2.50 mm pitch, position count and mating part numbers.",
+      "Confirm the electrical function and polarity of both wires from board markings.",
+      "Make suitable crimps, mate the connector, and check terminal locking and retention with a gentle pull."
+    ]
+  },
+  "header-2x5": {
+    "name": "2 × 5 dual-row pin header",
+    "subtitle": "2.54 mm pitch, ten through-hole pins",
+    "family": "Connectors",
+    "package": "2 × 5 · 2.54 mm",
+    "description": "Ten metal pins are arranged in two rows of five and retained by an insulating plastic strip. The model uses a generic vertical header structure, comparable to the Samtec TSW-105 dual-row configuration.",
+    "specs": [
+      [
+        "Arrangement",
+        "2 rows × 5 columns"
+      ],
+      [
+        "Pin and row pitch",
+        "2.54 mm"
+      ],
+      [
+        "Contact count",
+        "10"
+      ],
+      [
+        "Current and voltage capability",
+        "Determined by pin material, plating, mating half and complete part number"
+      ]
+    ],
+    "uses": [
+      "Development-board interfaces",
+      "Debug and programming connections",
+      "Board-to-board signal connections"
+    ],
+    "tip": "Find the PCB pin-1 mark and read the interface definition; several debugging protocols use similar headers. Check orientation and the position of every row when mating.",
+    "pinNotes": [
+      [
+        "1 · starting position",
+        "Usually identified by a square PCB pad, the number 1 or a triangle; the design documentation is authoritative."
+      ],
+      [
+        "Numbering scheme",
+        "Dual-row interfaces commonly put odd and even numbers in separate rows; some designs number by row. Follow the schematic."
+      ],
+      [
+        "Signals and power",
+        "Each pin conducts independently; the application circuit assigns GND, power and signal functions."
+      ]
+    ],
+    "steps": [
+      "Confirm 2 × 5 positions and 2.54 mm pitch.",
+      "Locate pin 1 and check every item in the interface table.",
+      "Align all ten pins when mating, and inspect for a one-column offset or reversed connection."
+    ]
+  },
+  "screw-terminal-2": {
+    "name": "Two-position screw terminal block",
+    "subtitle": "5.08 mm pitch, PCB-mounted wire clamp",
+    "family": "Connectors",
+    "package": "2 positions · 5.08 mm",
+    "description": "A screw-driven clamp secures an external wire to a PCB contact. The model represents the two-position 5.08 mm PCB terminal family, comparable to Phoenix Contact MKDS 1,5/2-5,08.",
+    "specs": [
+      [
+        "Wiring positions",
+        "2"
+      ],
+      [
+        "Contact pitch",
+        "5.08 mm"
+      ],
+      [
+        "Connection method",
+        "Screw clamp / PCB soldering"
+      ],
+      [
+        "Electrical and wire-size ratings",
+        "Check the complete part number and applicable standards"
+      ]
+    ],
+    "uses": [
+      "External power wiring",
+      "DC load outputs",
+      "Field-sensor wiring"
+    ],
+    "tip": "Select wire size, stripping length and tightening torque according to the manufacturer. Secure the wire after inserting it into the clamping opening, then gently pull to check retention.",
+    "pinNotes": [
+      [
+        "Terminal 1",
+        "One wire-clamping opening and its corresponding PCB pin form a single contact."
+      ],
+      [
+        "Terminal 2",
+        "A second independent contact; its electrical function follows the PCB marking and schematic."
+      ],
+      [
+        "Screws and polarity",
+        "Screws provide mechanical clamping; the circuit defines polarity. Trace wire destinations before connecting."
+      ]
+    ],
+    "steps": [
+      "Disconnect power and verify both terminals’ electrical functions.",
+      "Strip the wire as specified and insert the conductor fully into the clamping area.",
+      "Tighten to the specified torque, gently check retention, and confirm spacing between adjacent terminals."
+    ]
+  },
+  "resistor-1k": {
+    "name": "1 kΩ axial resistor",
+    "subtitle": "Limit current and divide voltage with resistance",
+    "family": "Passive components",
+    "package": "Axial through-hole · generic structure",
+    "description": "Metal leads extend from both ends of a cylindrical resistor body, with colored bands encoding resistance and tolerance. The model uses a four-band 1 kΩ, ±5% teaching example; actual power rating and dimensions depend on the product.",
+    "specs": [
+      [
+        "Nominal resistance",
+        "1 kΩ = 1000 Ω"
+      ],
+      [
+        "Four-band example",
+        "Brown · black · red · gold"
+      ],
+      [
+        "Example tolerance",
+        "±5%, indicated by the gold band"
+      ],
+      [
+        "Rated power",
+        "Determined by complete part number and temperature-derating curve"
+      ]
+    ],
+    "uses": [
+      "LED current limiting",
+      "Resistor voltage dividers",
+      "Digital-input pull-up or pull-down"
+    ],
+    "tip": "Use I = V/R and P = I²R to calculate current and dissipation. The bands encode resistance and tolerance; obtain rated power from the model documentation.",
+    "pinNotes": [
+      [
+        "End leads",
+        "An ordinary fixed resistor is nonpolarized; its ends are interchangeable in DC wiring."
+      ],
+      [
+        "First three bands",
+        "Brown is 1, black is 0 and red is ×100, giving 1000 Ω."
+      ],
+      [
+        "Gold tolerance band",
+        "Gold indicates ±5%; first identify the tolerance band, which is spaced from the others."
+      ]
+    ],
+    "steps": [
+      "Read from the value bands toward the tolerance band and confirm brown, black, red, gold.",
+      "Measure resistance with power off; consider parallel paths when measuring in circuit.",
+      "Calculate expected dissipation and select a power rating with margin."
+    ]
+  },
+  "ceramic-100nf": {
+    "name": "100 nF ceramic-disc capacitor",
+    "subtitle": "Disc-shaped, two-lead nonpolarized capacitor",
+    "family": "Passive components",
+    "package": "Radial ceramic disc · generic structure",
+    "description": "A ceramic dielectric and two electrodes form a capacitor, often enclosed in a coated disc. The model illustrates a 100 nF ceramic-disc capacitor family; verify dimensions, voltage rating, tolerance and dielectric class for the purchased part.",
+    "specs": [
+      [
+        "Nominal capacitance",
+        "100 nF = 0.1 µF"
+      ],
+      [
+        "Common capacitance code",
+        "104 = 10 × 10⁴ pF"
+      ],
+      [
+        "Polarity",
+        "Nonpolarized"
+      ],
+      [
+        "Voltage rating and tolerance",
+        "Check the complete marking and manufacturer datasheet"
+      ]
+    ],
+    "uses": [
+      "Local supply bypassing",
+      "RC filtering",
+      "AC signal coupling"
+    ],
+    "tip": "104 encodes capacitance; read the complete marking or datasheet for voltage rating. Shorten leads and loops for bypassing, and check the frequency behavior required by the circuit.",
+    "pinNotes": [
+      [
+        "Two electrodes",
+        "The two leads connect to internal electrodes; ordinary ceramic-disc capacitor terminals are interchangeable."
+      ],
+      [
+        "104 marking",
+        "In pF, the first two digits are significant figures and the third is the power of ten."
+      ],
+      [
+        "Visual identification",
+        "Other components also use disc shapes; identify the part using its capacitance code, part number and circuit location."
+      ]
+    ],
+    "steps": [
+      "Read the 104 capacitance code and check the complete part number and rated voltage.",
+      "Choose placement according to bypass, filtering or coupling use.",
+      "Install with power off and the capacitor discharged; keep bypass leads and loops short."
+    ]
+  },
+  "electrolytic-100uf": {
+    "name": "100 µF aluminum electrolytic capacitor",
+    "subtitle": "Polarized, radial two-lead energy-storage capacitor",
+    "family": "Passive components",
+    "package": "Radial aluminum electrolytic · generic structure",
+    "description": "The cylindrical aluminum can contains electrodes and electrolyte, suitable for power filtering and energy storage. The model represents an ordinary polarized radial aluminum electrolytic capacitor; parts with the same capacitance have various voltage, size and ripple ratings.",
+    "specs": [
+      [
+        "Nominal capacitance",
+        "100 µF"
+      ],
+      [
+        "Polarity",
+        "Polarized; connect according to + / −"
+      ],
+      [
+        "Rated voltage",
+        "Confirm from the complete body marking and datasheet"
+      ],
+      [
+        "Ripple and temperature",
+        "Check the series, capacitance and case dimensions"
+      ]
+    ],
+    "uses": [
+      "Power-supply smoothing",
+      "Low-frequency energy buffering",
+      "Signal coupling with DC bias"
+    ],
+    "tip": "Keep operating voltage, including ripple peaks, within the rating, and assess ripple current and temperature. Before handling, discharge through a suitable resistor and measure terminal voltage.",
+    "pinNotes": [
+      [
+        "− · negative",
+        "Ordinary radial aluminum electrolytics commonly mark negative with a side stripe containing minus signs; confirm the manufacturer’s marking."
+      ],
+      [
+        "+ · positive",
+        "The positive lead is commonly longer on new parts; combine lead length with body markings after cutting or forming."
+      ],
+      [
+        "Top and case",
+        "Some sizes have scored pressure-release vents on top. Leave the required clearance, and use the leads for circuit connections."
+      ]
+    ],
+    "steps": [
+      "Check 100 µF, rated voltage and the side negative stripe.",
+      "Verify polarity and operating voltage, including ripple peaks, against the schematic.",
+      "Switch off, discharge and measure terminal voltage before fitting, then perform a low-voltage power-on check."
+    ]
+  },
+  "hc04": {
+    "name": "SN74HC04N",
+    "subtitle": "Hex inverter",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "Six independent inverters change high logic levels to low and low levels to high. The device changes control-signal polarity and supports learning the most basic logic operation.",
+    "specs": [
+      [
+        "Logic function",
+        "6 NOT gates"
+      ],
+      [
+        "Inputs per gate",
+        "1"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ],
+      [
+        "Logic family",
+        "HC CMOS"
+      ]
+    ],
+    "uses": [
+      "Logic inversion",
+      "Control-signal processing",
+      "Digital-circuit introduction"
+    ],
+    "tip": "The top notch establishes orientation. Connect pin 14 to VCC and pin 7 to GND. Tie unused CMOS inputs to valid logic levels.",
+    "pinNotes": [
+      [
+        "A",
+        "Six independent logic inputs."
+      ],
+      [
+        "Y",
+        "The inverted output corresponding to each input."
+      ],
+      [
+        "14 VCC · 7 GND",
+        "Power and ground; place a decoupling capacitor nearby."
+      ]
+    ],
+    "steps": [
+      "Apply a high or low level to one A input.",
+      "Observe the opposite level at its Y output.",
+      "Test each channel and draw the inverter truth table."
+    ]
+  },
+  "hc14": {
+    "name": "SN74HC14N",
+    "subtitle": "Hex Schmitt-trigger inverter",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "All six inverters have Schmitt-trigger inputs. Separate rising and falling switching thresholds turn slowly changing signals into clean digital edges.",
+    "specs": [
+      [
+        "Channels",
+        "6"
+      ],
+      [
+        "Input characteristic",
+        "Schmitt trigger"
+      ],
+      [
+        "Logic function",
+        "Inverting"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ]
+    ],
+    "uses": [
+      "Switch-signal conditioning",
+      "RC oscillators",
+      "Slow-edge signal conditioning"
+    ],
+    "tip": "Hysteresis is the gap between rising and falling switching thresholds. An RC network and Schmitt-trigger input can implement switch debouncing.",
+    "pinNotes": [
+      [
+        "A",
+        "Input with hysteresis; its voltage must remain within the allowed range."
+      ],
+      [
+        "Y",
+        "Conditioned and inverted digital output."
+      ],
+      [
+        "14 VCC · 7 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Use a resistor and capacitor to generate a slowly changing input.",
+      "Observe output transitions when the input crosses a threshold.",
+      "Compare switching points during rising and falling transitions."
+    ]
+  },
+  "hc08": {
+    "name": "SN74HC08N",
+    "subtitle": "Quad two-input AND gate",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "Four two-input AND gates produce a high output only when both inputs are high. They express control relationships requiring several conditions to be true together.",
+    "specs": [
+      [
+        "Logic function",
+        "4 AND gates"
+      ],
+      [
+        "Inputs per gate",
+        "2"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ],
+      [
+        "Output type",
+        "Push-pull"
+      ]
+    ],
+    "uses": [
+      "Combining conditions",
+      "Signal enabling",
+      "Truth-table experiments"
+    ],
+    "tip": "Treat the two inputs as two switch conditions; the output indicates whether both are true. LED experiments require series current-limiting resistors.",
+    "pinNotes": [
+      [
+        "A / B",
+        "The two logic inputs of each AND gate."
+      ],
+      [
+        "Y",
+        "High when both A and B are high."
+      ],
+      [
+        "14 VCC · 7 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Connect switchable logic levels to A and B.",
+      "Test 00, 01, 10 and 11 in sequence.",
+      "Record Y and observe the case in which both conditions are true."
+    ]
+  },
+  "hc32": {
+    "name": "SN74HC32N",
+    "subtitle": "Quad two-input OR gate",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "Four two-input OR gates produce a high output when either input is high. They commonly combine several trigger conditions.",
+    "specs": [
+      [
+        "Logic function",
+        "4 OR gates"
+      ],
+      [
+        "Inputs per gate",
+        "2"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ],
+      [
+        "Output type",
+        "Push-pull"
+      ]
+    ],
+    "uses": [
+      "Combining trigger conditions",
+      "Alarm logic",
+      "Digital-logic teaching"
+    ],
+    "tip": "An OR gate actively generates its output level. Feed multiple push-pull signals into separate OR-gate inputs to combine them.",
+    "pinNotes": [
+      [
+        "A / B",
+        "The two inputs of each OR gate."
+      ],
+      [
+        "Y",
+        "High when at least one input is high."
+      ],
+      [
+        "14 VCC · 7 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Set the two inputs individually high or low.",
+      "Observe the output when either condition is true.",
+      "Write the truth table for all four input combinations."
+    ]
+  },
+  "hc86": {
+    "name": "SN74HC86N",
+    "subtitle": "Quad two-input XOR gate",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "Four independent XOR gates each compare two inputs. Different levels produce high; matching levels produce low. XOR supports binary addition and parity checking.",
+    "specs": [
+      [
+        "Logic function",
+        "4 XOR gates"
+      ],
+      [
+        "Inputs per gate",
+        "2"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ],
+      [
+        "Logic family",
+        "HC CMOS"
+      ]
+    ],
+    "uses": [
+      "Half adders",
+      "Parity checking",
+      "Logic comparison"
+    ],
+    "tip": "The common XOR symbol is ⊕. A half adder uses XOR for the sum bit and AND for the carry bit.",
+    "pinNotes": [
+      [
+        "A / B",
+        "The two inputs to the XOR operation."
+      ],
+      [
+        "Y",
+        "High for inputs 01 or 10."
+      ],
+      [
+        "14 VCC · 7 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Enumerate the four input combinations.",
+      "Compare Y with the least significant bit of binary addition.",
+      "Add an AND gate to observe sum and carry."
+    ]
+  },
+  "hc74": {
+    "name": "SN74HC74N",
+    "subtitle": "Dual D-type flip-flop",
+    "family": "Digital logic",
+    "package": "DIP-14",
+    "description": "Two flip-flops each store one bit of state. They sample D on the clock’s rising edge and retain the result at Q, supporting frequency division, state storage and synchronization.",
+    "specs": [
+      [
+        "Flip-flop count",
+        "2"
+      ],
+      [
+        "Trigger edge",
+        "Rising clock edge"
+      ],
+      [
+        "Asynchronous controls",
+        "Preset and clear"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ]
+    ],
+    "uses": [
+      "Divide-by-two circuits",
+      "State storage",
+      "Sequential-logic experiments"
+    ],
+    "tip": "Data must meet setup and hold times around the clock edge. PRE# and CLR# are active-low asynchronous controls.",
+    "pinNotes": [
+      [
+        "D / CLK",
+        "Data input and rising-edge clock."
+      ],
+      [
+        "Q / Q#",
+        "Stored state and its complementary output."
+      ],
+      [
+        "PRE# / CLR#",
+        "Asynchronous set and clear; use combinations according to the function table."
+      ],
+      [
+        "VCC / GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Set D and keep asynchronous controls inactive.",
+      "Apply a rising edge to CLK that meets timing requirements.",
+      "Observe Q retaining the sampled data."
+    ]
+  },
+  "hc138": {
+    "name": "SN74HC138N",
+    "subtitle": "3-to-8 line decoder",
+    "family": "Digital logic",
+    "package": "DIP-16",
+    "description": "A three-bit binary address becomes one of eight selection signals. When enabled, the addressed output goes low, allowing selection of memory or other peripherals.",
+    "specs": [
+      [
+        "Address inputs",
+        "3 bits"
+      ],
+      [
+        "Selection outputs",
+        "8"
+      ],
+      [
+        "Active level",
+        "Low"
+      ],
+      [
+        "Supply",
+        "2–6 V"
+      ]
+    ],
+    "uses": [
+      "Address decoding",
+      "Peripheral chip selection",
+      "Seven-segment digit selection"
+    ],
+    "tip": "An overbar or # indicates active low. Confirm enable conditions, then select an output using the C, B and A combination.",
+    "pinNotes": [
+      [
+        "A / B / C",
+        "Three address bits; A is the least significant bit."
+      ],
+      [
+        "Y0#–Y7#",
+        "The selected output goes low."
+      ],
+      [
+        "G1 / G2A# / G2B#",
+        "One active-high and two active-low enables."
+      ],
+      [
+        "16 VCC · 8 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Set all three enables to their active combination.",
+      "Apply addresses 0 through 7.",
+      "Observe the active-low selection moving between outputs."
+    ]
+  },
+  "cd4017": {
+    "name": "CD4017BE",
+    "subtitle": "Decade counter and decoder",
+    "family": "Digital logic",
+    "package": "DIP-16",
+    "description": "Each valid clock moves the high level to the next of ten decoded outputs. Combining counting and decoding makes this device useful for running-light and sequencing demonstrations.",
+    "specs": [
+      [
+        "Count cycle",
+        "0–9"
+      ],
+      [
+        "Decoded outputs",
+        "10"
+      ],
+      [
+        "Clock input",
+        "Schmitt trigger"
+      ],
+      [
+        "Controls",
+        "Reset and clock inhibit"
+      ]
+    ],
+    "uses": [
+      "Running lights",
+      "Sequence control",
+      "Divide-by-ten experiments"
+    ],
+    "tip": "Output numbers and physical pin numbers have separate meanings. Locate Q0–Q9 using the datasheet and check drive current before connecting LEDs.",
+    "pinNotes": [
+      [
+        "CLOCK",
+        "A rising edge advances the count while clock inhibit is low."
+      ],
+      [
+        "Q0–Q9",
+        "Ten decoded outputs that go high in sequence during normal counting."
+      ],
+      [
+        "RESET / CLOCK INHIBIT",
+        "High levels reset the count or pause clock counting."
+      ],
+      [
+        "VDD / VSS / CARRY OUT",
+        "Power, ground and carry output for division or cascading."
+      ]
+    ],
+    "steps": [
+      "Reset the counter so Q0 is the initial state.",
+      "Apply slow clock pulses.",
+      "Observe the ten outputs cycling in sequence."
+    ]
+  },
+  "cd4066": {
+    "name": "CD4066BE",
+    "subtitle": "Quad bilateral analog switch",
+    "family": "Analog and signal",
+    "package": "DIP-14",
+    "description": "Four independent electronic switches are each controlled by a digital level. When closed, each path carries analog or digital signals in either direction within the allowed range.",
+    "specs": [
+      [
+        "Independent switches",
+        "4"
+      ],
+      [
+        "Switch structure",
+        "Single-pole single-throw"
+      ],
+      [
+        "Signal direction",
+        "Bidirectional"
+      ],
+      [
+        "Control",
+        "Digital level"
+      ]
+    ],
+    "uses": [
+      "Audio switching",
+      "Signal gating",
+      "Sampling circuits"
+    ],
+    "tip": "A closed switch has on-resistance that varies with supply and signal voltage. Keep signal voltages within the device’s allowed supply range.",
+    "pinNotes": [
+      [
+        "Signal terminals",
+        "The pair of input/output terminals on each switch carries signals in either direction."
+      ],
+      [
+        "CONTROL",
+        "Independent control for each channel; high closes the switch."
+      ],
+      [
+        "14 VDD · 7 VSS",
+        "Upper and lower supply rails determine the available signal range."
+      ]
+    ],
+    "steps": [
+      "Place one switch in series with a low-voltage signal path.",
+      "Change the corresponding control logic level.",
+      "Measure the open/closed state and signal changes while conducting."
+    ]
+  },
+  "cd4051": {
+    "name": "CD4051BE",
+    "subtitle": "8-to-1 analog multiplexer",
+    "family": "Analog and signal",
+    "package": "DIP-16",
+    "description": "A three-bit address selects one of eight channels to connect to the common terminal. The bidirectional path lets several slow analog signals take turns feeding one ADC.",
+    "specs": [
+      [
+        "Channel configuration",
+        "8:1"
+      ],
+      [
+        "Select inputs",
+        "3 bits"
+      ],
+      [
+        "Signal direction",
+        "Bidirectional"
+      ],
+      [
+        "Additional control",
+        "All-channel inhibit"
+      ]
+    ],
+    "uses": [
+      "ADC channel expansion",
+      "Sensor polling",
+      "Analog-signal selection"
+    ],
+    "tip": "Allow settling time after switching before sampling. On-resistance, load and ADC input capacitance jointly affect the reading.",
+    "pinNotes": [
+      [
+        "X0–X7 / COM",
+        "Eight channels and the common signal terminal."
+      ],
+      [
+        "A / B / C",
+        "Select the channel to connect."
+      ],
+      [
+        "INH",
+        "High disconnects all channels."
+      ],
+      [
+        "VDD / VSS / VEE",
+        "Positive supply, logic ground and analog negative-supply reference."
+      ]
+    ],
+    "steps": [
+      "Connect signals to the channels and the common terminal to the sampling input.",
+      "Set the address to select a signal.",
+      "Wait for settling, sample, and move to the next channel."
+    ]
+  },
+  "lvc245": {
+    "name": "SN74LVC245APWR",
+    "subtitle": "Octal bus transceiver",
+    "family": "Digital logic",
+    "package": "TSSOP-20",
+    "description": "Signals pass between two eight-bit data buses, with one control selecting the direction for the whole group. Three-state outputs release the bus for buffering and shared-bus interfaces.",
+    "specs": [
+      [
+        "Data width",
+        "8 bits"
+      ],
+      [
+        "Supply",
+        "1.65–3.6 V"
+      ],
+      [
+        "Input tolerance",
+        "Up to 5.5 V"
+      ],
+      [
+        "Output states",
+        "High / low / high impedance"
+      ]
+    ],
+    "uses": [
+      "Bus buffering",
+      "5 V input to low-voltage logic",
+      "Parallel interfaces"
+    ],
+    "tip": "VCC determines the output-high level. DIR controls the group direction and OE# controls bus drive; check logic thresholds at both ends.",
+    "pinNotes": [
+      [
+        "A1–A8 / B1–B8",
+        "Two banks of eight data terminals."
+      ],
+      [
+        "DIR",
+        "Selects transfer from A to B or B to A."
+      ],
+      [
+        "OE#",
+        "Low enables outputs; high selects high impedance."
+      ],
+      [
+        "VCC / GND",
+        "Low-voltage power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Set the supply and verify both sides’ logic-level requirements.",
+      "Set DIR, then drive OE# low.",
+      "Observe eight-bit transfer and high-impedance bus release."
+    ]
+  },
+  "at24c02": {
+    "name": "AT24C02C-PUM",
+    "subtitle": "2 Kbit I²C EEPROM",
+    "family": "Memory and timing",
+    "package": "DIP-8",
+    "description": "A serial memory stores small amounts of configuration data and retains them after power is removed. I²C accesses 256 bytes for addresses, settings or calibration values.",
+    "specs": [
+      [
+        "Capacity",
+        "2 Kbit / 256 B"
+      ],
+      [
+        "Interface",
+        "I²C"
+      ],
+      [
+        "Supply",
+        "1.7–5.5 V"
+      ],
+      [
+        "Page write",
+        "8 byte"
+      ]
+    ],
+    "uses": [
+      "Device parameters",
+      "Calibration data",
+      "Serial-number storage"
+    ],
+    "tip": "Page writes have boundaries and require an internal write-cycle wait. Handle acknowledge polling and memory endurance according to the datasheet.",
+    "pinNotes": [
+      [
+        "SDA / SCL",
+        "I²C data and clock, requiring pull-up resistors."
+      ],
+      [
+        "A0–A2",
+        "Select the bus address for multiple devices on shared lines."
+      ],
+      [
+        "WP",
+        "High enables hardware write protection."
+      ],
+      [
+        "8 VCC · 4 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Select the device address and target byte position.",
+      "Write data and wait for the internal write cycle to finish.",
+      "Cycle power, then read and verify the contents."
+    ]
+  },
+  "mb85rc256": {
+    "name": "MB85RC256V",
+    "subtitle": "256 Kbit ferroelectric RAM",
+    "family": "Memory and timing",
+    "package": "SOP-8",
+    "description": "Ferroelectric cells support frequent reads and writes while retaining data through power loss. The host accesses 32 KiB through I²C to save operating counts and frequently changing state.",
+    "specs": [
+      [
+        "Capacity",
+        "256 Kbit / 32 KiB"
+      ],
+      [
+        "Interface",
+        "I²C, up to 1 MHz"
+      ],
+      [
+        "Supply",
+        "2.7–5.5 V"
+      ],
+      [
+        "Read/write endurance",
+        "10¹² cycles / byte"
+      ]
+    ],
+    "uses": [
+      "Operating counters",
+      "State retention",
+      "Data logging"
+    ],
+    "tip": "FRAM completes writes within bus timing. Retention time depends on temperature, and the system power-down process must still preserve a complete record.",
+    "pinNotes": [
+      [
+        "SDA / SCL",
+        "Serial data and clock."
+      ],
+      [
+        "A0–A2",
+        "Hardware device-address selection."
+      ],
+      [
+        "WP",
+        "Hardware write-protect input."
+      ],
+      [
+        "VDD / VSS",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Specify the memory address over I²C.",
+      "Write the latest count or state.",
+      "Read the record at the next startup to restore operation."
+    ]
+  },
+  "w5500": {
+    "name": "W5500",
+    "subtitle": "Hardware TCP/IP Ethernet controller",
+    "family": "Communication and interfaces",
+    "package": "LQFP-48",
+    "description": "TCP/IP processing, Ethernet MAC and PHY are integrated in one chip. A microcontroller accesses socket buffers over SPI; network magnetics and a jack complete a wired-network device.",
+    "specs": [
+      [
+        "Ethernet",
+        "10 / 100 Mbit/s"
+      ],
+      [
+        "Host interface",
+        "SPI"
+      ],
+      [
+        "Independent sockets",
+        "8"
+      ],
+      [
+        "Operating supply",
+        "3.3 V"
+      ]
+    ],
+    "uses": [
+      "Wired IoT",
+      "Network instruments",
+      "Embedded gateways"
+    ],
+    "tip": "Twelve leads on each of four sides form LQFP-48. Follow official schematics for jack and transformer connections, differential routing and supply decoupling.",
+    "pinNotes": [
+      [
+        "SCSn / SCLK / MOSI / MISO",
+        "SPI interface to the host."
+      ],
+      [
+        "TXP / TXN · RXP / RXN",
+        "Differential transmit/receive terminals connected to network magnetics."
+      ],
+      [
+        "RSTn / INTn",
+        "Reset input and interrupt output."
+      ],
+      [
+        "Power / ground / XI / XO",
+        "Configure power domains and external clock connections according to the reference design."
+      ]
+    ],
+    "steps": [
+      "Configure the MAC address and network settings through SPI.",
+      "Establish a TCP or UDP socket.",
+      "Read and write buffers to exchange data over Ethernet."
+    ]
+  },
+  "mcp2515": {
+    "name": "MCP2515-I/P",
+    "subtitle": "Stand-alone CAN protocol controller",
+    "family": "Communication and interfaces",
+    "package": "DIP-18",
+    "description": "The chip receives host commands over SPI and handles CAN frame formatting, filtering and transmit/receive buffers. With an external CAN transceiver, it connects a general microcontroller to a classic CAN network.",
+    "specs": [
+      [
+        "CAN type",
+        "CAN 2.0B"
+      ],
+      [
+        "CAN rate",
+        "Up to 1 Mbit/s"
+      ],
+      [
+        "Host interface",
+        "SPI"
+      ],
+      [
+        "Supply",
+        "2.7–5.5 V"
+      ]
+    ],
+    "uses": [
+      "CAN learning boards",
+      "Industrial network nodes",
+      "CAN data logging"
+    ],
+    "tip": "MCP2515 handles the protocol; transceivers such as TJA1050 handle bus electrical signaling. Configure CAN bit timing using the crystal frequency and target bit rate.",
+    "pinNotes": [
+      [
+        "SCK / SI / SO / CS#",
+        "SPI communication with the host."
+      ],
+      [
+        "TXCAN / RXCAN",
+        "Logic signals connected to the CAN transceiver."
+      ],
+      [
+        "OSC1 / OSC2",
+        "Clock-circuit connections."
+      ],
+      [
+        "INT# / RESET# / power",
+        "Interrupt, reset and supply connections."
+      ]
+    ],
+    "steps": [
+      "Configure the CAN bit rate and receive filters from the host.",
+      "Write a message into the transmit buffer.",
+      "The controller generates a CAN frame that the transceiver sends onto the bus."
+    ]
+  },
+  "tja1050": {
+    "name": "TJA1050T",
+    "subtitle": "High-speed CAN transceiver",
+    "family": "Communication and interfaces",
+    "package": "SOIC-8",
+    "description": "The device converts a CAN controller’s logic into differential levels on CANH and CANL, then restores received signals for the controller. It provides the electrical connection between a node and the CAN bus.",
+    "specs": [
+      [
+        "Supply",
+        "4.75–5.25 V"
+      ],
+      [
+        "Maximum rate",
+        "1 Mbit/s"
+      ],
+      [
+        "Bus form",
+        "CAN differential pair"
+      ],
+      [
+        "Operating modes",
+        "High-speed / silent"
+      ]
+    ],
+    "uses": [
+      "CAN network nodes",
+      "Industrial-control communication",
+      "Automotive-electronics teaching"
+    ],
+    "tip": "Place termination resistors at the two CAN-network ends according to bus requirements. When connecting a 3.3 V MCU, check transmit-input and receive-output levels individually.",
+    "pinNotes": [
+      [
+        "1 TXD · 4 RXD",
+        "Transmit input and receive output connected to the CAN controller."
+      ],
+      [
+        "7 CANH · 6 CANL",
+        "CAN differential-bus terminals."
+      ],
+      [
+        "8 S · 5 Vref",
+        "Mode selection and reference-voltage output."
+      ],
+      [
+        "3 VCC · 2 GND",
+        "5 V power supply and ground."
+      ]
+    ],
+    "steps": [
+      "The CAN controller outputs a sequence of logic bits.",
+      "The transceiver converts them into differential-bus states.",
+      "The receiving transceiver restores logic levels for CAN-controller decoding."
+    ]
+  },
+  "max485": {
+    "name": "MAX485CPA+",
+    "subtitle": "Half-duplex RS-485 transceiver",
+    "family": "Communication and interfaces",
+    "package": "DIP-8",
+    "description": "The device translates between a logic-level interface such as UART and an RS-485 differential bus. Transmit and receive share one wire pair; enable signals switch direction for multi-node wired communication.",
+    "specs": [
+      [
+        "Supply",
+        "5 V nominal"
+      ],
+      [
+        "Maximum rate",
+        "2.5 Mbit/s"
+      ],
+      [
+        "Communication mode",
+        "Half-duplex"
+      ],
+      [
+        "Interface standards",
+        "RS-485 / RS-422"
+      ]
+    ],
+    "uses": [
+      "Modbus communication",
+      "Instrument networking",
+      "Multi-node control"
+    ],
+    "tip": "Coordinate bus transmitters so they take turns. Design termination, biasing and a common reference for the bus topology.",
+    "pinNotes": [
+      [
+        "DI / RO",
+        "Logic transmit input and receive output."
+      ],
+      [
+        "DE / RE#",
+        "Transmit enable and active-low receive enable."
+      ],
+      [
+        "A / B",
+        "Differential-bus terminals; verify the definitions at both ends."
+      ],
+      [
+        "8 VCC · 5 GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "The host enables transmission and outputs serial data.",
+      "Data travels as the differential voltage between A and B.",
+      "Release the transmitter and switch to receiving the reply."
+    ]
+  },
+  "cp2102n": {
+    "name": "CP2102N-A02-GQFN28",
+    "subtitle": "USB-to-UART bridge with integrated clock",
+    "family": "Communication and interfaces",
+    "package": "QFN-28",
+    "description": "The chip converts USB data into UART serial data and integrates a USB transceiver and clock. A computer driver exposes a virtual serial port for exchanging commands and logs with a microcontroller.",
+    "specs": [
+      [
+        "USB",
+        "2.0 full-speed"
+      ],
+      [
+        "UART",
+        "Up to 3 Mbaud"
+      ],
+      [
+        "Clock",
+        "Integrated internally"
+      ],
+      [
+        "GPIO in this version",
+        "7"
+      ]
+    ],
+    "uses": [
+      "Firmware-download interfaces",
+      "Serial debugging",
+      "USB instruments"
+    ],
+    "tip": "CP2102N has 20-, 24- and 28-pin versions. Supply and I/O assignments vary by version; this model represents GQFN28.",
+    "pinNotes": [
+      [
+        "D+ / D−",
+        "USB differential-data terminals."
+      ],
+      [
+        "TXD / RXD",
+        "UART transmit and receive; connect each to the other device’s corresponding receive or transmit."
+      ],
+      [
+        "RTS / CTS",
+        "Hardware flow-control signals."
+      ],
+      [
+        "VREGIN / VDD / GND",
+        "Internal-regulator input, device supply and ground; connect according to the supply scheme."
+      ]
+    ],
+    "steps": [
+      "Connect USB to the computer so the driver creates a serial-port interface.",
+      "Set the baud rate and data format to match the target.",
+      "Transfer programming data or debug logs through UART."
+    ]
+  },
+  "pcf8574": {
+    "name": "PCF8574P",
+    "subtitle": "Eight-bit I²C I/O expander",
+    "family": "Communication and interfaces",
+    "package": "DIP-16",
+    "description": "The I²C bus expands to eight quasi-bidirectional I/O pins for switches or indicators. An interrupt output can prompt the host to read the port when input states change.",
+    "specs": [
+      [
+        "Expanded I/O",
+        "8 channels"
+      ],
+      [
+        "Bus speed",
+        "100 kHz"
+      ],
+      [
+        "Supply",
+        "2.5–6 V"
+      ],
+      [
+        "Port type",
+        "Quasi-bidirectional"
+      ]
+    ],
+    "uses": [
+      "Switch-input expansion",
+      "LCD control",
+      "Indicator control"
+    ],
+    "tip": "Write 1 to a port bit before using it as an input. Check the quasi-bidirectional port’s pull-high and pull-low drive characteristics separately.",
+    "pinNotes": [
+      [
+        "P0–P7",
+        "Eight quasi-bidirectional ports."
+      ],
+      [
+        "SDA / SCL",
+        "I²C data and clock."
+      ],
+      [
+        "A0–A2 / INT#",
+        "Address selection and open-drain interrupt output."
+      ],
+      [
+        "VDD / VSS",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Set the I²C address using the address pins.",
+      "Write the port state or set target bits for input use.",
+      "Read switch states or update indicators."
+    ]
+  },
+  "ds18b20": {
+    "name": "DS18B20+",
+    "subtitle": "1-Wire digital temperature sensor",
+    "family": "Sensors",
+    "package": "TO-92",
+    "description": "One data line returns digital temperature, and each chip has a unique 64-bit identification code. A host can place several sensors on the same bus and individually request conversions and readings.",
+    "specs": [
+      [
+        "Measurement range",
+        "−55–125 °C"
+      ],
+      [
+        "Resolution",
+        "Selectable 9–12 bit"
+      ],
+      [
+        "Interface",
+        "1-Wire"
+      ],
+      [
+        "External supply",
+        "3.0–5.5 V"
+      ]
+    ],
+    "uses": [
+      "Digital thermometers",
+      "Multi-point temperature sensing",
+      "Environmental logging"
+    ],
+    "tip": "TO-92 can contain a complete digital sensor. Match the datasheet’s viewing direction when wiring. DQ requires a pull-up, and parasite power also requires the specified strong-pull-up conditions.",
+    "pinNotes": [
+      [
+        "1 GND",
+        "Ground pin."
+      ],
+      [
+        "2 DQ",
+        "Bidirectional 1-Wire data interface."
+      ],
+      [
+        "3 VDD",
+        "External supply; follow the datasheet for parasite-power wiring."
+      ]
+    ],
+    "steps": [
+      "Identify sensor addresses on the bus.",
+      "Issue a temperature-conversion command and wait for completion.",
+      "Read temperature and check data, then convert to degrees Celsius."
+    ]
+  },
+  "lm75b": {
+    "name": "LM75BD",
+    "subtitle": "I²C temperature sensor with overtemperature alarm",
+    "family": "Sensors",
+    "package": "SOIC-8",
+    "description": "The device continuously converts its die temperature into digital readings for the host over I²C. Programmable thresholds and hysteresis operate the OS output to alert the system to excessive temperature.",
+    "specs": [
+      [
+        "Temperature resolution",
+        "0.125 °C"
+      ],
+      [
+        "Digital interface",
+        "I²C"
+      ],
+      [
+        "Supply",
+        "2.8–5.5 V"
+      ],
+      [
+        "Measurement range",
+        "−55–125 °C"
+      ]
+    ],
+    "uses": [
+      "Board-temperature sensing",
+      "Fan control",
+      "Temperature alarms"
+    ],
+    "tip": "0.125 °C is the readout step size; accuracy follows the error specification. Sensor location and nearby heat sources affect the measured temperature.",
+    "pinNotes": [
+      [
+        "SDA / SCL",
+        "I²C temperature reading and configuration."
+      ],
+      [
+        "A0–A2",
+        "Hardware address selection."
+      ],
+      [
+        "OS",
+        "Open-drain overtemperature output, configurable for comparator or interrupt mode."
+      ],
+      [
+        "VCC / GND",
+        "Power supply and ground."
+      ]
+    ],
+    "steps": [
+      "Set temperature thresholds and hysteresis from the host.",
+      "Read the temperature register periodically.",
+      "Control fans and alarms using OS or the readings."
+    ]
+  },
+  "pic16f877a": {
+    "name": "PIC16F877A-I/P",
+    "subtitle": "Classic 8-bit PIC microcontroller",
+    "family": "Control and computing",
+    "package": "DIP-40",
+    "description": "An 8-bit MCU integrates Flash, ADC, timers and serial interfaces. The 40-pin through-hole package makes power, ports, clocks and programming-signal roles easy to observe.",
+    "specs": [
+      [
+        "Processor",
+        "8-bit PIC"
+      ],
+      [
+        "Program memory",
+        "8K × 14 bit"
+      ],
+      [
+        "ADC",
+        "10 bit, 8 channels"
+      ],
+      [
+        "Supply",
+        "4.0–5.5 V"
+      ]
+    ],
+    "uses": [
+      "Introduction to PIC programming",
+      "Instrument control",
+      "Embedded experiments"
+    ],
+    "tip": "PIC program memory is often expressed in instruction words; each program word here is 14 bits. Configure port analog and digital functions before applying analog signals.",
+    "pinNotes": [
+      [
+        "RA–RE",
+        "Several I/O ports; some pins multiplex ADC and communication peripherals."
+      ],
+      [
+        "OSC1 / OSC2",
+        "External clock-circuit connections."
+      ],
+      [
+        "MCLR / PGC / PGD",
+        "Reset and ICSP programming signals."
+      ],
+      [
+        "VDD / VSS",
+        "Connect every power and ground pin according to the datasheet."
+      ]
+    ],
+    "steps": [
+      "Prepare clock, power, reset and ICSP connections.",
+      "Program Flash with a compatible programmer.",
+      "Read the ADC, then control outputs using a timer or GPIO."
+    ]
+  },
+  "at89s52": {
+    "name": "AT89S52-24PU",
+    "subtitle": "Classic 8051-architecture microcontroller",
+    "family": "Control and computing",
+    "package": "DIP-40",
+    "description": "Compatible with the 8051 instruction set, it integrates program Flash, four ports, timers and a serial interface. It is a classic teaching device for registers, peripherals and interrupts.",
+    "specs": [
+      [
+        "Architecture",
+        "8-bit 8051"
+      ],
+      [
+        "Flash",
+        "8 KB"
+      ],
+      [
+        "This model’s speed grade",
+        "24 MHz"
+      ],
+      [
+        "Supply",
+        "4.0–5.5 V"
+      ]
+    ],
+    "uses": [
+      "8051 teaching",
+      "Keypad and display control",
+      "Simple automation"
+    ],
+    "tip": "Configure pull-ups for P0’s open-drain behavior when using general-purpose I/O. RST is active high, and EA connects to a valid high level when using internal program memory.",
+    "pinNotes": [
+      [
+        "P0–P3",
+        "Four eight-bit ports, with some pins also serving communication or bus functions."
+      ],
+      [
+        "XTAL1 / XTAL2",
+        "Clock-circuit interface."
+      ],
+      [
+        "RST / EA",
+        "Reset and program-memory access selection."
+      ],
+      [
+        "MOSI / MISO / SCK",
+        "ISP programming interface multiplexed on P1."
+      ]
+    ],
+    "steps": [
+      "Configure power, crystal, reset and EA.",
+      "Program a blinking-light application through ISP.",
+      "Use timer interrupts to control the LED rhythm."
+    ]
+  },
+  "stm32f407": {
+    "name": "STM32F407VGT6",
+    "subtitle": "Cortex-M4 MCU with floating-point unit",
+    "family": "Control and computing",
+    "package": "LQFP-100",
+    "description": "The Cortex-M4 core includes DSP instructions and a single-precision floating-point unit for real-time signal processing. Extensive timing, sampling and communication peripherals support more complex control systems.",
+    "specs": [
+      [
+        "Core",
+        "Cortex-M4 + FPU"
+      ],
+      [
+        "Maximum clock",
+        "168 MHz"
+      ],
+      [
+        "Flash",
+        "1 MB"
+      ],
+      [
+        "SRAM",
+        "192 KB + 4 KB backup"
+      ]
+    ],
+    "uses": [
+      "Audio processing",
+      "Motor control",
+      "Networked instruments"
+    ],
+    "tip": "The 100-pin package has 25 pins per side. Check the complete memory, package and temperature suffixes; power domains also include analog supply and core-regulator support terminals.",
+    "pinNotes": [
+      [
+        "VDD / VSS / VDDA",
+        "Digital and analog supplies, with separate decoupling."
+      ],
+      [
+        "GPIO / alternate peripherals",
+        "Configure ADC, timer or communication functions on the selected physical pins."
+      ],
+      [
+        "SWDIO / SWCLK",
+        "Programming and in-circuit debugging."
+      ],
+      [
+        "NRST / BOOT0 / VCAP",
+        "Reset, boot mode and external capacitors for the internal regulator."
+      ]
+    ],
+    "steps": [
+      "Initialize clocks, power and required peripherals.",
+      "Download the program through SWD.",
+      "Move sampled data using DMA, then perform real-time processing."
+    ]
+  },
+  "stm32g030": {
+    "name": "STM32G030F6P6",
+    "subtitle": "Compact Cortex-M0+ MCU",
+    "family": "Control and computing",
+    "package": "TSSOP-20",
+    "description": "A 20-pin surface-mount package integrates a 32-bit core, Flash, ADC and timers. It can handle power management, switch inputs and small-device control with a limited pin count.",
+    "specs": [
+      [
+        "Core",
+        "Cortex-M0+"
+      ],
+      [
+        "Maximum clock",
+        "64 MHz"
+      ],
+      [
+        "Flash / SRAM",
+        "32 KB / 8 KB"
+      ],
+      [
+        "Supply",
+        "2.0–3.6 V"
+      ]
+    ],
+    "uses": [
+      "Small-appliance control",
+      "Sensor nodes",
+      "Compact control boards"
+    ],
+    "tip": "TSSOP-20 peripheral availability depends on actual pin multiplexing. Start with the internal clock and retain the SWD debug interface.",
+    "pinNotes": [
+      [
+        "VDD / VSS",
+        "Power supply and ground."
+      ],
+      [
+        "GPIO",
+        "General-purpose I/O and alternate functions; select them using the TSSOP-20 pin diagram."
+      ],
+      [
+        "SWDIO / SWCLK",
+        "Two-wire programming and debug interface."
+      ],
+      [
+        "NRST",
+        "External reset input; its function depends on configuration."
+      ]
+    ],
+    "steps": [
+      "Build a minimal system using the internal clock.",
+      "Program through SWD and configure GPIO.",
+      "Read the ADC or generate PWM to implement a control function."
+    ]
+  },
+  "ch32v003": {
+    "name": "CH32V003F4P6",
+    "subtitle": "Small RISC-V microcontroller",
+    "family": "Control and computing",
+    "package": "TSSOP-20",
+    "description": "A WCH QingKe RISC-V core is combined with an ADC, timers and common serial interfaces. Small memories and a compact package suit learning concise embedded-control programs.",
+    "specs": [
+      [
+        "Core",
+        "QingKe RISC-V2A"
+      ],
+      [
+        "Maximum clock",
+        "48 MHz"
+      ],
+      [
+        "Flash / SRAM",
+        "16 KB / 2 KB"
+      ],
+      [
+        "Nominal supply",
+        "3.3 V / 5 V"
+      ]
+    ],
+    "uses": [
+      "RISC-V introduction",
+      "Small controllers",
+      "Sensor interfaces"
+    ],
+    "tip": "This series uses a single-wire SDI debug interface. Confirm debug mode and target power before connecting tools such as WCH-Link.",
+    "pinNotes": [
+      [
+        "VDD / VSS",
+        "Power supply and ground."
+      ],
+      [
+        "PA / PC / PD",
+        "General-purpose I/O and peripheral alternate functions."
+      ],
+      [
+        "PD1 / SWIO",
+        "Multiplexed pin for the single-wire debug interface."
+      ],
+      [
+        "NRST",
+        "Reset-function pin; the precise alternate function depends on configuration."
+      ]
+    ],
+    "steps": [
+      "Connect power and single-wire debugging.",
+      "Compile and download a RISC-V program.",
+      "Use timers, GPIO or ADC for a control experiment."
+    ]
+  },
+  "esp8266ex": {
+    "name": "ESP8266EX",
+    "subtitle": "Wi-Fi wireless microcontroller",
+    "family": "Wireless connectivity",
+    "package": "QFN-32",
+    "description": "Integrates a 32-bit processor and 2.4 GHz Wi-Fi in one chip. With external flash, a clock, and supporting RF circuitry, it can run programs and connect to wireless networks.",
+    "specs": [
+      [
+        "Core",
+        "Tensilica L106"
+      ],
+      [
+        "Maximum clock",
+        "160 MHz"
+      ],
+      [
+        "Wireless",
+        "2.4 GHz Wi-Fi"
+      ],
+      [
+        "Supply",
+        "2.5–3.6 V"
+      ]
+    ],
+    "uses": [
+      "Smart lighting",
+      "Wireless sensors",
+      "Wi-Fi learning"
+    ],
+    "tip": "A bare-chip design needs external storage, RF matching, and an antenna. Set the boot states of GPIO0, GPIO2, and GPIO15 according to the datasheet.",
+    "pinNotes": [
+      [
+        "Power / GND",
+        "Decouple digital and RF supplies according to the reference design."
+      ],
+      [
+        "CHIP_EN / EXT_RSTB",
+        "Chip enable and external reset."
+      ],
+      [
+        "U0TXD / U0RXD",
+        "UART programming and logging interface."
+      ],
+      [
+        "SPI / LNA",
+        "External flash interface and RF antenna connection."
+      ]
+    ],
+    "steps": [
+      "Load the application from external flash.",
+      "Configure Wi-Fi and join an access point.",
+      "Read sensors and send their data over the network."
+    ]
+  },
+  "esp32s3": {
+    "name": "ESP32-S3",
+    "subtitle": "Dual-core Wi-Fi and Bluetooth LE MCU",
+    "family": "Wireless connectivity",
+    "package": "QFN-56",
+    "description": "Dual Xtensa LX7 cores integrate Wi-Fi, Bluetooth LE, and extensive peripherals. Camera, display, and USB connections support connected interfaces and edge signal processing.",
+    "specs": [
+      [
+        "Processor",
+        "Dual-core Xtensa LX7"
+      ],
+      [
+        "Maximum clock",
+        "240 MHz"
+      ],
+      [
+        "On-chip SRAM",
+        "512 KB"
+      ],
+      [
+        "Wireless",
+        "Wi-Fi + Bluetooth 5 LE"
+      ]
+    ],
+    "uses": [
+      "Connected interactive devices",
+      "Image capture",
+      "USB peripherals"
+    ],
+    "tip": "This exhibit represents the base ESP32-S3 chip, whose program flash is provided externally. Other suffix variants can integrate flash or PSRAM within the package.",
+    "pinNotes": [
+      [
+        "VDD / VDDA / GND",
+        "Digital and analog supplies and ground, connected by power domain."
+      ],
+      [
+        "CHIP_PU / GPIO0",
+        "Enable and boot-configuration signals."
+      ],
+      [
+        "GPIO19 / GPIO20",
+        "Can be multiplexed as USB D− and D+."
+      ],
+      [
+        "SPI / LNA_IN",
+        "Memory interface and RF antenna terminal."
+      ]
+    ],
+    "steps": [
+      "Configure external flash, power, and boot circuitry.",
+      "Write the application through a supported programming interface.",
+      "Schedule both cores and peripherals for connected acquisition and interaction."
+    ]
+  },
+  "attiny85": {
+    "name": "ATtiny85-20PU",
+    "subtitle": "Eight-pin AVR microcontroller",
+    "family": "Control and computing",
+    "package": "DIP-8",
+    "description": "An eight-pin package integrates an 8-bit processor, program memory, an ADC, and timers. It supports lighting, buttons, and simple sensor control within a small pin and memory budget.",
+    "specs": [
+      [
+        "Core",
+        "8-bit AVR"
+      ],
+      [
+        "Flash",
+        "8 KB"
+      ],
+      [
+        "SRAM",
+        "512 B"
+      ],
+      [
+        "Maximum clock*",
+        "20 MHz"
+      ]
+    ],
+    "uses": [
+      "Compact lighting control",
+      "Button interfaces",
+      "Minimal embedded experiments"
+    ],
+    "tip": "20 MHz operation requires a 4.5–5.5 V supply. PB5 normally serves as RESET, so the usable I/O count depends on fuse settings and the programming method.",
+    "pinNotes": [
+      [
+        "8 VCC · 4 GND",
+        "Power and ground."
+      ],
+      [
+        "PB0–PB5",
+        "Port pins with multiplexed ADC, timer, and other functions."
+      ],
+      [
+        "RESET / ISP",
+        "Reset and serial programming share some port pins."
+      ],
+      [
+        "XTAL / USI",
+        "Optional clock and universal serial interface functions share I/O."
+      ]
+    ],
+    "steps": [
+      "Apply power and retain the ISP programming connections.",
+      "Write the program and select a suitable clock configuration.",
+      "Program the device to control LEDs or read buttons and analog inputs."
+    ]
+  },
+  "tl072": {
+    "name": "TL072CP",
+    "subtitle": "Dual operational amplifier",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "Contains two operational amplifiers. It amplifies weak analog signals and can form audio filters with external resistors and capacitors.",
+    "specs": [
+      [
+        "Channels",
+        "2 channels"
+      ],
+      [
+        "Total supply voltage",
+        "7–30 V"
+      ],
+      [
+        "Gain-bandwidth product (typical)",
+        "3 MHz"
+      ],
+      [
+        "Package",
+        "DIP-8"
+      ]
+    ],
+    "uses": [
+      "Audio preamplifiers",
+      "Active filters",
+      "Signal buffering"
+    ],
+    "tip": "Allow supply-rail headroom for both input voltage range and output swing. Check the complete part number to distinguish TL072 from later H-series versions.",
+    "pinNotes": [
+      [
+        "IN+ / IN−",
+        "Noninverting and inverting inputs for each channel."
+      ],
+      [
+        "OUT1 / OUT2",
+        "Two analog outputs."
+      ],
+      [
+        "V+ / V−",
+        "Positive and negative supply terminals. Total supply is their voltage difference."
+      ]
+    ],
+    "steps": [
+      "The input receives the analog signal to be processed.",
+      "The external feedback network sets gain or filtering.",
+      "The output varies continuously with the input to form the processed signal."
+    ]
+  },
+  "lm324": {
+    "name": "LM324N",
+    "subtitle": "Quad operational amplifier",
+    "family": "Analog and signals",
+    "package": "DIP-14",
+    "description": "Packs four operational amplifiers into one through-hole package. It can process several sensor signals on the same circuit board.",
+    "specs": [
+      [
+        "Channels",
+        "4 channels"
+      ],
+      [
+        "Total supply voltage",
+        "3–30 V"
+      ],
+      [
+        "Gain-bandwidth product (typical)",
+        "1.2 MHz"
+      ],
+      [
+        "Package",
+        "DIP-14"
+      ]
+    ],
+    "uses": [
+      "Multichannel sensor conditioning",
+      "Active filtering",
+      "Analog signal buffering"
+    ],
+    "tip": "This exhibit uses the TI LM324N. Check both manufacturer and full suffix when ordering or reading specifications. All channels share the supply.",
+    "pinNotes": [
+      [
+        "IN1–IN4 + / −",
+        "Four differential input pairs."
+      ],
+      [
+        "OUT1–OUT4",
+        "Four independent analog outputs."
+      ],
+      [
+        "VCC+ / VCC−",
+        "Supply terminals shared by every channel."
+      ]
+    ],
+    "steps": [
+      "Each channel receives an analog signal.",
+      "Separate feedback networks set each processing function.",
+      "The four outputs feed acquisition circuits or later stages."
+    ]
+  },
+  "lm393": {
+    "name": "LM393P",
+    "subtitle": "Dual voltage comparator",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "Compares the voltages at two inputs and turns a continuously varying voltage into a detectable state. One chip provides two independent threshold-detection channels.",
+    "specs": [
+      [
+        "Comparator channels",
+        "2 channels"
+      ],
+      [
+        "Supply",
+        "2–30 V"
+      ],
+      [
+        "Output type",
+        "Open collector"
+      ],
+      [
+        "Package",
+        "DIP-8"
+      ]
+    ],
+    "uses": [
+      "Light-level threshold detection",
+      "Voltage monitoring",
+      "Sensor-state detection"
+    ],
+    "tip": "Open-collector outputs need pull-up resistors to establish a high level. Add hysteresis near the threshold to reduce output chatter.",
+    "pinNotes": [
+      [
+        "IN+ / IN−",
+        "The two voltage-comparison inputs for each channel."
+      ],
+      [
+        "OUT1 / OUT2",
+        "Pull the output node low or release it so a pull-up resistor establishes a high level."
+      ],
+      [
+        "VCC / GND",
+        "Power and reference ground."
+      ]
+    ],
+    "steps": [
+      "Apply the sensor voltage and reference voltage to the comparator.",
+      "Their relative levels determine the output state.",
+      "A controller reads the state to detect threshold crossings."
+    ]
+  },
+  "lm339": {
+    "name": "LM339N",
+    "subtitle": "Quad voltage comparator",
+    "family": "Analog and signals",
+    "package": "DIP-14",
+    "description": "Contains four voltage comparators to detect whether several signals cross preset thresholds. Common roles include voltage monitoring and state detection.",
+    "specs": [
+      [
+        "Comparator channels",
+        "4 channels"
+      ],
+      [
+        "Supply",
+        "2–30 V"
+      ],
+      [
+        "Output type",
+        "Open collector"
+      ],
+      [
+        "Package",
+        "DIP-14"
+      ]
+    ],
+    "uses": [
+      "Multilevel voltage indication",
+      "Window detection",
+      "Multichannel threshold alarms"
+    ],
+    "tip": "Check input common-mode range for the supply conditions. Fit suitable pull-up resistors on each output to interface with downstream logic.",
+    "pinNotes": [
+      [
+        "IN1–IN4 + / −",
+        "Four comparison-input pairs."
+      ],
+      [
+        "OUT1–OUT4",
+        "Four open-collector outputs."
+      ],
+      [
+        "VCC / GND",
+        "Shared supply and reference ground."
+      ]
+    ],
+    "steps": [
+      "Set a reference threshold for each channel.",
+      "Each comparator evaluates its signal relative to the threshold.",
+      "Combine the results into a window or multilevel state."
+    ]
+  },
+  "ad620": {
+    "name": "AD620ANZ",
+    "subtitle": "Precision instrumentation amplifier",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "Amplifies tiny voltage differences between two signal wires while suppressing interference common to both. It is often used with bridge sensors.",
+    "specs": [
+      [
+        "Amplifier channels",
+        "1 differential channel"
+      ],
+      [
+        "Adjustable gain",
+        "1–10000×"
+      ],
+      [
+        "Dual-supply range",
+        "±2.3 to ±18 V"
+      ],
+      [
+        "Gain setting",
+        "1 external resistor"
+      ]
+    ],
+    "uses": [
+      "Weighing-scale signal conditioning",
+      "Pressure-bridge measurement",
+      "Precision instrument front ends"
+    ],
+    "tip": "High gain also amplifies input errors. Check common-mode voltage, output swing, and the REF potential together.",
+    "pinNotes": [
+      [
+        "+IN / −IN",
+        "Inputs for the differential signal being measured."
+      ],
+      [
+        "RG",
+        "A resistor between the two gain terminals sets gain."
+      ],
+      [
+        "REF / OUT",
+        "REF sets the output reference potential and OUT carries the amplified signal."
+      ],
+      [
+        "+VS / −VS",
+        "Instrumentation-amplifier supply terminals."
+      ]
+    ],
+    "steps": [
+      "A bridge sensor produces a small differential voltage.",
+      "The instrumentation amplifier scales that difference by the selected gain.",
+      "An ADC converts the output into processable digital data."
+    ]
+  },
+  "ina128": {
+    "name": "INA128P",
+    "subtitle": "Precision differential measurement front end",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "An instrumentation amplifier for precision measurement. One external resistor sets its gain to amplify tiny outputs from strain gauges, pressure bridges, and similar sensors.",
+    "specs": [
+      [
+        "Amplifier channels",
+        "1 differential channel"
+      ],
+      [
+        "Total supply voltage",
+        "4.5–36 V"
+      ],
+      [
+        "Adjustable gain",
+        "1–10000×"
+      ],
+      [
+        "Gain setting",
+        "1 external resistor"
+      ]
+    ],
+    "uses": [
+      "Strain-gauge measurement",
+      "Bridge pressure sensors",
+      "Industrial data acquisition"
+    ],
+    "tip": "Higher gain reduces the allowable differential input amplitude. Choose gain using both the sensor full-scale output and the ADC input range.",
+    "pinNotes": [
+      [
+        "VIN+ / VIN−",
+        "Differential signal inputs."
+      ],
+      [
+        "RG",
+        "External resistor sets the gain."
+      ],
+      [
+        "REF / VO",
+        "Output reference and analog output terminals."
+      ],
+      [
+        "V+ / V−",
+        "Shared supply terminals."
+      ]
+    ],
+    "steps": [
+      "The sensor converts a physical quantity into a differential voltage.",
+      "INA128 suppresses common-mode interference and amplifies the differential component.",
+      "The acquisition circuit reads the output and applies calibration."
+    ]
+  },
+  "mcp6002": {
+    "name": "MCP6002-I/P",
+    "subtitle": "Low-voltage dual operational amplifier",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "A dual operational amplifier that works at low supply voltages. Its inputs and outputs can approach both supply rails, supporting analog processing in portable devices.",
+    "specs": [
+      [
+        "Channels",
+        "2 channels"
+      ],
+      [
+        "Supply",
+        "1.8–6 V"
+      ],
+      [
+        "Gain-bandwidth product (typical)",
+        "1 MHz"
+      ],
+      [
+        "Input / output",
+        "Rail-to-rail"
+      ]
+    ],
+    "uses": [
+      "Battery-powered sensor circuits",
+      "Signal buffering",
+      "Low-frequency active filters"
+    ],
+    "tip": "Rail-to-rail operation allows signals to approach the supply rails. Actual output headroom varies with load, with precise limits given under the datasheet test conditions.",
+    "pinNotes": [
+      [
+        "VIN+ / VIN−",
+        "Noninverting and inverting inputs for each channel."
+      ],
+      [
+        "VOUTA / VOUTB",
+        "Two analog outputs."
+      ],
+      [
+        "VDD / VSS",
+        "Positive and lower-potential supply terminals."
+      ]
+    ],
+    "steps": [
+      "A low-voltage sensor produces an analog signal.",
+      "A feedback network controls gain or frequency response.",
+      "The output feeds a microcontroller ADC or the next circuit stage."
+    ]
+  },
+  "tl431": {
+    "name": "TL431CLP",
+    "subtitle": "Adjustable precision shunt regulator",
+    "family": "Power and drivers",
+    "package": "TO-92 · 3P",
+    "description": "Stabilizes voltage by adjusting the current flowing through itself. Common uses include supply feedback and voltage references. Its small three-pin body contains a reference and control circuitry.",
+    "specs": [
+      [
+        "Operating mode",
+        "Shunt regulation"
+      ],
+      [
+        "Reference voltage",
+        "Approximately 2.5 V"
+      ],
+      [
+        "Adjustable range",
+        "Approximately 2.5–36 V"
+      ],
+      [
+        "Package",
+        "TO-92 · 3P"
+      ]
+    ],
+    "uses": [
+      "Power-supply feedback",
+      "Voltage references",
+      "Voltage threshold detection"
+    ],
+    "tip": "TO-92 also houses transistors and other devices, so the complete part number identifies the function. Arrange current limiting and operating current according to the shunt-regulator datasheet.",
+    "pinNotes": [
+      [
+        "REF",
+        "Feedback reference input for comparing the target voltage."
+      ],
+      [
+        "K (cathode)",
+        "Terminal receiving the controlled current."
+      ],
+      [
+        "A (anode)",
+        "Lower-potential terminal of the shunt regulator."
+      ]
+    ],
+    "steps": [
+      "A divider feeds the monitored voltage to REF.",
+      "Internal circuitry compares feedback with the reference.",
+      "Changing cathode current adjusts the feedback state."
+    ]
+  },
+  "lm317": {
+    "name": "LM317T",
+    "subtitle": "Adjustable linear regulator",
+    "family": "Power and drivers",
+    "package": "TO-220 · 3P",
+    "description": "A three-terminal linear regulator whose output voltage is set by external resistors. It illustrates the relationship between feedback, voltage headroom, and heat dissipation.",
+    "specs": [
+      [
+        "Regulation type",
+        "Linear regulation"
+      ],
+      [
+        "Adjustable output range",
+        "1.2–37 V"
+      ],
+      [
+        "Adjustment method",
+        "External divider resistors"
+      ],
+      [
+        "Package",
+        "TO-220 · 3P"
+      ]
+    ],
+    "uses": [
+      "Adjustable power supplies",
+      "Local voltage regulation",
+      "Constant-current source learning"
+    ],
+    "tip": "Linear-regulator heating depends on the input-output voltage difference and load current. Operating conditions must meet headroom, cooling, and protection requirements together.",
+    "pinNotes": [
+      [
+        "IN",
+        "Unregulated input supply."
+      ],
+      [
+        "OUT",
+        "Regulated output voltage."
+      ],
+      [
+        "ADJ",
+        "Adjustment terminal for the external feedback network."
+      ],
+      [
+        "Metal thermal tab",
+        "Connected to OUT. Check insulation requirements when fitting a heatsink."
+      ]
+    ],
+    "steps": [
+      "Divider resistors set the target output.",
+      "Internal feedback adjusts the series pass device.",
+      "The load receives a stable voltage while energy associated with the voltage drop mainly becomes heat."
+    ]
+  },
+  "lm2596": {
+    "name": "LM2596S-ADJ/NOPB",
+    "subtitle": "Adjustable buck switching regulator",
+    "family": "Power and drivers",
+    "package": "TO-263 · 5P",
+    "description": "Uses periodic switching and an external inductor to turn a higher DC voltage into a lower regulated voltage. Common buck modules use this architecture.",
+    "specs": [
+      [
+        "Input range",
+        "4.5–40 V"
+      ],
+      [
+        "Switching frequency",
+        "150 kHz"
+      ],
+      [
+        "Regulator type",
+        "Adjustable buck"
+      ],
+      [
+        "Package",
+        "TO-263 · 5P"
+      ]
+    ],
+    "uses": [
+      "DC voltage step-down",
+      "Instrument power",
+      "Switching-supply learning"
+    ],
+    "tip": "The chip, inductor, diode, and PCB cooling jointly determine usable load capacity. Interpret module current labels in the context of operating conditions.",
+    "pinNotes": [
+      [
+        "VIN / GND",
+        "Supply input and reference ground."
+      ],
+      [
+        "OUTPUT",
+        "Power-switch node. External energy-storage and filtering components form the regulated output."
+      ],
+      [
+        "FEEDBACK",
+        "Reads the divided output voltage for regulation."
+      ],
+      [
+        "ON/OFF",
+        "Controls operating and shutdown states."
+      ]
+    ],
+    "steps": [
+      "The internal switch transfers energy to the inductor each cycle.",
+      "The external inductor, capacitor, and diode smooth current flow.",
+      "Feedback adjusts switching duty cycle to regulate the output."
+    ]
+  },
+  "mp1584": {
+    "name": "MP1584EN-LF-Z",
+    "subtitle": "Compact adjustable buck converter",
+    "family": "Power and drivers",
+    "package": "SOIC-8 · exposed pad",
+    "description": "Integrates buck control and a power switch in an eight-pin package. An external inductor, capacitors, and diode form a compact DC supply.",
+    "specs": [
+      [
+        "Input range",
+        "4.5–28 V"
+      ],
+      [
+        "Adjustable switching frequency",
+        "100 kHz–1.5 MHz"
+      ],
+      [
+        "Conversion type",
+        "Buck"
+      ],
+      [
+        "Package",
+        "SOIC-8E"
+      ]
+    ],
+    "uses": [
+      "Embedded-device power",
+      "Compact buck modules",
+      "Distributed power supplies"
+    ],
+    "tip": "The exposed underside pad contributes to heat removal. High-frequency supply performance also depends on PCB layout and inductor and capacitor selection.",
+    "pinNotes": [
+      [
+        "VIN / GND",
+        "Supply input and reference ground."
+      ],
+      [
+        "SW / BST",
+        "Switch node and high-side switch bootstrap terminal."
+      ],
+      [
+        "FB / COMP",
+        "Output feedback and loop compensation."
+      ],
+      [
+        "FREQ / EN",
+        "Frequency setting and enable control."
+      ]
+    ],
+    "steps": [
+      "Input power enters the chip and external energy-storage network.",
+      "The power switch controls energy transferred each cycle.",
+      "Feedback and compensation maintain a stable output."
+    ]
+  },
+  "tps5430": {
+    "name": "TPS5430DDA",
+    "subtitle": "Wide-input buck converter",
+    "family": "Power and drivers",
+    "package": "SOIC-8 · PowerPAD",
+    "description": "A buck regulator with an integrated power MOSFET. It converts DC from industrial equipment or an adapter into a local power rail.",
+    "specs": [
+      [
+        "Input range",
+        "5.5–36 V"
+      ],
+      [
+        "Switching frequency",
+        "500 kHz"
+      ],
+      [
+        "Conversion type",
+        "Buck"
+      ],
+      [
+        "Package",
+        "8-pin PowerPAD"
+      ]
+    ],
+    "uses": [
+      "Industrial-equipment power",
+      "DC adapter step-down",
+      "Board-level power"
+    ],
+    "tip": "The underside PowerPAD needs a suitable PCB thermal design. Output capability depends jointly on input/output conditions, external components, and temperature rise.",
+    "pinNotes": [
+      [
+        "VIN / GND",
+        "Input supply and ground."
+      ],
+      [
+        "PH / BOOT",
+        "Power-switch node and bootstrap supply."
+      ],
+      [
+        "VSENSE / ENA",
+        "Feedback sensing and enable control."
+      ],
+      [
+        "PowerPAD",
+        "Thermal pad connected as specified in the datasheet."
+      ]
+    ],
+    "steps": [
+      "The internal switch operates at a fixed frequency.",
+      "An external inductor and capacitor smooth pulses into DC.",
+      "Feedback senses the output and corrects energy transfer."
+    ]
+  },
+  "mt3608": {
+    "name": "MT3608",
+    "subtitle": "Six-pin boost converter",
+    "family": "Power and drivers",
+    "package": "SOT-23-6",
+    "description": "A tiny six-pin chip controls a boost supply, raising a lower input voltage to a higher output. It is common in portable equipment.",
+    "specs": [
+      [
+        "Input range",
+        "2–24 V"
+      ],
+      [
+        "Switching frequency",
+        "1.2 MHz"
+      ],
+      [
+        "Conversion type",
+        "Boost"
+      ],
+      [
+        "Package",
+        "SOT-23-6"
+      ]
+    ],
+    "uses": [
+      "Portable-device boost supplies",
+      "Auxiliary sensor power",
+      "Small boost modules"
+    ],
+    "tip": "The available boosted load current depends on input power, efficiency, and cooling. Peak switch current and output load current describe different circuit locations.",
+    "pinNotes": [
+      [
+        "IN / GND",
+        "Input supply and ground."
+      ],
+      [
+        "SW",
+        "Switch node connected to the external inductor and rectification network."
+      ],
+      [
+        "FB",
+        "Detects output voltage through a divider."
+      ],
+      [
+        "EN",
+        "Converter enable control."
+      ]
+    ],
+    "steps": [
+      "The inductor stores energy while the switch conducts.",
+      "After switching, the inductor transfers energy to the higher-voltage output.",
+      "Feedback regulates the process to keep output near the setpoint."
+    ]
+  },
+  "tp4056": {
+    "name": "TP4056 (ESOP-8)",
+    "subtitle": "Single-cell lithium-battery charge management",
+    "family": "Power and drivers",
+    "package": "ESOP-8 · exposed pad",
+    "description": "A linear charge-management IC for one series lithium-ion cell. It manages constant-current, constant-voltage, and charge-completion states, and is common on small charger boards.",
+    "specs": [
+      [
+        "Battery type",
+        "1-series-cell lithium-ion"
+      ],
+      [
+        "Constant-voltage phase",
+        "4.2 V"
+      ],
+      [
+        "Charging method",
+        "Linear constant current / constant voltage"
+      ],
+      [
+        "Package",
+        "ESOP-8"
+      ]
+    ],
+    "uses": [
+      "Portable-device charge management",
+      "Small charger boards",
+      "Charging-process learning"
+    ],
+    "tip": "Match battery chemistry and allowed charge voltage to the datasheet. Charging and battery protection have separate responsibilities, and the selected charge current must account for heating.",
+    "pinNotes": [
+      [
+        "VCC / BAT",
+        "Input supply, plus battery-voltage sensing and charging connection."
+      ],
+      [
+        "PROG",
+        "An external resistor sets charging current."
+      ],
+      [
+        "CHRG / STDBY",
+        "Charging and charge-complete status outputs."
+      ],
+      [
+        "TEMP / CE / GND",
+        "Temperature sensing, enable, and reference ground."
+      ]
+    ],
+    "steps": [
+      "The chip detects battery state and enters the appropriate charging phase.",
+      "It first limits current, then regulates voltage near the target voltage.",
+      "It reports completion when current falls to the termination condition."
+    ]
+  },
+  "mcp73831": {
+    "name": "MCP73831T-2ACI/OT",
+    "subtitle": "Five-pin single-cell lithium charger",
+    "family": "Power and drivers",
+    "package": "SOT-23-5",
+    "description": "Provides linear charge management for a single lithium-ion or lithium-polymer cell using five pins. It fits compact portable products.",
+    "specs": [
+      [
+        "Battery type",
+        "1-series-cell lithium-ion / lithium-polymer"
+      ],
+      [
+        "Charge voltage for this version",
+        "4.20 V"
+      ],
+      [
+        "Charging method",
+        "Constant current / constant voltage"
+      ],
+      [
+        "Package",
+        "SOT-23-5"
+      ]
+    ],
+    "uses": [
+      "Wearable power management",
+      "Compact portable equipment",
+      "Charge-status indication"
+    ],
+    "tip": "The voltage option in the part number determines the final charging voltage. Check battery specifications, programmed current, and board cooling together.",
+    "pinNotes": [
+      [
+        "VDD / VSS",
+        "Input supply and reference ground."
+      ],
+      [
+        "VBAT",
+        "Battery-voltage sensing and charge output."
+      ],
+      [
+        "PROG",
+        "Sets charging current."
+      ],
+      [
+        "STAT",
+        "Charging-status output."
+      ]
+    ],
+    "steps": [
+      "Detect battery voltage and choose preconditioning or charging.",
+      "Manage charging using the programmed current and fixed final voltage.",
+      "Update status at completion and monitor recharge conditions."
+    ]
+  },
+  "dw01a": {
+    "name": "DW01A-G",
+    "subtitle": "Single-cell lithium-battery protection controller",
+    "family": "Power and drivers",
+    "package": "SOT-23-6",
+    "description": "Monitors abnormal voltage and current conditions in one series lithium cell and controls external MOSFETs for protection. It is common on small battery-protection boards.",
+    "specs": [
+      [
+        "Battery type",
+        "1-series-cell lithium-ion / lithium-polymer"
+      ],
+      [
+        "Monitored conditions",
+        "Overcharge / overdischarge / overcurrent"
+      ],
+      [
+        "Protection switch",
+        "External MOSFET"
+      ],
+      [
+        "Package",
+        "SOT-23-6"
+      ]
+    ],
+    "uses": [
+      "Battery-protection boards",
+      "Portable-device battery packs",
+      "Protection-state learning"
+    ],
+    "tip": "Protection thresholds handle abnormal conditions. A charger matched to the battery sets the normal charge endpoint, while the external MOSFETs also determine protection-board capability.",
+    "pinNotes": [
+      [
+        "VCC / GND",
+        "Battery-voltage sensing and reference."
+      ],
+      [
+        "CS",
+        "Detects abnormal current through voltage drop in the external path."
+      ],
+      [
+        "OC",
+        "Charge-protection control output."
+      ],
+      [
+        "OD",
+        "Discharge-protection control output."
+      ]
+    ],
+    "steps": [
+      "Continuously monitor battery voltage and current-related signals.",
+      "Trigger protection after the specified fault delay.",
+      "Control external switches and release protection when recovery conditions are met."
+    ]
+  },
+  "xl6019": {
+    "name": "XL6019E1",
+    "subtitle": "Five-pin boost converter",
+    "family": "Power and drivers",
+    "package": "TO-263 · 5P",
+    "description": "A boost converter integrating control circuitry and a power switch. An external inductor, diode, and capacitors provide a higher DC output voltage.",
+    "specs": [
+      [
+        "Input range",
+        "5–40 V"
+      ],
+      [
+        "Switching frequency (typical)",
+        "180 kHz"
+      ],
+      [
+        "Feedback reference (typical)",
+        "1.25 V"
+      ],
+      [
+        "Package",
+        "TO-263 · 5P"
+      ]
+    ],
+    "uses": [
+      "Industrial auxiliary power",
+      "Instrument voltage boost",
+      "DC conversion learning"
+    ],
+    "tip": "Output power depends on input conditions, external components, and thermal design. Datasheet switch-current figures describe the capability at the chip switch node.",
+    "pinNotes": [
+      [
+        "VIN / GND",
+        "Input supply and reference ground."
+      ],
+      [
+        "SW",
+        "Switching node for the external energy-storage network."
+      ],
+      [
+        "FB",
+        "Divider feedback input."
+      ],
+      [
+        "EN",
+        "Enables switching conversion."
+      ]
+    ],
+    "steps": [
+      "The inductor stores energy while the switch conducts.",
+      "Switching then transfers energy to the output.",
+      "Feedback controls duty cycle to stabilize the target voltage."
+    ]
+  },
+  "ir2104": {
+    "name": "IR2104PBF",
+    "subtitle": "Half-bridge gate driver",
+    "family": "Power and drivers",
+    "package": "DIP-8",
+    "description": "Converts controller logic into gate-drive signals for high-side and low-side power devices. It includes interlock and dead-time control.",
+    "specs": [
+      [
+        "Driver topology",
+        "High-side + low-side half bridge"
+      ],
+      [
+        "Gate-drive supply",
+        "10–20 V"
+      ],
+      [
+        "Control signals",
+        "IN + shutdown control"
+      ],
+      [
+        "Package",
+        "DIP-8"
+      ]
+    ],
+    "uses": [
+      "Motor power-stage control",
+      "Switching-supply power stages",
+      "Half-bridge operation learning"
+    ],
+    "tip": "The high-side driver floats relative to VS. Understand the reference relationships of VB, VS, and COM, and verify bootstrap-supply operating conditions in the datasheet.",
+    "pinNotes": [
+      [
+        "VCC / COM",
+        "Low-side driver supply and reference."
+      ],
+      [
+        "IN / SD",
+        "Logic input and shutdown control."
+      ],
+      [
+        "HO / LO",
+        "Gate-drive outputs for high-side and low-side power devices."
+      ],
+      [
+        "VB / VS",
+        "High-side floating supply and its reference."
+      ]
+    ],
+    "steps": [
+      "The logic input requests a power-switch state.",
+      "Interlock and dead time coordinate both output transitions.",
+      "HO and LO charge and discharge the external power-device gates."
+    ]
+  },
+  "uln2003": {
+    "name": "ULN2003AN",
+    "subtitle": "Seven-channel Darlington driver array",
+    "family": "Power and drivers",
+    "package": "DIP-16",
+    "description": "Provides seven transistor-driver channels in one package, allowing logic signals to control relays, indicators, or small stepper-motor windings.",
+    "specs": [
+      [
+        "Drive channels",
+        "7 channels"
+      ],
+      [
+        "Output topology",
+        "NPN Darlington sink"
+      ],
+      [
+        "Inductive-load clamp",
+        "Integrated diodes"
+      ],
+      [
+        "Package",
+        "DIP-16"
+      ]
+    ],
+    "uses": [
+      "Relay arrays",
+      "Unipolar stepper motors",
+      "Multiple indicators"
+    ],
+    "tip": "Check total chip heating when several channels conduct together. COM is the common terminal of the clamp diodes and must be wired for the load circuit.",
+    "pinNotes": [
+      [
+        "1B–7B",
+        "Seven logic control inputs."
+      ],
+      [
+        "1C–7C",
+        "Seven current-sinking outputs."
+      ],
+      [
+        "GND",
+        "Common Darlington emitter connection."
+      ],
+      [
+        "COM",
+        "Common terminal of the internal clamp diodes."
+      ]
+    ],
+    "steps": [
+      "A logic input controls its Darlington channel.",
+      "A conducting channel provides the load-current return path.",
+      "The clamp network handles inductive voltage during load switching."
+    ]
+  },
+  "uln2803": {
+    "name": "ULN2803APG",
+    "subtitle": "Eight-channel Darlington driver array",
+    "family": "Power and drivers",
+    "package": "DIP-18",
+    "description": "Provides eight Darlington drivers with input resistors. A group of digital signals controls multiple loads, with integrated clamp diodes.",
+    "specs": [
+      [
+        "Drive channels",
+        "8 channels"
+      ],
+      [
+        "Output topology",
+        "Darlington sink"
+      ],
+      [
+        "Inductive-load clamp",
+        "Integrated diodes"
+      ],
+      [
+        "Package",
+        "DIP-18"
+      ]
+    ],
+    "uses": [
+      "Eight-relay banks",
+      "Lighting-display drivers",
+      "Multiple-actuator control"
+    ],
+    "tip": "Each channel rating and the total chip thermal limit must both be met. Output on-state voltage drop also affects the voltage delivered to the load.",
+    "pinNotes": [
+      [
+        "I1–I8",
+        "Eight logic inputs."
+      ],
+      [
+        "O1–O8",
+        "Eight collector outputs."
+      ],
+      [
+        "GND",
+        "Common reference for the driver channels."
+      ],
+      [
+        "COMMON",
+        "Common clamp-diode terminal."
+      ]
+    ],
+    "steps": [
+      "The controller sends a group of switching signals.",
+      "The array converts them into load-current paths.",
+      "Check power dissipation and temperature rise for the number of simultaneously active channels."
+    ]
+  },
+  "l293d": {
+    "name": "L293DNE",
+    "subtitle": "Dual H-bridge motor driver",
+    "family": "Power and drivers",
+    "package": "DIP-16",
+    "description": "Four half-bridge channels form two H bridges to control the direction of two small DC motors, or drive one bipolar stepper motor.",
+    "specs": [
+      [
+        "Bridge drive",
+        "2 complete H bridges"
+      ],
+      [
+        "Motor supply",
+        "4.5–36 V"
+      ],
+      [
+        "Clamp diodes",
+        "Integrated in the D version"
+      ],
+      [
+        "Package",
+        "DIP-16"
+      ]
+    ],
+    "uses": [
+      "Dual-motor vehicles",
+      "Bipolar stepper motors",
+      "H-bridge learning"
+    ],
+    "tip": "VCC1 and VCC2 identify the logic and motor supplies. Select loads with motor startup current, output voltage drop, and chip temperature rise in mind.",
+    "pinNotes": [
+      [
+        "VCC1 / VCC2 / GND",
+        "Logic supply, motor supply, and common ground."
+      ],
+      [
+        "1A–4A",
+        "Four driver-control inputs."
+      ],
+      [
+        "1Y–4Y",
+        "Power outputs connected to motor windings."
+      ],
+      [
+        "1,2EN / 3,4EN",
+        "Enable the two channel groups separately."
+      ]
+    ],
+    "steps": [
+      "The controller sets the input state of each bridge leg.",
+      "The H bridge changes the voltage direction across the motor.",
+      "Enable signals and control logic provide start/stop or speed control."
+    ]
+  },
+  "a4988": {
+    "name": "A4988SETTR-T",
+    "subtitle": "Microstepping stepper-motor driver",
+    "family": "Power and drivers",
+    "package": "QFN-28 · exposed pad",
+    "description": "Converts step pulses into controlled current for a two-phase motor. Microstepping support makes it common in desktop manufacturing motion systems.",
+    "specs": [
+      [
+        "Motor type",
+        "Bipolar stepper"
+      ],
+      [
+        "Finest microstepping",
+        "1/16 step"
+      ],
+      [
+        "Motor supply",
+        "8–35 V"
+      ],
+      [
+        "Package",
+        "QFN-28"
+      ]
+    ],
+    "uses": [
+      "3D-printer axis drives",
+      "Desktop CNC motion",
+      "Stepper-control learning"
+    ],
+    "tip": "Reference voltage and sense resistors set current, subject to cooling limits. Microstepping increases command resolution, while mechanical accuracy also depends on the motor and load.",
+    "pinNotes": [
+      [
+        "STEP / DIR",
+        "Step pulses and direction control."
+      ],
+      [
+        "MS1 / MS2 / MS3",
+        "Select full-step or microstepping modes."
+      ],
+      [
+        "VBB / VDD / GND",
+        "Motor supply, logic supply, and ground."
+      ],
+      [
+        "VREF / SENSE1 / SENSE2",
+        "Current-limit reference and two-phase current sensing."
+      ]
+    ],
+    "steps": [
+      "The controller sends direction and step pulses.",
+      "The internal translator generates the corresponding two-phase current targets.",
+      "Chopper regulation controls current so the motor follows the selected step sequence."
+    ]
+  },
+  "tb6612": {
+    "name": "TB6612FNG",
+    "subtitle": "Dual DC-motor driver",
+    "family": "Power and drivers",
+    "package": "SSOP-24",
+    "description": "Two motor bridges in a fine-pitch surface-mount package independently control direction, speed, braking, and standby for two DC motors.",
+    "specs": [
+      [
+        "Drive channels",
+        "2 DC-motor channels"
+      ],
+      [
+        "Motor supply VM",
+        "2.5–13.5 V"
+      ],
+      [
+        "Logic supply VCC",
+        "2.7–5.5 V"
+      ],
+      [
+        "Package",
+        "SSOP-24"
+      ]
+    ],
+    "uses": [
+      "Mobile robots",
+      "Small mechatronic devices",
+      "PWM speed-control learning"
+    ],
+    "tip": "Operating current varies with motor supply, PWM conditions, and temperature rise. Use recommended operating conditions and check motor stall current when selecting the load.",
+    "pinNotes": [
+      [
+        "VM / VCC / GND",
+        "Motor supply, logic supply, and ground."
+      ],
+      [
+        "AIN1/2 · BIN1/2",
+        "Direction and state control for both motors."
+      ],
+      [
+        "PWMA / PWMB / STBY",
+        "Speed-control pulses and standby."
+      ],
+      [
+        "AO1/2 · BO1/2",
+        "Power outputs for the two motors."
+      ]
+    ],
+    "steps": [
+      "Direction inputs determine each bridge state.",
+      "PWM adjusts the fraction of time the motor receives energy.",
+      "Standby and braking controls complete motion management."
+    ]
+  },
+  "ads1115": {
+    "name": "ADS1115IDGSR",
+    "subtitle": "16-bit I²C analog-to-digital converter",
+    "family": "Isolation and conversion",
+    "package": "VSSOP-10",
+    "description": "Converts analog voltages into digital readings, with an integrated input multiplexer and programmable gain. It suits slowly changing signals such as temperature and pressure.",
+    "specs": [
+      [
+        "Resolution",
+        "16 bits"
+      ],
+      [
+        "Data rate",
+        "8–860 SPS"
+      ],
+      [
+        "Input selection",
+        "4 single-ended / 2 differential"
+      ],
+      [
+        "Digital interface",
+        "I²C"
+      ]
+    ],
+    "uses": [
+      "Fine sensor acquisition",
+      "Voltage loggers",
+      "Instrument data acquisition"
+    ],
+    "tip": "PGA range settings and permitted pin voltage have separate constraints. Actual input voltage must meet supply-rail and common-mode requirements.",
+    "pinNotes": [
+      [
+        "AIN0–AIN3",
+        "Multiplexed analog inputs."
+      ],
+      [
+        "SDA / SCL",
+        "I²C data and clock."
+      ],
+      [
+        "ADDR / ALERT/RDY",
+        "Address selection and threshold-alert or conversion-ready signal."
+      ],
+      [
+        "VDD / GND",
+        "Supply and reference ground."
+      ]
+    ],
+    "steps": [
+      "The controller selects input channel, gain, and data rate.",
+      "The ADC converts the chosen analog voltage into a digital code.",
+      "Read the result over I²C and scale it using the selected range."
+    ]
+  },
+  "mcp4725": {
+    "name": "MCP4725A0T-E/CH",
+    "subtitle": "12-bit I²C digital-to-analog converter",
+    "family": "Isolation and conversion",
+    "package": "SOT-23-6",
+    "description": "Converts numbers sent by a controller into an analog voltage. Integrated EEPROM can retain the output setting to restore at power-up.",
+    "specs": [
+      [
+        "Resolution",
+        "12 bits"
+      ],
+      [
+        "Output channels",
+        "1 channel"
+      ],
+      [
+        "Digital interface",
+        "I²C"
+      ],
+      [
+        "Nonvolatile storage",
+        "Integrated EEPROM"
+      ]
+    ],
+    "uses": [
+      "Analog setpoint voltages",
+      "Sensor-signal simulation",
+      "Low-speed waveform generation"
+    ],
+    "tip": "Use the volatile register for continuous waveform updates. EEPROM stores settings that must survive power loss, with write endurance considered.",
+    "pinNotes": [
+      [
+        "VOUT",
+        "Converted analog voltage output."
+      ],
+      [
+        "SDA / SCL",
+        "I²C data and clock."
+      ],
+      [
+        "A0",
+        "Participates in device-address selection."
+      ],
+      [
+        "VDD / VSS",
+        "Supply and reference terminals."
+      ]
+    ],
+    "steps": [
+      "The controller converts the target voltage into a digital code.",
+      "Write the code to the conversion register over I²C.",
+      "The DAC produces the voltage and stores the power-up setting when requested."
+    ]
+  },
+  "pcf8591": {
+    "name": "PCF8591P",
+    "subtitle": "8-bit ADC / DAC",
+    "family": "Isolation and conversion",
+    "package": "DIP-16",
+    "description": "Combines acquisition of four analog inputs with one analog output, communicating over I²C. It offers a direct introduction to ADC and DAC operation.",
+    "specs": [
+      [
+        "Conversion resolution",
+        "8 bits"
+      ],
+      [
+        "Analog inputs",
+        "4 multiplexed inputs"
+      ],
+      [
+        "Analog output",
+        "1 DAC channel"
+      ],
+      [
+        "Digital interface",
+        "I²C"
+      ]
+    ],
+    "uses": [
+      "Potentiometer and sensor readings",
+      "Analog-output experiments",
+      "ADC / DAC comparison"
+    ],
+    "tip": "An 8-bit converter provides 256 digital codes. Actual measurement accuracy also depends on reference voltage, noise, and conversion errors.",
+    "pinNotes": [
+      [
+        "AIN0–AIN3 / AOUT",
+        "Analog-input group and DAC output."
+      ],
+      [
+        "SDA / SCL",
+        "I²C data and clock."
+      ],
+      [
+        "A0 / A1 / A2",
+        "Select the device address on the bus."
+      ],
+      [
+        "VDD / VSS / VREF / AGND",
+        "Supply and analog-conversion reference terminals."
+      ]
+    ],
+    "steps": [
+      "The controller selects input mode and acquisition channel.",
+      "The ADC converts the analog input into a digital reading.",
+      "Writing DAC data produces the corresponding analog output."
+    ]
+  },
+  "lm386": {
+    "name": "LM386N-1/NOPB",
+    "subtitle": "Low-voltage audio power amplifier",
+    "family": "Analog and signals",
+    "package": "DIP-8",
+    "description": "Amplifies a small audio signal to power a small loudspeaker. Its internally set basic gain makes it a classic low-power audio IC.",
+    "specs": [
+      [
+        "Audio channels",
+        "1 channel"
+      ],
+      [
+        "Supply for this version",
+        "4–12 V"
+      ],
+      [
+        "Voltage gain range",
+        "20–200×"
+      ],
+      [
+        "Package",
+        "DIP-8"
+      ]
+    ],
+    "uses": [
+      "Small radios",
+      "Voice annunciators",
+      "Audio-amplifier learning"
+    ],
+    "tip": "The part suffix affects supply and output capability. Watch clipping as volume rises, and interpret output power with its load and distortion conditions.",
+    "pinNotes": [
+      [
+        "+INPUT / −INPUT",
+        "Noninverting and inverting audio inputs."
+      ],
+      [
+        "GAIN",
+        "An external network adjusts gain."
+      ],
+      [
+        "VS / GND",
+        "Supply and reference ground."
+      ],
+      [
+        "VOUT / BYPASS",
+        "Audio output and internal-bias bypass terminal."
+      ]
+    ],
+    "steps": [
+      "The audio source supplies a small AC signal.",
+      "The internal amplifier applies the selected gain.",
+      "The output stage supplies load current to produce sound from the speaker."
+    ]
+  },
+  "tda2030": {
+    "name": "TDA2030AV",
+    "subtitle": "Classic class-AB audio power amplifier",
+    "family": "Analog and signals",
+    "package": "Pentawatt · 5P",
+    "description": "A classic mono audio amplifier in a five-pin power package. External feedback and a heatsink help it drive a speaker and illustrate power-stage thermal design.",
+    "specs": [
+      [
+        "Audio channels",
+        "1 channel"
+      ],
+      [
+        "Amplifier class",
+        "Class AB"
+      ],
+      [
+        "Feedback method",
+        "External negative feedback"
+      ],
+      [
+        "Package",
+        "Pentawatt · 5P"
+      ]
+    ],
+    "uses": [
+      "Classic powered speakers",
+      "Audio power-stage learning",
+      "Reading legacy circuits"
+    ],
+    "tip": "Datasheet power figures include supply, load, and distortion conditions. Check the electrical potential and insulation method of the metal thermal area in the device documentation.",
+    "pinNotes": [
+      [
+        "+IN / −IN",
+        "Noninverting and inverting inputs. The feedback network connects to the inverting input."
+      ],
+      [
+        "OUT",
+        "Audio power output."
+      ],
+      [
+        "+VS / −VS",
+        "Positive and negative supply terminals."
+      ]
+    ],
+    "steps": [
+      "The input and feedback signals are compared at the amplifier front end.",
+      "The class-AB output stage supplies current in both directions to the speaker.",
+      "The thermal structure removes dissipated heat to maintain an allowed junction temperature."
+    ]
+  },
+  "pam8403": {
+    "name": "PAM8403DR",
+    "subtitle": "Stereo class-D audio amplifier",
+    "family": "Analog and signals",
+    "package": "SOP-16",
+    "description": "Converts left and right audio into fast switching outputs that drive small speakers. Its class-D architecture suits low-voltage portable audio equipment.",
+    "specs": [
+      [
+        "Audio channels",
+        "2 stereo channels"
+      ],
+      [
+        "Amplifier class",
+        "Class D"
+      ],
+      [
+        "Supply",
+        "2.5–5.5 V"
+      ],
+      [
+        "Package",
+        "SOP-16"
+      ]
+    ],
+    "uses": [
+      "Portable speakers",
+      "Small desktop speakers",
+      "Class-D audio learning"
+    ],
+    "tip": "Both terminals of each speaker are driven by the amplifier. Use a measurement method suited to bridge outputs, and interpret power ratings with supply, impedance, and distortion conditions.",
+    "pinNotes": [
+      [
+        "INL / INR",
+        "Left and right analog inputs."
+      ],
+      [
+        "±OUT_L / ±OUT_R",
+        "Two bridge-connected speaker outputs."
+      ],
+      [
+        "MUTE / SHDN",
+        "Mute and shutdown control."
+      ],
+      [
+        "VDD / PVDD / GND / PGND",
+        "Analog and power supplies and grounds."
+      ]
+    ],
+    "steps": [
+      "Two audio channels enter the internal modulator.",
+      "The power stage drives outputs through rapid switching.",
+      "The speakers respond to the audio component and produce left and right sound."
+    ]
+  }
+}

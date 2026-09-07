@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex -- The 3D canvas host implements arrow-key rotation and zoom controls. */
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -11,14 +12,17 @@ import {
   type Marker,
 } from './models';
 import type { Part } from './catalog';
+import { markerText, text, type Language } from './i18n';
 export type SceneCommand = {
   type: 'reset' | 'top' | 'bottom' | 'zoomIn' | 'zoomOut';
   tick: number;
 };
 type Props = {
+  language: Language;
   part: Part;
   parts: Part[];
   rotate: boolean;
+  operation: number;
   labels: boolean;
   explode: number;
   overview: boolean;
@@ -41,7 +45,9 @@ export default function Scene(props: Props) {
       reset: (view?: string) => void;
     } | null>(null);
   const state = useRef(props);
-  state.current = props;
+  useEffect(() => {
+    state.current = props;
+  }, [props]);
   const [error, setError] = useState(false),
     [loaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -54,13 +60,13 @@ export default function Scene(props: Props) {
         powerPreference: 'high-performance',
       });
     } catch {
-      setError(true);
+      queueMicrotask(() => setError(true));
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.setClearColor('#11161e');
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.3;
     container.appendChild(renderer.domElement);
@@ -111,10 +117,12 @@ export default function Scene(props: Props) {
     );
     ground.rotation.x = -Math.PI / 2;
     ground.position.y = -1.05;
+    ground.name = 'workbench-floor';
     ground.receiveShadow = true;
     scene.add(ground);
     const grid = new THREE.GridHelper(100, 100, '#2e3e50', '#253040');
     grid.position.y = -1.041;
+    grid.name = 'workbench-grid';
     (grid.material as THREE.Material).transparent = true;
     (grid.material as THREE.Material).opacity = 0.47;
     scene.add(grid);
@@ -268,6 +276,7 @@ export default function Scene(props: Props) {
     };
     renderer.domElement.addEventListener('webglcontextlost', lost);
     const temp = new THREE.Vector3();
+    let ready = false;
     let last = performance.now();
     renderer.setAnimationLoop((now) => {
       const dt = Math.min((now - last) / 1000, 0.05);
@@ -286,9 +295,33 @@ export default function Scene(props: Props) {
       objects.traverse((o) => {
         if (o.userData.explode !== undefined)
           o.position.y = o.userData.baseY + r.explode * o.userData.explode;
+        const operation = state.current.overview ? 0 : state.current.operation;
+        if (o.userData.press)
+          o.position.y -= o.userData.press * (operation ? 1 : 0);
+        if (o.userData.slide)
+          o.position.x = o.userData.slide * (operation ? 2 : 0);
+        if (o instanceof THREE.Mesh && o.userData.emitter) {
+          const m = o.material as THREE.MeshStandardMaterial;
+          m.emissiveIntensity = (
+            o.userData.rgbChannel
+              ? operation === o.userData.rgbChannel
+              : operation > 0
+          )
+            ? 2.8
+            : 0.03;
+        }
+        if (o instanceof THREE.Mesh && o.userData.glow) {
+          const m = o.material as THREE.MeshBasicMaterial;
+          m.opacity = operation ? 0.5 : 0;
+          if (o.userData.rgb)
+            m.color.set(
+              ['#ff3344', '#ff3344', '#42ef7c', '#4786ff'][operation] ||
+                '#ff3344',
+            );
+        }
       });
       // The ground moves out of the way when inspecting the underside.
-      ground.visible = camera.position.y > -0.8;
+      ground.visible = camera.position.y > ground.position.y + 0.1;
       grid.visible = ground.visible;
       for (let i = 0; i < r.labels.length; i++) {
         const el = r.labels[i],
@@ -308,8 +341,11 @@ export default function Scene(props: Props) {
         el.style.top = `${(-temp.y * 0.5 + 0.5) * container.clientHeight}px`;
       }
       renderer.render(scene, camera);
+      if (!ready) {
+        ready = true;
+        setLoaded(true);
+      }
     });
-    setLoaded(true);
     return () => {
       renderer.setAnimationLoop(null);
       observer.disconnect();
@@ -338,7 +374,7 @@ export default function Scene(props: Props) {
     if (props.overview) {
       const cols = Math.max(
           1,
-          Math.min(5, Math.ceil(Math.sqrt(props.parts.length))),
+          Math.min(15, Math.ceil(Math.sqrt(props.parts.length))),
         ),
         rows = Math.max(1, Math.ceil(props.parts.length / cols)),
         spacing = 4.3;
@@ -347,7 +383,7 @@ export default function Scene(props: Props) {
         optimizeExhibit(group);
         const bb = new THREE.Box3().setFromObject(group);
         const sz = bb.getSize(new THREE.Vector3());
-        const scale = 2.65 / Math.max(sz.x, sz.z);
+        const scale = 2.65 / Math.max(sz.x, sz.y, sz.z);
         group.scale.setScalar(scale);
         group.position.set(
           ((i % cols) - (cols - 1) / 2) * spacing,
@@ -374,10 +410,10 @@ export default function Scene(props: Props) {
         cx.fillStyle = '#bacaab';
         cx.textAlign = 'center';
         cx.font = '25px monospace';
-        cx.fillText(p.name, 256, 36);
+        cx.fillText(p.name, 256, 36, 490);
         cx.fillStyle = '#7f91a6';
         cx.font = '18px monospace';
-        cx.fillText(p.package, 256, 65);
+        cx.fillText(p.package, 256, 65, 490);
         const tex = new THREE.CanvasTexture(c);
         tex.colorSpace = THREE.SRGBColorSpace;
         const plane = new THREE.Mesh(
@@ -403,7 +439,7 @@ export default function Scene(props: Props) {
         size = bounds.getSize(new THREE.Vector3()),
         center = bounds.getCenter(new THREE.Vector3());
       model.group.position.sub(new THREE.Vector3(center.x, 0, center.z));
-      const maxSize = Math.max(size.x, size.z);
+      const maxSize = Math.max(size.x, size.y, size.z);
       const scale = 4.8 / maxSize;
       model.group.scale.setScalar(scale);
       model.group.position.multiplyScalar(scale);
@@ -423,18 +459,23 @@ export default function Scene(props: Props) {
       r.markers.forEach((m) => {
         const el = document.createElement('div');
         el.className = 'part-hotspot';
-        el.textContent = m.label;
+        el.textContent = markerText(m.label, props.language);
         host.current!.appendChild(el);
         r.labels.push(el);
       });
     }
+    const floor = r.scene.getObjectByName('workbench-floor')!,
+      grid = r.scene.getObjectByName('workbench-grid')!;
+    const lower = new THREE.Box3().setFromObject(r.objects).min.y;
+    floor.position.y = Number.isFinite(lower) ? lower - 0.3 : -1.05;
+    grid.position.y = floor.position.y + 0.009;
     r.scene.fog = new THREE.Fog(
       '#11161e',
-      props.overview ? 70 : 18,
-      props.overview ? 170 : 55,
+      props.overview ? 120 : 18,
+      props.overview ? 400 : 55,
     );
     r.reset();
-  }, [props.part.id, props.overview, props.parts]);
+  }, [props.part, props.overview, props.parts, props.language]);
   useEffect(() => {
     const r = runtime.current;
     if (!r) return;
@@ -459,13 +500,23 @@ export default function Scene(props: Props) {
         ref={host}
         className="three-host"
         tabIndex={0}
-        role="region"
-        aria-label="交互式三维元件模型。鼠标拖动旋转，滚轮缩放；键盘方向键旋转，加减键缩放，0 重置。"
+        role="application"
+        aria-label={text(
+          props.language,
+          'Interactive 3D model. Drag to rotate, scroll to zoom. Arrow keys rotate, plus/minus zoom, 0 resets.',
+          '交互式三维元件模型。鼠标拖动旋转，滚轮缩放；键盘方向键旋转，加减键缩放，0 重置。',
+        )}
       />
       {!loaded && !error && (
         <div className="loading-scene">
           <Box size={32} />
-          <span>正在准备 3D 实验台…</span>
+          <span>
+            {text(
+              props.language,
+              'Preparing the 3D workbench…',
+              '正在准备 3D 实验台…',
+            )}
+          </span>
         </div>
       )}
       {error && (
@@ -474,11 +525,14 @@ export default function Scene(props: Props) {
           style={{ pointerEvents: 'auto', background: '#11161e' }}
         >
           <div className="model-error">
-            3D 视图需要 WebGL 2
-            图形支持。可继续阅读元件资料，并尝试在浏览器设置中启用硬件加速。
+            {text(
+              props.language,
+              'The 3D view requires WebGL 2. You can read the learning notes while enabling hardware acceleration in your browser settings.',
+              '3D 视图需要 WebGL 2 图形支持。可继续阅读元件资料，并尝试在浏览器设置中启用硬件加速。',
+            )}
             <br />
             <button onClick={() => window.location.reload()}>
-              重新载入场景
+              {text(props.language, 'Reload scene', '重新载入场景')}
             </button>
           </div>
         </div>

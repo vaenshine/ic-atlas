@@ -39,3 +39,6 @@ next-env.d.ts
 
 # TypeScript incremental cache
 *.tsbuildinfo
+
+# Local Sites hosting association (GitHub Pages uses its workflow)
+/.openai/

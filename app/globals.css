@@ -1317,3 +1317,352 @@ button:disabled:hover {
     scroll-behavior: auto !important;
   }
 }
+.function-picker {
+  padding: 0 18px 12px;
+}
+.function-picker [data-slot='select-trigger'] {
+  width: 100%;
+  font-size: 12px;
+  color: #acb8c8;
+  background: #1e2530;
+}
+.component-operation {
+  position: absolute;
+  top: 20px;
+  left: 23px;
+  right: 70px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.component-operation button {
+  background: #c4f582;
+  color: #142115;
+  border: 1px solid #d0fda0;
+  border-radius: 6px;
+  padding: 8px 13px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.component-operation span {
+  font-size: 12px;
+  color: #b1c5a8;
+  background: #18241ddc;
+  padding: 7px 10px;
+  border-radius: 4px;
+}
+.spec-cell strong {
+  overflow-wrap: anywhere;
+}
+.filter-row {
+  flex-wrap: wrap;
+}
+.filter-row button {
+  min-width: 30px;
+}
+
+:root {
+  --font-geist-sans:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', Arial,
+    sans-serif;
+  --font-geist-mono: 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+/* Bilingual catalog: keep long technical names readable at every width. */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.language-switch {
+  display: flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid #3b4655;
+  border-radius: 7px;
+  background: #161d26;
+}
+.language-switch button {
+  padding: 6px 9px;
+  font-size: 13px;
+  color: #a3b0c0;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.language-switch button[aria-pressed='true'] {
+  color: #d5f7af;
+  background: #31402f;
+}
+.compact-learn {
+  display: none;
+}
+.catalog-modes {
+  margin-bottom: 15px;
+}
+.catalog-modes [data-slot='tabs-list'] {
+  width: 100%;
+  height: auto;
+  gap: 2px;
+  padding: 3px;
+  background: #111923;
+}
+.catalog-modes [data-slot='tabs-trigger'] {
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 4px;
+  font-size: 12px;
+  color: #a7b4c5;
+}
+.catalog-modes [data-slot='tabs-trigger'][data-active] {
+  color: var(--primary);
+  background: #2e3b2d;
+}
+.catalog-modes small {
+  font:
+    11px var(--font-geist-mono),
+    monospace;
+  color: #829179;
+}
+.catalog-title h2 {
+  font-size: 19px;
+}
+.item-copy strong {
+  white-space: normal;
+  line-height: 1.5;
+  font-size: 14px;
+}
+.item-copy small {
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.item-icon {
+  flex-shrink: 0;
+}
+.catalog-item {
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 8px;
+}
+.item-arrow {
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+.group-label {
+  gap: 10px;
+  line-height: 1.5;
+  font-size: 12px;
+}
+.filter-row button {
+  font-size: 12px;
+}
+.bilingual-title {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #879987;
+  margin: 8px 0 0;
+}
+.scene-header h1 {
+  font-size: 26px;
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+  max-width: 650px;
+}
+.scene-subtitle {
+  line-height: 1.6;
+}
+.breadcrumbs {
+  flex-wrap: wrap;
+}
+.translation-copy {
+  padding-left: 12px;
+  border-left: 2px solid #3c4d3a;
+  font-size: 14px;
+  line-height: 1.85;
+  color: #93a18f;
+  margin: -9px 0 22px;
+}
+.detail-copy {
+  font-size: 16px;
+  line-height: 1.8;
+}
+.part-badges {
+  flex-wrap: wrap;
+}
+.tag {
+  max-width: 100%;
+  line-height: 1.5;
+}
+.inspector h2 {
+  overflow-wrap: anywhere;
+}
+.tip p,
+.pin-list p,
+.package-note,
+.flow-step p {
+  font-size: 14px;
+  line-height: 1.85;
+}
+.spec-cell span,
+.use-tags span,
+.section-label,
+.source-link,
+.option,
+.explode-control label {
+  font-size: 13px;
+}
+.quick-card strong {
+  font-size: 13px;
+}
+.quick-card span {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.part-subtitle {
+  line-height: 1.6;
+}
+.component-operation.with-guide {
+  top: 150px;
+}
+.clear-filter {
+  margin-top: 12px;
+  color: var(--primary);
+  border: 1px solid #526c42;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+.dialog-content {
+  max-height: 85dvh;
+  overflow-y: auto;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+@media (min-width: 1201px) {
+  .workspace {
+    grid-template-columns: 275px minmax(0, 1fr) 325px;
+  }
+}
+@media (min-width: 1600px) {
+  .workspace {
+    grid-template-columns: 305px minmax(0, 1fr) 365px;
+  }
+}
+@media (max-width: 1200px) {
+  .topnav {
+    gap: 15px;
+  }
+  .header-actions {
+    gap: 7px;
+  }
+  .brand-sub {
+    letter-spacing: 1px;
+  }
+}
+@media (max-width: 980px) {
+  .topnav {
+    gap: 13px;
+  }
+  .topnav button {
+    font-size: 13px;
+  }
+  .topnav button svg {
+    display: none;
+  }
+  .brand-sub {
+    font-size: 10px;
+  }
+  .header-actions {
+    gap: 5px;
+  }
+}
+@media (max-width: 760px) {
+  .topnav {
+    display: none;
+  }
+  .compact-learn {
+    display: grid;
+  }
+  .topbar {
+    justify-content: space-between;
+  }
+  .scene-header h1 {
+    font-size: 24px;
+  }
+}
+@media (max-width: 640px) {
+  .language-switch button {
+    padding: 5px 7px;
+    font-size: 12px;
+  }
+  .header-actions {
+    gap: 6px;
+  }
+  .header-actions .help-button {
+    width: 26px;
+  }
+  .brand-sub {
+    max-width: 140px;
+    letter-spacing: 0.6px;
+    font-size: 8px;
+  }
+  .brand-icon {
+    display: none;
+  }
+  .workspace {
+    display: flex;
+  }
+  .catalog-modes [data-slot='tabs-trigger'] {
+    flex-direction: row;
+    gap: 7px;
+  }
+  .component-operation.with-guide {
+    top: 165px;
+  }
+  .model-caption {
+    max-width: 75%;
+  }
+  .model-caption span {
+    letter-spacing: 0.5px;
+  }
+  .bottom-status .status-left {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .overview-note {
+    font-size: 11px;
+  }
+}
+@media (max-width: 380px) {
+  .header-actions {
+    gap: 3px;
+  }
+  .topbar {
+    padding: 0 10px;
+  }
+  .brand-name {
+    font-size: 17px;
+  }
+  .brand-sub {
+    display: none;
+  }
+}
+@media (min-width: 981px) {
+  .workspace {
+    height: max(780px, calc(100dvh - 109px));
+  }
+}
+@media (max-width: 900px) {
+  .topnav {
+    display: none;
+  }
+  .compact-learn {
+    display: grid;
+  }
+}

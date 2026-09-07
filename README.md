@@ -1,43 +1,92 @@
-# IC Atlas · 芯片探索实验室
+# IC Atlas · Electronics Learning Lab / 电子元件学习实验室
 
-面向电子新手的中文 Three.js 交互式元件展馆。当前包含 26 个典型芯片、处理器、开发板与模块，覆盖 9 类封装；目录按功能与类型检索。
+A local Three.js learning workbench with English as the default language and Chinese translations. Explore **200 component categories**, **100 representative devices** and **16 common package types**. The category list follows all 200 entries supplied for this project, organized into 13 functional groups.
 
-## 运行
+本地 Three.js 电子学习工作区，默认英文，支持中文切换。名称与概述提供双语对照；参数、用途、引脚笔记、学习路径及模型标注随语言切换，语言偏好保存在本机。搜索同时匹配中英文，兼容常见连字符形式。
+
+**[Launch the live 3D lab](https://vaenshine.github.io/ic-atlas/)** · **[打开在线实验室](https://vaenshine.github.io/ic-atlas/)**
+
+Open the website and select a category to rotate, zoom, reveal its structure and read bilingual learning notes. Everything runs in your browser; manufacturer references open their original sources.
+
+## GitHub Pages
+
+The live demo is a static React + Three.js build of the same workbench used locally. The `web/` entry and `vite.pages.config.ts` package the shared application for GitHub Pages. Local development continues to use Vinext.
+
+The [Publish IC Atlas workflow](.github/workflows/pages.yml) validates pull requests and publishes changes to `main`. Repository Pages settings use **GitHub Actions**. The workflow automatically adds the repository name to asset paths, so forks can deploy under their own names.
+
+```sh
+npm run build:pages
+npm run check:pages
+```
+
+These commands produce and validate `dist/pages/` for a root URL. To reproduce this project's repository URL on macOS/Linux:
+
+```sh
+IC_ATLAS_BASE_PATH=/ic-atlas npm run build:pages
+IC_ATLAS_BASE_PATH=/ic-atlas npm run check:pages
+```
+
+On PowerShell, set `$env:IC_ATLAS_BASE_PATH = "/ic-atlas"` before running the two npm commands. Upload only `dist/pages/` to a static host. A user/organization site named `username.github.io` uses an empty base path. For a custom domain, adjust the workflow's base-path step for that domain's root.
+
+## Run locally / 本地运行
+
+Double-click `启动芯片实验室.command`, or run:
 
 ```sh
 npm install
 npm run dev
 ```
 
-打开终端显示的本地地址。生产构建使用 `npm run build`。
+Open **http://127.0.0.1:3000/**. Pages, geometry, learning data and fonts are served locally. Manufacturer links open external reference material. Closing the launcher terminal stops its server.
 
-## 学习与操作
+双击启动脚本即可打开本地页面。生产运行使用 `npm run build` 后执行 `npm start`，服务绑定本机回环地址。
 
-- 鼠标左键拖动旋转，滚轮缩放，右键拖动平移；触屏支持单指旋转、双指缩放与平移。
-- 点选场景后，方向键旋转，`+` / `-` 缩放，`0` 重置；`/` 聚焦搜索，`Esc` 退出放大观察。
-- 工具栏提供展馆总览、顶视图、底视图、缩放与全屏观察；总览中的模型可点选。
-- 切换自动旋转、结构标注，或调整结构展开滑块，观察引脚、焊盘、芯片内部与开发板部件。
-- 学习资料分为“认识它”“引脚与结构”“典型应用”，每项附厂商资料。三条学习路径串起封装识别、开发板结构与信号处理。
+## Explore / 学习与操作
 
-## 实现
+- **Categories / 类别**: 200 bilingual families covering passives, protection, discrete semiconductors, power, processors, logic, memory, analog conversion, wired interfaces, RF, timing, sensors, optoelectronics, connectors and modules.
+- **Devices / 型号**: 100 specific examples with preserved specifications, pin notes, use cases and manufacturer references. Category cards link to matching device examples where available.
+- **Packages / 封装**: 16 package guides including DIP, SOIC, TSSOP, LQFP, QFN, BGA, TO-220, SOT-223, SOT-23, DO-35, DO-41, SMA and TO-92 variants.
 
-- `app/catalog.ts`：典型型号、封装与中文学习资料。
-- `app/models.ts`：程序化实体建模，包括 PCB 孔洞、铜箔走线、引脚、屏蔽罩、USB、散热片、焊球和教学用内部结构。
-- `app/scene.tsx`：Three.js 渲染、OrbitControls、射线点选、标注投影、结构展开与资源释放。
-- `app/page.tsx` / `app/globals.css`：响应式学习工作区。
+Drag to rotate, scroll to zoom, and right-drag to pan. Touch screens use one finger to rotate and two to zoom or pan. With focus in the scene, arrow keys rotate, `+` / `-` zoom and `0` resets. `/` opens search; `Esc` exits enlarged viewing.
 
-总览按材质合并静态几何，BGA 使用实例化焊球；切换元件时回收几何、材质与纹理。尊重系统减少动画偏好，并提供 WebGL 失效提示。
+工具栏提供总览、顶视图、底视图、缩放与全屏。自动旋转、结构标注和展开滑块辅助观察内部结构。总览按当前筛选显示展品，点击模型进入独立观察。LED、RGB LED、贴片可寻址 RGB LED、轻触开关及滑动开关提供状态演示。
 
-## 检查
+Four guided paths cover basic components, package recognition, development boards and the sensor-to-control signal chain. Learning notes include Overview, Structure and Applications tabs.
+
+## Implementation / 实现
+
+- `app/data/profiles.json`: all 200 categories, bilingual learning notes, representative shapes and links to existing devices.
+- `app/catalog.ts`, `app/data/basic.json`, `analog.json`, `digital.json`: the original 100 device examples and Chinese package guides.
+- `app/data/translations.json`, `app/i18n.ts`, `app/lessons.ts`: English device content, translated UI/model labels, package guides and learning paths.
+- `app/atlas.ts`: category/device lookup, localization and bilingual search normalization.
+- `app/models.ts`, `app/family-models.ts`, `app/special-models.ts`, `app/model-utils.ts`: procedural geometry for IC leads and solder balls, PCB assemblies, windings, layered capacitors, optical packages, relay mechanisms and connector contacts.
+- `app/scene.tsx`: rendering, OrbitControls, ray picking, annotation projection, structure expansion and resource disposal.
+
+The 200-category catalog uses 88 representative geometry variants. Gallery geometry is merged by material; BGA balls are instanced. Switching models releases geometry, materials and textures. Reduced-motion preferences are respected, and the page provides a WebGL fallback message.
+
+## Validation / 检查
 
 ```sh
 npx tsc --noEmit
-node --experimental-strip-types scripts/check-models.mjs
+npm run check:models
+npm run check:catalog
 npm run build
 ```
 
-几何检查使用 Canvas 最小替身，可验证目录完整性、有限顶点、主要封装引脚数、展开状态与总览合并。图形外观需要在支持 WebGL 2 的浏览器中查看。
+Checks cover the exact requested category list, translation completeness, bilingual search, numeric specification preservation, finite geometry, lead/contact/ball counts, translated labels, exploded views and gallery geometry. A minimal canvas shim supports geometry checks without requiring WebGL; rendered appearance is outside these checks.
 
-## 教学范围
+To extend the catalog, add a bilingual record to `profiles.json`, select a matching `Shape`, implement a geometry variant when needed, and add translated structural labels. Keep generic families and exact device examples separately identified.
 
-本项目提供典型器件的结构与外形教学示意。模型尺寸、丝印、内部裸片与键合线经过简化，开发板走线为示意。具体脚号、电气连接、额定值、封装尺寸及布局以所选厂商、料号和硬件版本的数据手册为准。GY-521 与射频模块的板型存在多种版本。
+## Learning scope / 教学范围
+
+Models illustrate representative external forms and simplified internal structures. Dimensions, die layouts, bond wires, PCB traces and markings are educational approximations. Check the selected manufacturer, exact part number and board revision for dimensions, pin numbering, ratings, wiring and layout. Category-level examples show a common construction; a family can span several package types.
+
+模型用于理解典型外形、基本结构及用途。实际尺寸、脚号、电气连接、额定值和布局以所选厂商、具体料号与硬件版本的数据手册为准。
+
+## License and sources
+
+Original application code, procedural geometry and original explanatory content are available under the [MIT License](LICENSE). Third-party dependencies retain their licenses; complete notices are included in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the static site. Each build also generates `bundled-dependencies.json` with the exact bundled dependency licenses.
+
+Manufacturer names, product identifiers and source links identify examples and reference material. Linked documents and trademarks retain their respective owners' rights. Model construction and reference links are maintained in source so contributors can check and improve accuracy.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow and data/model checks.

@@ -1,10 +1,15 @@
 'use client';
-import { useState, useMemo, useRef, useEffect } from 'react';
+import {
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+  useSyncExternalStore,
+} from 'react';
 import {
   Cpu,
   Search,
   ChevronRight,
-  ArrowUpRight,
   Box,
   Layers,
   BookOpen,
@@ -20,19 +25,21 @@ import {
   MousePointer2,
   Lightbulb,
   SlidersHorizontal,
-  Radio,
-  Zap,
-  MemoryStick,
   CircuitBoard,
   MoveUpRight,
-  Check,
   X,
-  Keyboard,
   Target,
   ExternalLink,
   ArrowDownToLine,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -41,67 +48,72 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { type Part, type Kind } from './catalog';
 import {
-  parts,
-  kindLabels,
-  packageInfo,
-  type Part,
-  type Kind,
-} from './catalog';
+  profiles,
+  originalParts,
+  itemIn,
+  domainOf,
+  packageIn,
+  packageIds,
+  searchText,
+  normalizeSearch,
+} from './atlas';
+import { domains, kindNames, type Language } from './i18n';
+import { lessonsEn, lessonsZh } from './lessons';
 import Scene, { type SceneCommand } from './scene';
-const lessons = [
-  {
-    title: '从外形认识封装',
-    description: '定位 1 脚 → 看引脚排列 → 观察底面',
-    ids: ['ne555', 'stm32', 'rp2040', 'am3358'],
-    tips: [
-      '找到芯片顶端的缺口。顶视图中，左上角是 1 脚。',
-      '这颗芯片有四排细脚。数一边的引脚，再乘以四。',
-      'QFN 的连接点在底面。点击右侧“底视图”观察焊盘。',
-      'BGA 的底面铺满焊球。点击底视图，再尝试放大。',
-    ],
-  },
-  {
-    title: '理解一块开发板',
-    description: '主控芯片 → 无线模组 → 完整开发板',
-    ids: ['stm32', 'wroom', 'esp32dev'],
-    tips: [
-      '单片机把处理器、存储器与外设集成在芯片里。拖动“结构展开”，看封装内部示意。',
-      '无线模组集成了芯片、时钟、Flash 和天线。展开结构，观察屏蔽罩下面。',
-      '开发板增加电源、USB 和排针，方便连接电脑与外部器件。',
-    ],
-  },
-  {
-    title: '沿着信号学习电路',
-    description: '传感器 → 信号处理 → 采样 → 控制输出',
-    ids: ['mpu6050', 'lm358', 'mcp3008', 'stm32', 'drv8833'],
-    tips: [
-      '传感器将物理运动转换为电信号。MPU-6050 内部集成了采样与数字接口。',
-      '微弱的模拟传感器信号，可以先由运放放大。',
-      'ADC 将模拟电压转换成数值。查看“典型应用”了解采样过程。',
-      '单片机读取数据，并根据程序作出判断。',
-      '电机驱动芯片把控制信号转换成带动电机所需的电流。',
-    ],
-  },
-];
+
+let sessionLanguage: Language = 'en';
+function readLanguage(): Language {
+  try {
+    const value = localStorage.getItem('ic-atlas-language');
+    if (value === 'en' || value === 'zh') return value;
+  } catch {}
+  return sessionLanguage;
+}
+function subscribeLanguage(listener: () => void) {
+  window.addEventListener('storage', listener);
+  window.addEventListener('ic-atlas-language', listener);
+  return () => {
+    window.removeEventListener('storage', listener);
+    window.removeEventListener('ic-atlas-language', listener);
+  };
+}
+function changeLanguage(lang: Language) {
+  sessionLanguage = lang;
+  try {
+    localStorage.setItem('ic-atlas-language', lang);
+  } catch {}
+  window.dispatchEvent(new Event('ic-atlas-language'));
+}
+const initialLanguage = (): Language => 'en';
+type Mode = 'families' | 'parts' | 'packages';
+const allIds = {
+  families: profiles.map((p) => p.id),
+  parts: originalParts.map((p) => p.id),
+  packages: packageIds,
+};
+const searchable = new Map(
+  [...allIds.families, ...allIds.parts].map((id) => [id, searchText(id)]),
+);
 function PartIcon({ part, size = 18 }: { part: Part; size?: number }) {
   const Icon =
-    part.kind === 'module'
-      ? part.family === '无线连接'
-        ? Radio
-        : CircuitBoard
-      : part.family === '电源与驱动'
-        ? Zap
-        : part.family === '存储与时钟'
-          ? MemoryStick
-          : Cpu;
+    part.kind === 'basic' || part.kind === 'module' ? CircuitBoard : Cpu;
   return <Icon size={size} strokeWidth={1.6} />;
 }
 export default function Home() {
-  const [selected, setSelected] = useState('esp32dev'),
+  const language = useSyncExternalStore(
+    subscribeLanguage,
+    readLanguage,
+    initialLanguage,
+  );
+  const t = (en: string, zh: string) => (language === 'en' ? en : zh);
+  const [selected, setSelected] = useState('cat-001'),
+    [mode, setMode] = useState<Mode>('families'),
     [filter, setFilter] = useState<Kind | 'all'>('all'),
     [query, setQuery] = useState(''),
-    [mode, setMode] = useState<'parts' | 'packages'>('parts'),
+    [domain, setDomain] = useState('all');
+  const [operation, setOperation] = useState(0),
     [rotate, setRotate] = useState(false),
     [labels, setLabels] = useState(true),
     [explode, setExplode] = useState(0),
@@ -116,50 +128,58 @@ export default function Home() {
     tick: 0,
   });
   const searchRef = useRef<HTMLInputElement>(null);
-  const part = parts.find((p) => p.id === selected) || parts[0];
-  const pkg = packageInfo[part.shape];
-  const packageParts = useMemo(
-    () =>
-      Object.keys(packageInfo)
-        .map((shape) => parts.find((p) => p.shape === shape))
-        .filter((p): p is Part => !!p),
-    [],
+  const part = useMemo(() => itemIn(selected, language), [selected, language]);
+  const counterpart = useMemo(
+    () => itemIn(selected, language === 'en' ? 'zh' : 'en'),
+    [selected, language],
   );
-  const visible = useMemo(() => {
-    const list = mode === 'packages' ? packageParts : parts;
-    return list.filter(
-      (p) =>
-        (mode === 'packages' || filter === 'all' || p.kind === filter) &&
-        `${p.name} ${p.subtitle} ${p.package} ${p.family} ${p.description}`
-          .toLowerCase()
-          .includes(query.toLowerCase()),
-    );
-  }, [filter, query, mode, packageParts]);
+  const profile = profiles.find((p) => p.id === selected),
+    pkg = packageIn(part.shape, language),
+    otherPkg = packageIn(part.shape, language === 'en' ? 'zh' : 'en');
+  const lessons = language === 'en' ? lessonsEn : lessonsZh;
+  const modeName = (m: Mode) =>
+    m === 'families'
+      ? t('Categories', '类别')
+      : m === 'parts'
+        ? t('Devices', '型号')
+        : t('Packages', '封装');
+  const visible = useMemo(
+    () =>
+      allIds[mode]
+        .filter((id) => {
+          const p = itemIn(id, language);
+          return (
+            (mode === 'packages' || filter === 'all' || p.kind === filter) &&
+            (domain === 'all' || domainOf(id) === domain) &&
+            searchable.get(id)?.includes(normalizeSearch(query))
+          );
+        })
+        .map((id) => itemIn(id, language)),
+    [mode, filter, domain, query, language],
+  );
   const grouped = useMemo(
     () =>
-      Array.from(
-        new Set(
-          visible.map((p) => (mode === 'packages' ? '典型封装' : p.family)),
-        ),
-      ).map((name) => ({
-        name,
-        items: visible.filter(
-          (p) => (mode === 'packages' ? '典型封装' : p.family) === name,
-        ),
-      })),
-    [visible, mode],
+      Object.keys(domains)
+        .map((key) => ({
+          key,
+          items: visible.filter((p) => domainOf(p.id) === key),
+        }))
+        .filter((g) => g.items.length),
+    [visible],
   );
-  const quick = useMemo(
-    () =>
-      mode === 'packages'
-        ? packageParts.slice(0, 5)
-        : ['esp32dev', 'stm32', 'ne555', 'atmega', 'wroom']
-            .map((id) => parts.find((p) => p.id === id)!)
-            .filter(Boolean),
-    [mode, packageParts],
-  );
+  const quickIds = useMemo(() => {
+    if (mode === 'packages') return packageIds.slice(0, 5);
+    if (profile) {
+      const related = profiles
+        .filter((p) => p.group === profile.group && p.id !== selected)
+        .map((p) => p.id);
+      return [...profile.existingIds, ...related].slice(0, 5);
+    }
+    return ['esp32dev', 'stm32', 'ne555', 'led-red-5mm', 'usb-c-24'];
+  }, [mode, profile, selected]);
   const select = (id: string) => {
     setSelected(id);
+    setOperation(0);
     setExplode(0);
     setOverview(false);
     setMobileCatalog(false);
@@ -167,24 +187,36 @@ export default function Home() {
   };
   const runCommand = (type: SceneCommand['type']) =>
     setCommand((c) => ({ type, tick: c.tick + 1 }));
-  const changeMode = (value: 'parts' | 'packages') => {
-    setMode(value);
-    setQuery('');
+  const changeMode = (m: Mode) => {
+    setMode(m);
     setFilter('all');
+    setDomain('all');
+    setQuery('');
     setGuide(null);
-    setOverview(false);
-    if (value === 'packages') select('stm32');
+    select(allIds[m][0]);
   };
+  useEffect(() => {
+    document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
+    document.title =
+      language === 'en'
+        ? 'IC Atlas · Electronics Learning Lab'
+        : 'IC Atlas · 电子元件学习实验室';
+  }, [language]);
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setExpanded(false);
         setMobileCatalog(false);
       }
-      if (e.key === '/' && !(e.target instanceof HTMLInputElement)) {
+      if (
+        e.key === '/' &&
+        !(e.target instanceof HTMLInputElement) &&
+        !(e.target instanceof HTMLTextAreaElement) &&
+        !(e.target as HTMLElement)?.isContentEditable
+      ) {
         e.preventDefault();
         setMobileCatalog(true);
-        searchRef.current?.focus();
+        requestAnimationFrame(() => searchRef.current?.focus());
       }
     };
     window.addEventListener('keydown', key);
@@ -194,6 +226,7 @@ export default function Home() {
     setGuide({ lesson: index, step: 0 });
     setMode('parts');
     setFilter('all');
+    setDomain('all');
     setQuery('');
     select(lessons[index].ids[0]);
     setDialog(null);
@@ -209,10 +242,33 @@ export default function Home() {
     setGuide({ ...guide, step: next });
     select(lessons[guide.lesson].ids[next]);
   };
+  const actionLabel = ['rgbled', 'smdrgb'].includes(part.shape)
+    ? [
+        t('Light red', '点亮红色'),
+        t('Switch to green', '切换绿色'),
+        t('Switch to blue', '切换蓝色'),
+        t('Turn off', '熄灭'),
+      ][operation]
+    : part.shape === 'led'
+      ? operation
+        ? t('Turn LED off', '熄灭 LED')
+        : t('Light LED', '点亮 LED')
+      : part.shape === 'tactile'
+        ? operation
+          ? t('Release', '松开按钮')
+          : t('Press', '按下按钮')
+        : operation
+          ? t('Slide left', '拨向左侧')
+          : t('Slide right', '拨向右侧');
   return (
     <main>
       <header className="topbar">
-        <a className="brand" href="/" aria-label="IC Atlas 首页">
+        <button
+          type="button"
+          className="brand"
+          onClick={() => changeMode('families')}
+          aria-label="IC Atlas home"
+        >
           <span className="brand-icon">
             <Cpu size={25} strokeWidth={1.5} />
           </span>
@@ -220,183 +276,279 @@ export default function Home() {
             <div className="brand-name">
               IC <span>ATLAS</span>
             </div>
-            <div className="brand-sub">芯片探索实验室</div>
+            <div className="brand-sub">
+              {t('ELECTRONICS LEARNING LAB', '电子元件学习实验室')}
+            </div>
           </div>
-        </a>
-        <nav className="topnav" aria-label="主导航">
+        </button>
+        <nav className="topnav" aria-label={t('Main navigation', '主导航')}>
           <button
-            className={mode === 'parts' ? 'active' : ''}
-            onClick={() => changeMode('parts')}
+            className={mode !== 'packages' ? 'active' : ''}
+            onClick={() => changeMode('families')}
           >
             <Box size={16} />
-            元件图鉴
+            {t('Explore', '元件图鉴')}
           </button>
           <button
             className={mode === 'packages' ? 'active' : ''}
             onClick={() => changeMode('packages')}
           >
             <Layers size={16} />
-            封装实验室
+            {t('Packages', '封装实验室')}
           </button>
           <button onClick={() => setDialog('learn')}>
             <BookOpen size={16} />
-            学习路径
-            <ArrowUpRight size={13} />
+            {t('Learning paths', '学习路径')}
           </button>
         </nav>
-        <div className="top-right">
-          <span>
-            <i className="live-dot" />
-            探索，从一颗芯片开始
-          </span>
+        <div className="header-actions">
+          <fieldset className="language-switch" aria-label="Language / 语言">
+            <button
+              aria-pressed={language === 'en'}
+              onClick={() => changeLanguage('en')}
+            >
+              English
+            </button>
+            <button
+              aria-pressed={language === 'zh'}
+              onClick={() => changeLanguage('zh')}
+            >
+              中文
+            </button>
+          </fieldset>
+          <button
+            className="help-button compact-learn"
+            aria-label={t('Learning paths', '学习路径')}
+            onClick={() => setDialog('learn')}
+          >
+            <BookOpen size={17} />
+          </button>
           <button
             className="help-button"
-            aria-label="操作帮助"
+            aria-label={t('Help', '操作帮助')}
             onClick={() => setDialog('help')}
           >
-            <HelpCircle size={16} />
+            <HelpCircle size={17} />
           </button>
         </div>
       </header>
       <div className="workspace">
         <aside
           className={`catalog ${mobileCatalog ? 'mobile-open' : ''}`}
-          aria-label="元件目录"
+          aria-label={t('Component catalog', '元件目录')}
         >
           <div className="catalog-head">
-            <div className="eyebrow">THE COLLECTION</div>
+            <div className="eyebrow">{t('THE COLLECTION', '元件收藏馆')}</div>
             <div className="catalog-title">
-              <h2>{mode === 'parts' ? '探索元件' : '认识封装'}</h2>
-              <span className="count">
-                {mode === 'parts' ? parts.length : packageParts.length}
-              </span>
+              <h2>{t('Explore electronics', '探索电子元件')}</h2>
+              <span className="count">{allIds[mode].length}</span>
             </div>
+            <Tabs
+              value={mode}
+              onValueChange={(v) => changeMode(v as Mode)}
+              className="catalog-modes"
+            >
+              <TabsList>
+                {(['families', 'parts', 'packages'] as Mode[]).map((m) => (
+                  <TabsTrigger key={m} value={m}>
+                    {modeName(m)}
+                    <small>{allIds[m].length}</small>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
             <label className="search">
               <Search size={15} />
               <input
                 ref={searchRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="搜索型号、功能、封装…"
-                aria-label="搜索型号、功能或封装"
+                placeholder={t('Search English / 中文…', '搜索中文 / English…')}
+                aria-label={t(
+                  'Search categories, devices and packages',
+                  '搜索类别、型号和封装',
+                )}
               />
               <kbd>/</kbd>
             </label>
-            {mode === 'parts' && (
-              <div className="filter-row" aria-label="元件分类">
-                {(
-                  [
-                    ['all', '全部'],
-                    ['ic', 'IC'],
-                    ['mcu', '单片机'],
-                    ['module', '模块'],
-                  ] as const
-                ).map(([value, label]) => (
+            {mode !== 'packages' && (
+              <div
+                className="filter-row"
+                aria-label={t('Component type', '元件类型')}
+              >
+                {(['all', 'ic', 'mcu', 'module', 'basic'] as const).map((k) => (
                   <button
-                    key={value}
-                    aria-pressed={filter === value}
-                    className={filter === value ? 'active' : ''}
-                    onClick={() => setFilter(value)}
+                    key={k}
+                    className={filter === k ? 'active' : ''}
+                    aria-pressed={filter === k}
+                    onClick={() => setFilter(k)}
                   >
-                    {label}
+                    {k === 'all'
+                      ? t('All', '全部')
+                      : k === 'mcu'
+                        ? 'MCU+'
+                        : k === 'module'
+                          ? t('Modules', '模块')
+                          : k === 'basic'
+                            ? t('Basic', '基础')
+                            : 'ICs'}
                   </button>
                 ))}
               </div>
             )}
           </div>
-          <div className="catalog-scroll">
-            {grouped.map((g) => (
-              <div key={g.name}>
-                <div className="group-label">
-                  <span>{g.name}</span>
-                  <span>{g.items.length.toString().padStart(2, '0')}</span>
-                </div>
-                {g.items.map((p) => (
-                  <button
-                    className={`catalog-item ${selected === p.id ? 'active' : ''}`}
-                    key={p.id}
-                    onClick={() => {
-                      select(p.id);
-                      setGuide(null);
-                    }}
-                    aria-pressed={selected === p.id}
-                  >
-                    <span className="item-icon">
-                      <PartIcon part={p} />
-                    </span>
-                    <span className="item-copy">
-                      <strong>
-                        {mode === 'packages'
-                          ? packageInfo[p.shape]?.title
-                          : p.name}
-                      </strong>
-                      <small>
-                        {mode === 'packages'
-                          ? packageInfo[p.shape]?.name
-                          : `${p.package} · ${p.subtitle.replace('微控制器', 'MCU')}`}
-                      </small>
-                    </span>
-                    {selected === p.id && (
-                      <ChevronRight size={13} className="item-arrow" />
-                    )}
-                  </button>
+          <div className="function-picker">
+            <Select value={domain} onValueChange={(v) => setDomain(v || 'all')}>
+              <SelectTrigger aria-label={t('Filter by function', '按功能筛选')}>
+                <SelectValue>
+                  {domain === 'all'
+                    ? t('All functions', '全部功能')
+                    : domains[domain]?.[language === 'en' ? 0 : 1]}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  {t('All functions', '全部功能')}
+                </SelectItem>
+                {Object.entries(domains).map(([key, names]) => (
+                  <SelectItem key={key} value={key}>
+                    {names[language === 'en' ? 0 : 1]}
+                  </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="catalog-scroll">
+            {grouped.map((group) => (
+              <div key={group.key}>
+                <div className="group-label">
+                  <span>{domains[group.key][language === 'en' ? 0 : 1]}</span>
+                  <span>{group.items.length}</span>
+                </div>
+                {group.items.map((p) => {
+                  const c = profiles.find((c) => c.id === p.id);
+                  const primary =
+                    mode === 'packages'
+                      ? packageIn(p.shape, language)?.title
+                      : p.name;
+                  const secondary =
+                    mode === 'packages'
+                      ? packageIn(p.shape, language)?.name
+                      : c
+                        ? c[language === 'en' ? 'zh' : 'en']
+                        : p.subtitle;
+                  return (
+                    <button
+                      key={p.id}
+                      className={`catalog-item ${selected === p.id && !overview ? 'active' : ''}`}
+                      title={`${primary} · ${secondary}`}
+                      aria-pressed={selected === p.id && !overview}
+                      onClick={() => {
+                        select(p.id);
+                        setGuide(null);
+                      }}
+                    >
+                      <span className="item-icon">
+                        <PartIcon part={p} />
+                      </span>
+                      <span className="item-copy">
+                        <strong>{primary}</strong>
+                        <small
+                          lang={
+                            c ? (language === 'en' ? 'zh-CN' : 'en') : undefined
+                          }
+                        >
+                          {secondary}
+                        </small>
+                      </span>
+                      {selected === p.id && (
+                        <ChevronRight size={13} className="item-arrow" />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             ))}
             {visible.length === 0 && (
-              <p className="empty-results">
-                暂未找到对应元件。试试“定时器”“STM32”或“DIP”。
-              </p>
+              <div className="empty-results">
+                <p>
+                  {t(
+                    'No matches in this view. Try “MOSFET”, “电容” or “QFN”.',
+                    '当前目录暂无匹配。试试“MOSFET”“电容”或“QFN”。',
+                  )}
+                </p>
+                <button
+                  className="clear-filter"
+                  onClick={() => {
+                    setQuery('');
+                    setDomain('all');
+                    setFilter('all');
+                  }}
+                >
+                  {t('Clear filters', '清除筛选')}
+                </button>
+              </div>
             )}
           </div>
           <div className="catalog-foot">
             <b>
-              {parts.length} 个典型元件 · {packageParts.length} 类封装
+              {profiles.length} {t('categories', '类别')} ·{' '}
+              {originalParts.length} {t('devices', '型号')}
             </b>
             <br />
-            从常用型号建立你的电子知识地图
+            {t(
+              'English first · 中文对照 · Local edition',
+              '双语资料 · 本地版本',
+            )}
           </div>
         </aside>
-        <section className="center" aria-label="三维实验台">
+        <section
+          className="center"
+          aria-label={t('3D workbench', '三维实验台')}
+        >
           <div className="scene-header">
             <div>
               <div className="breadcrumbs">
-                <span>{mode === 'packages' ? '封装实验室' : '元件图鉴'}</span>
+                <span>{modeName(mode)}</span>
                 <ChevronRight size={11} />
-                <span>
-                  {overview
-                    ? '展馆总览'
-                    : mode === 'packages'
-                      ? pkg?.title
-                      : kindLabels[part.kind]}
-                </span>
+                <span>{overview ? t('Gallery', '展馆总览') : part.family}</span>
               </div>
               <h1>
                 {overview
-                  ? '每一颗，都有它的用处'
+                  ? t('The component collection', '元件全景收藏馆')
                   : mode === 'packages'
-                    ? `${pkg?.title} 封装`
+                    ? pkg?.title
                     : part.name}
               </h1>
               <p className="scene-subtitle">
                 {overview
-                  ? `${visible.length} 个展品 · 点选模型，走近它的世界`
+                  ? `${visible.length} ${t('exhibits · Select any model to inspect', '个展品 · 点击模型独立观察')}`
                   : mode === 'packages'
                     ? pkg?.name
                     : part.subtitle}
               </p>
+              {!overview && mode !== 'packages' && (
+                <p
+                  className="bilingual-title"
+                  lang={language === 'en' ? 'zh-CN' : 'en'}
+                >
+                  {counterpart.name}
+                  {profile ? '' : ` · ${counterpart.subtitle}`}
+                </p>
+              )}
             </div>
             <div className="scene-header-right">
               <span className="scene-badge">
                 <Box size={12} />
-                实时 3D
+                LIVE 3D
               </span>
               <button
                 className="mobile-catalog-toggle"
+                aria-expanded={mobileCatalog}
                 onClick={() => setMobileCatalog(!mobileCatalog)}
               >
                 <SlidersHorizontal size={14} />
-                选元件
+                {t('Browse', '选元件')}
               </button>
             </div>
           </div>
@@ -404,34 +556,67 @@ export default function Home() {
             <Scene
               part={part}
               parts={visible}
+              language={language}
               rotate={rotate}
               labels={labels}
               explode={explode}
               overview={overview}
               command={command}
               onSelect={select}
+              operation={operation}
             />
+            {!overview &&
+              ['led', 'rgbled', 'smdrgb', 'tactile', 'slideswitch'].includes(
+                part.shape,
+              ) && (
+                <div
+                  className={`component-operation ${guide ? 'with-guide' : ''}`}
+                >
+                  <button
+                    onClick={() =>
+                      setOperation((v) =>
+                        ['rgbled', 'smdrgb'].includes(part.shape)
+                          ? (v + 1) % 4
+                          : v
+                            ? 0
+                            : 1,
+                      )
+                    }
+                  >
+                    {actionLabel}
+                  </button>
+                  <span>
+                    {['rgbled', 'smdrgb'].includes(part.shape)
+                      ? [
+                          t('Off', '灯灭'),
+                          t('Red', '红光'),
+                          t('Green', '绿光'),
+                          t('Blue', '蓝光'),
+                        ][operation]
+                      : operation
+                        ? t('Active', '已接通')
+                        : t('Resting', '初始状态')}{' '}
+                    · {t('State demonstration', '教学状态演示')}
+                  </span>
+                </div>
+              )}
             {guide && (
               <div className="guide-banner">
                 <p>
                   <span style={{ color: '#c4f582' }}>
-                    0{guide.step + 1} / 0{lessons[guide.lesson].ids.length}
+                    {guide.step + 1} / {lessons[guide.lesson].ids.length}
                   </span>
                   　{lessons[guide.lesson].tips[guide.step]}
                 </p>
                 <button onClick={nextLessonStep}>
                   {guide.step === lessons[guide.lesson].ids.length - 1
-                    ? '完成'
-                    : '下一步'}
-                  <ChevronRight
-                    size={11}
-                    style={{ display: 'inline', marginLeft: 2 }}
-                  />
+                    ? t('Finish', '完成')
+                    : t('Next', '下一步')}
                 </button>
                 <button
                   className="guide-close"
                   onClick={() => setGuide(null)}
-                  aria-label="退出学习引导"
+                  aria-label={t('Exit learning path', '退出学习引导')}
                 >
                   <X size={14} />
                 </button>
@@ -440,8 +625,8 @@ export default function Home() {
             <div className="scene-tools">
               <button
                 className={`icon-button ${overview ? 'on' : ''}`}
-                title="展馆总览"
-                aria-label="切换全部元件 3D 总览"
+                title={t('Gallery overview', '展馆总览')}
+                aria-label={t('Toggle gallery overview', '切换展馆总览')}
                 aria-pressed={overview}
                 onClick={() => {
                   setOverview(!overview);
@@ -451,71 +636,71 @@ export default function Home() {
               >
                 <Grid2X2 size={16} />
               </button>
-              <button
-                className="icon-button"
-                title="重置视角 (0)"
-                aria-label="重置视角"
-                onClick={() => {
-                  runCommand('reset');
-                  setExplode(0);
-                }}
-              >
-                <RotateCcw size={16} />
-              </button>
-              <button
-                className="icon-button"
-                title="顶视图"
-                aria-label="顶视图"
-                onClick={() => runCommand('top')}
-              >
-                <Scan size={16} />
-              </button>
-              <button
-                className="icon-button"
-                title="底视图 · 观察焊盘与焊球"
-                aria-label="底视图"
-                onClick={() => runCommand('bottom')}
-              >
-                <ArrowDownToLine size={16} />
-              </button>
-              <button
-                className="icon-button"
-                title="放大"
-                aria-label="放大模型"
-                onClick={() => runCommand('zoomIn')}
-              >
-                <Plus size={17} />
-              </button>
-              <button
-                className="icon-button"
-                title="缩小"
-                aria-label="缩小模型"
-                onClick={() => runCommand('zoomOut')}
-              >
-                <Minus size={17} />
-              </button>
+              {(
+                [
+                  {
+                    type: 'reset',
+                    en: 'Reset view (0)',
+                    zh: '重置视角 (0)',
+                    Icon: RotateCcw,
+                  },
+                  { type: 'top', en: 'Top view', zh: '顶视图', Icon: Scan },
+                  {
+                    type: 'bottom',
+                    en: 'Bottom view',
+                    zh: '底视图',
+                    Icon: ArrowDownToLine,
+                  },
+                  { type: 'zoomIn', en: 'Zoom in', zh: '放大', Icon: Plus },
+                  { type: 'zoomOut', en: 'Zoom out', zh: '缩小', Icon: Minus },
+                ] as const
+              ).map(({ type, en, zh, Icon }) => (
+                <button
+                  key={type}
+                  className="icon-button"
+                  title={t(en, zh)}
+                  aria-label={t(en, zh)}
+                  onClick={() => {
+                    runCommand(type);
+                    if (type === 'reset') setExplode(0);
+                  }}
+                >
+                  <Icon size={16} />
+                </button>
+              ))}
               <button
                 className={`icon-button ${expanded ? 'on' : ''}`}
-                title={expanded ? '退出全屏' : '全屏观察'}
-                aria-label={expanded ? '退出全屏观察' : '全屏观察'}
+                title={
+                  expanded
+                    ? t('Exit fullscreen', '退出全屏')
+                    : t('Fullscreen', '全屏观察')
+                }
+                aria-label={
+                  expanded
+                    ? t('Exit fullscreen', '退出全屏')
+                    : t('Fullscreen', '全屏观察')
+                }
+                aria-pressed={expanded}
                 onClick={() => setExpanded(!expanded)}
               >
                 {expanded ? <Minimize size={16} /> : <Maximize size={16} />}
               </button>
             </div>
             {overview ? (
-              <div className="overview-note">点击任意元件，进入独立观察</div>
+              <div className="overview-note">
+                {t('Select a model to inspect it', '点击模型进入独立观察')}
+              </div>
             ) : (
               <div className="model-caption">
                 <span>
                   {explode > 0
-                    ? 'EXPLODED VIEW / 结构示意'
-                    : 'PERSPECTIVE VIEW / 透视观察'}
+                    ? t('EXPLODED VIEW', '结构展开')
+                    : profile
+                      ? t('FAMILY ILLUSTRATION', '类别结构示意')
+                      : t('DEVICE ILLUSTRATION', '典型型号示意')}
                 </span>
                 <p>
-                  {mode === 'packages'
-                    ? `${part.name} · ${part.package}`
-                    : '拖动旋转，自由发现每一个细节'}
+                  {t('Drag to rotate · Scroll to zoom', '拖动旋转 · 滚轮缩放')}
                 </p>
               </div>
             )}
@@ -529,26 +714,26 @@ export default function Home() {
           <div className="viewer-options">
             <label className="option">
               <Rotate3d size={14} />
-              <span>自动旋转</span>
+              <span>{t('Rotate', '自动旋转')}</span>
               <Switch
                 checked={rotate}
                 onCheckedChange={setRotate}
                 disabled={overview}
-                aria-label="自动旋转"
+                aria-label={t('Auto rotate', '自动旋转')}
               />
             </label>
             <label className="option">
               <Target size={14} />
-              <span>结构标注</span>
+              <span>{t('Labels', '结构标注')}</span>
               <Switch
                 checked={labels}
                 onCheckedChange={setLabels}
                 disabled={overview}
-                aria-label="显示结构标注"
+                aria-label={t('Show structure labels', '显示结构标注')}
               />
             </label>
             <div className="explode-control">
-              <label id="explode-label">结构展开</label>
+              <label id="explode-label">{t('Explode', '结构展开')}</label>
               <Slider
                 aria-labelledby="explode-label"
                 min={0}
@@ -565,48 +750,59 @@ export default function Home() {
             <div className="bottom-heading">
               <h3>
                 <Layers size={14} color="#c4f582" />
-                {mode === 'packages' ? '从引脚看懂封装' : '从这些经典元件开始'}
+                {mode === 'packages'
+                  ? t('Compare packages', '比较封装')
+                  : profile
+                    ? t('Examples & related categories', '典型型号与相关类别')
+                    : t('Keep exploring', '继续探索')}
               </h3>
-              <small>点选切换 · 自由探索</small>
+              <small>{t('Select to inspect', '点选切换')}</small>
             </div>
             <div className="quick-select">
-              {quick.map((p) => (
-                <button
-                  className={`quick-card ${p.id === selected && !overview ? 'active' : ''}`}
-                  key={p.id}
-                  onClick={() => {
-                    select(p.id);
-                    setGuide(null);
-                  }}
-                >
-                  <PartIcon part={p} size={20} />
-                  <strong>
-                    {mode === 'packages'
-                      ? packageInfo[p.shape]?.title
-                      : p.id === 'esp32dev'
-                        ? 'ESP32 DevKit'
-                        : p.id === 'stm32'
-                          ? 'STM32F103'
-                          : p.name}
-                  </strong>
-                  <span>
-                    {mode === 'packages'
-                      ? packageInfo[p.shape]?.mount
-                      : p.package}
-                  </span>
-                </button>
-              ))}
+              {quickIds.map((id) => {
+                const p = itemIn(id, language);
+                return (
+                  <button
+                    className={`quick-card ${id === selected ? 'active' : ''}`}
+                    key={id}
+                    title={p.name}
+                    onClick={() => {
+                      if (mode !== 'packages') {
+                        setMode(id.startsWith('cat-') ? 'families' : 'parts');
+                        setFilter('all');
+                        setDomain('all');
+                        setQuery('');
+                      }
+                      select(id);
+                      setGuide(null);
+                    }}
+                  >
+                    <PartIcon part={p} size={20} />
+                    <strong>
+                      {mode === 'packages'
+                        ? packageIn(p.shape, language)?.title
+                        : p.name}
+                    </strong>
+                    <span>{p.package}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
-        <aside className="inspector" aria-label="元件学习资料">
+        <aside
+          className="inspector"
+          aria-label={t('Component learning notes', '元件学习资料')}
+        >
           <div className="inspector-top">
-            <span>COMPONENT INSIGHT</span>
+            <span>{t('COMPONENT INSIGHT', '元件学习笔记')}</span>
             <BookOpen size={14} />
           </div>
           <div className="part-badges">
             <span className="tag green">
-              {mode === 'packages' ? '封装识别' : kindLabels[part.kind]}
+              {profile
+                ? t('Category', '元件类别')
+                : kindNames[part.kind][language === 'en' ? 0 : 1]}
             </span>
             <span className="tag">{part.package}</span>
           </div>
@@ -620,17 +816,33 @@ export default function Home() {
             className="detail-tabs"
           >
             <TabsList variant="line">
-              <TabsTrigger value="about">认识它</TabsTrigger>
-              <TabsTrigger value="pins">引脚与结构</TabsTrigger>
-              <TabsTrigger value="uses">典型应用</TabsTrigger>
+              <TabsTrigger value="about">{t('Overview', '认识它')}</TabsTrigger>
+              <TabsTrigger value="pins">
+                {t('Structure', '引脚与结构')}
+              </TabsTrigger>
+              <TabsTrigger value="uses">
+                {t('Applications', '典型应用')}
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="about">
               <p className="detail-copy">
                 {mode === 'packages' ? pkg?.description : part.description}
               </p>
+              <p
+                className="translation-copy"
+                lang={language === 'en' ? 'zh-CN' : 'en'}
+              >
+                {mode === 'packages'
+                  ? otherPkg?.description
+                  : counterpart.description}
+              </p>
               <h3 className="section-label">
                 <SlidersHorizontal size={14} />
-                {mode === 'packages' ? '封装特征' : '关键参数'}
+                {mode === 'packages'
+                  ? t('Package features', '封装特征')
+                  : profile
+                    ? t('What to learn', '认识要点')
+                    : t('Key specifications', '关键参数')}
               </h3>
               {mode === 'packages' ? (
                 <div className="tip">
@@ -648,7 +860,7 @@ export default function Home() {
               )}
               <h3 className="section-label">
                 <CircuitBoard size={14} />
-                你会在哪里见到它
+                {t('Where it is used', '常见用途')}
               </h3>
               <div className="use-tags">
                 {part.uses.map((u) => (
@@ -658,15 +870,17 @@ export default function Home() {
               <div className="tip">
                 <div className="tip-title">
                   <Lightbulb size={14} />
-                  新手观察笔记
+                  {t('Beginner’s observation', '新手观察笔记')}
                 </div>
                 <p>{part.tip}</p>
               </div>
             </TabsContent>
             <TabsContent value="pins">
               <p className="package-note">
-                {pkg?.feature || '由芯片、无源器件、PCB 与连接触点组成。'}
-                。打开结构标注，再尝试顶视图和底视图。
+                {t(
+                  'Enable Labels, then inspect the top and bottom views. Use Explode to separate the illustrated structure.',
+                  '打开结构标注，尝试顶视图和底视图，再拖动“结构展开”观察内部示意。',
+                )}
               </p>
               <ul className="pin-list">
                 {part.pinNotes.map(([title, note]) => (
@@ -679,17 +893,20 @@ export default function Home() {
               <div className="tip">
                 <div className="tip-title">
                   <Lightbulb size={14} />
-                  看图与接线
+                  {t('From model to circuit', '从模型到电路')}
                 </div>
                 <p>
-                  模型用于外形与结构识别。具体尺寸、脚号、电源和接线以所选型号的数据手册为准。
+                  {t(
+                    'Models show representative shapes and simplified internal structures. Use the selected manufacturer’s datasheet for exact dimensions, pin numbering, ratings and wiring.',
+                    '模型展示典型外形与简化内部结构。具体尺寸、脚号、额定值与接线请查阅所选型号的厂商数据手册。',
+                  )}
                 </p>
               </div>
             </TabsContent>
             <TabsContent value="uses">
               <h3 className="section-label">
                 <CircuitBoard size={14} />
-                {part.uses[0]} · 工作过程
+                {t('How it works in a circuit', '在电路中怎样工作')}
               </h3>
               {part.steps.map((step, i) => (
                 <div className="flow-step" key={step}>
@@ -700,14 +917,13 @@ export default function Home() {
               <div className="tip">
                 <div className="tip-title">
                   <Lightbulb size={14} />
-                  建立连接
+                  {t('Follow the signal', '沿着信号观察')}
                 </div>
                 <p>
-                  {part.kind === 'module'
-                    ? '在板上找到主控芯片，再分辨电源电路、通信接口和连接器。'
-                    : part.kind === 'mcu'
-                      ? '把系统拆成输入、处理和输出三部分，单片机负责执行中间的程序。'
-                      : '先确定信号从哪里来、需要怎样处理、最终送到哪里。'}
+                  {t(
+                    'Identify the input, the job this component performs, and the output. Compare the neighboring categories to understand how they work together.',
+                    '找到输入、器件执行的功能和输出，再比较相关类别，理解它们怎样配合。',
+                  )}
                 </p>
               </div>
             </TabsContent>
@@ -719,7 +935,7 @@ export default function Home() {
             rel="noreferrer"
           >
             <BookOpen size={14} />
-            查看厂商资料
+            {t('Manufacturer reference', '查看厂商资料')}
             <ExternalLink size={12} style={{ marginLeft: 'auto' }} />
           </a>
         </aside>
@@ -728,15 +944,23 @@ export default function Home() {
         <div className="status-left">
           <span>
             <i className="live-dot" />
-            THREE.JS · 3D WORKSPACE
+            LOCAL · THREE.JS
           </span>
-          <span>模型比例与内部结构为教学示意</span>
+          <span>
+            {t(
+              'Scale & internals: learning illustrations',
+              '比例与内部结构为教学示意',
+            )}
+          </span>
         </div>
         <div className="gesture-hint">
           <MousePointer2 size={11} />
-          拖动旋转　·　滚轮缩放　·　右键平移
+          {t(
+            'Drag: rotate · Scroll: zoom · Right drag: pan',
+            '拖动旋转 · 滚轮缩放 · 右键平移',
+          )}
         </div>
-        <span>IC ATLAS / VOL. 01</span>
+        <span>IC ATLAS / BILINGUAL EDITION</span>
       </footer>
       <Dialog
         open={dialog !== null}
@@ -747,13 +971,19 @@ export default function Home() {
         <DialogContent className="dialog-content">
           <DialogTitle>
             {dialog === 'learn'
-              ? '从一颗芯片，认识一个系统'
-              : '让实验台顺手起来'}
+              ? t('Learn one component at a time', '从元件到系统')
+              : t('Using the workbench', '实验台操作指南')}
           </DialogTitle>
           <DialogDescription>
             {dialog === 'learn'
-              ? '选择一条学习路径，跟着提示观察模型、理解功能。'
-              : '每个元件都可以从任意角度观察。电脑、触屏和键盘都能操作。'}
+              ? t(
+                  'Choose a path and follow the prompts to explore real device examples.',
+                  '选择学习路径，跟着提示观察典型型号，理解功能。',
+                )
+              : t(
+                  'Explore with a mouse, touch screen or keyboard. Switch languages at the top at any time.',
+                  '支持鼠标、触屏和键盘操作，顶部可随时切换语言。',
+                )}
           </DialogDescription>
           {dialog === 'learn' ? (
             <div className="lesson-grid">
@@ -775,20 +1005,33 @@ export default function Home() {
           ) : (
             <>
               <p className="keyboard-note">
-                鼠标左键拖动旋转，滚轮缩放，右键拖动平移。触屏单指旋转，双指缩放或平移。
+                {t(
+                  'Drag with the left mouse button to rotate, scroll to zoom, and drag with the right button to pan. On touch screens, use one finger to rotate and two fingers to zoom or pan.',
+                  '鼠标左键拖动旋转，滚轮缩放，右键拖动平移。触屏单指旋转，双指缩放或平移。',
+                )}
               </p>
               <p className="keyboard-note">
-                点选 3D 场景后，用 <kbd>↑ ↓ ← →</kbd> 旋转，<kbd>+</kbd>{' '}
-                <kbd>−</kbd> 缩放，<kbd>0</kbd> 重置视角。<kbd>/</kbd>{' '}
-                搜索元件，<kbd>Esc</kbd> 退出全屏。
+                <kbd>↑ ↓ ← →</kbd> {t('Rotate', '旋转')} · <kbd>+ −</kbd>{' '}
+                {t('Zoom', '缩放')} · <kbd>0</kbd> {t('Reset', '重置')}
+                <br />
+                <kbd>/</kbd> {t('Search', '搜索')} · <kbd>Esc</kbd>{' '}
+                {t('Exit fullscreen', '退出全屏')}
+                <br />
+                {t(
+                  'Focus the 3D view before using its keyboard controls.',
+                  '先点选三维场景，再使用键盘操作模型。',
+                )}
               </p>
               <div className="tip">
                 <div className="tip-title">
                   <Layers size={14} />
-                  三种学习方式
+                  {t('Three ways to explore', '三种目录')}
                 </div>
                 <p>
-                  元件图鉴认识功能；封装实验室比较外形；学习路径串起系统。使用“结构展开”探索内部，“展馆总览”同时浏览当前目录。
+                  {t(
+                    'Categories covers all 200 requested families. Devices contains 100 representative parts. Packages compares 16 common package types. Gallery shows the currently filtered collection together.',
+                    '类别覆盖清单中的 200 类元件；型号收录 100 个典型器件；封装比较 16 种常见类型。“展馆总览”同时展示当前筛选的内容。',
+                  )}
                 </p>
               </div>
             </>

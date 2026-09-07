@@ -16,8 +16,8 @@ globalThis.document = {
     }),
   }),
 };
-assert.equal(parts.length, 26);
-assert.equal(new Set(parts.map((p) => p.id)).size, 26);
+assert.equal(parts.length, 100);
+assert.equal(new Set(parts.map((p) => p.id)).size, parts.length);
 for (const shape of Object.keys(packageInfo))
   assert(
     parts.some((p) => p.shape === shape),
@@ -48,9 +48,11 @@ for (const part of parts) {
     part.id,
   );
   let pins = 0,
+    terminals = 0,
     meshes = 0;
   model.group.traverse((o) => {
     if (o.userData.pin !== undefined) pins++;
+    if (o.userData.terminal) terminals++;
     if (o instanceof THREE.Mesh) {
       meshes++;
       const a = o.geometry.attributes.position;
@@ -58,8 +60,33 @@ for (const part of parts) {
         assert(Number.isFinite(a.array[i]), `${part.id}: invalid vertex`);
     }
   });
-  if (['dip', 'soic', 'tssop', 'qfp', 'qfn', 'sot23'].includes(part.shape))
+  if (
+    ['dip', 'soic', 'tssop', 'qfp', 'qfn', 'sot23', 'sot236'].includes(
+      part.shape,
+    )
+  )
     assert.equal(pins, part.pins, `${part.id}: incorrect lead count`);
+  if (
+    part.kind === 'basic' ||
+    ['to263', 'to2205', 'bjt', 'to220'].includes(part.shape)
+  )
+    assert.equal(terminals, part.pins, `${part.id}: terminal count`);
+  for (const field of [
+    'id',
+    'name',
+    'subtitle',
+    'family',
+    'package',
+    'description',
+    'tip',
+    'source',
+  ])
+    assert(
+      typeof part[field] === 'string' && part[field].length > 0,
+      `${part.id}: missing ${field}`,
+    );
+  assert.equal(part.specs.length, 4, `${part.id}: specs`);
+  assert.equal(part.steps.length, 3, `${part.id}: application steps`);
   model.group.traverse((o) => {
     if (o.userData.explode !== undefined)
       o.position.y = o.userData.baseY + o.userData.explode;
