@@ -61,8 +61,28 @@ for (const name of [
   'LICENSE',
   'THIRD_PARTY_NOTICES.md',
   'bundled-dependencies.json',
+  'version.json',
 ])
   await stat(resolve(directory, name));
+const version = JSON.parse(
+  await readFile(resolve(directory, 'version.json'), 'utf8'),
+);
+assert(
+  version.schema === 1 && version.name === 'ic-atlas',
+  'Invalid public update manifest',
+);
+assert(
+  typeof version.version === 'string' && bundle.includes(version.version),
+  'Build version is missing from bundle',
+);
+assert(
+  version.commit === null || /^[a-f0-9]{40}$/.test(version.commit),
+  'Invalid build revision',
+);
+assert(
+  bundle.includes('https://github.com/vaenshine/ic-atlas'),
+  'Missing public source link',
+);
 const dependencies = JSON.parse(
   await readFile(resolve(directory, 'bundled-dependencies.json'), 'utf8'),
 );

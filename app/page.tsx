@@ -62,6 +62,7 @@ import {
 import { domains, kindNames, type Language } from './i18n';
 import { lessonsEn, lessonsZh } from './lessons';
 import Scene, { type SceneCommand } from './scene';
+import ProjectUpdates from './project-updates';
 
 let sessionLanguage: Language = 'en';
 function readLanguage(): Language {
@@ -944,7 +945,7 @@ export default function Home() {
         <div className="status-left">
           <span>
             <i className="live-dot" />
-            LOCAL · THREE.JS
+            IC ATLAS · THREE.JS
           </span>
           <span>
             {t(
@@ -960,7 +961,7 @@ export default function Home() {
             '拖动旋转 · 滚轮缩放 · 右键平移',
           )}
         </div>
-        <span>IC ATLAS / BILINGUAL EDITION</span>
+        <ProjectUpdates language={language} />
       </footer>
       <Dialog
         open={dialog !== null}

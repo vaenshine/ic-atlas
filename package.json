@@ -1,19 +1,23 @@
 {
   "name": "ic-atlas",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vinext dev",
+    "dev": "node scripts/local-server.mjs dev",
     "build": "vinext build",
-    "start": "vinext start --hostname 127.0.0.1",
+    "start": "node scripts/local-server.mjs start",
     "lint": "oxlint",
     "format": "oxfmt",
     "check:models": "node --experimental-strip-types scripts/check-models.mjs",
     "check:catalog": "node --experimental-strip-types scripts/check-catalog.mjs",
+    "prebuild:pages": "npm run check:updates",
     "build:pages": "node scripts/build-pages.mjs",
+    "check:updates": "node --experimental-strip-types scripts/check-update-client.mjs && node scripts/check-updater.mjs && node scripts/check-updater-cli.mjs && node scripts/check-local-server.mjs",
+    "update:check": "node scripts/update.mjs --check",
+    "update": "node scripts/update.mjs",
     "check:pages": "node scripts/check-pages.mjs"
   },
   "dependencies": {

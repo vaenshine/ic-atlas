@@ -62,6 +62,28 @@ npm run build
 npm start
 ```
 
+## Source and updates
+
+The footer links to the official [GitHub project](https://github.com/vaenshine/ic-atlas) and displays the page's version. Open **Updates** to compare the installed revision with the official project. A background check runs at most once every 24 hours per browser and build; **Check for updates** runs a fresh check at any time. Checks contact the public GitHub project and require an internet connection.
+
+For a Git clone started with `npm run dev` or `npm start`, choose **Update this installation**, review the service changes, then **Install & restart**. The local manager updates the source and dependencies, rebuilds production installations, and restarts the page service. Reload the workbench when it finishes; your language preference stays saved.
+
+Updates use the official `main` branch and a fast-forward merge. Local modifications, untracked files, a different branch, an unfinished Git operation or diverged commits pause installation with an explanation. Save your own work before retrying. Forks keep their existing remote configuration; their local commits require manual reconciliation with the official project.
+
+The command-line workflow is also available. Stop the running server before applying a command-line update:
+
+```sh
+npm run update:check
+npm run update
+npm run dev
+```
+
+For production, run `npm run build` and `npm start` after the command-line update. If dependency installation or rebuilding fails, the update panel reports the partial result and recovery commands. Updated manager code takes effect the next time you restart the launcher or the `npm run dev` / `npm start` command.
+
+ZIP downloads and ordinary static hosts use **Download latest source** or a fresh static build to update. The online GitHub Pages version updates through the repository's publishing workflow. Local controls bind to the loopback interface and require a same-origin session token for update actions. An optional `IC_ATLAS_PORT` environment variable changes the default port from 3000.
+
+Existing installations from before version 0.2.0 can get the updater with a one-time `git pull --ff-only` followed by `npm ci`, then restart with `npm run dev` or `npm start` (rebuild production first).
+
 ## Controls
 
 | Input                            | Action                     |
